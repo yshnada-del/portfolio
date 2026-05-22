@@ -340,8 +340,8 @@ img {
 }
 
 .gauntlet-image {
-  width: min(39vw, 390px);
-  max-height: 68svh;
+  width: min(32vw, 320px);
+  max-height: 58svh;
   object-fit: contain;
   user-select: none;
   filter:
@@ -398,7 +398,7 @@ img {
   }
 
   .gauntlet-image {
-    width: min(60vw, 300px);
-    max-height: 62svh;
+    width: min(52vw, 250px);
+    max-height: 54svh;
   }
 }
