@@ -1,5 +1,51 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
+import DecryptedText from "./DecryptedText.jsx";
+
+const stoneDetails = [
+  {
+    name: "ABOUT ME",
+    status: "GROWING DESIGNER",
+    basedLabel: "BASED IN:",
+    housedIn: "USER EXPERIENCE",
+    identityLabel: "IDENTITY:",
+    appearances: [
+      "OBSERVES USER PROBLEMS",
+      "STRUCTURES COMPLEX FLOWS",
+      "DESIGNS CLEAR EXPERIENCES",
+    ],
+  },
+  {
+    name: "SPACE STONE",
+    status: "UNKNOWN",
+    housedIn: "THE TESSERACT",
+    appearances: ["CAPTAIN AMERICA", "THE AVENGERS", "AVENGERS: ENDGAME"],
+  },
+  {
+    name: "TIME STONE",
+    status: "UNKNOWN",
+    housedIn: "THE EYE OF AGAMOTTO",
+    appearances: ["DOCTOR STRANGE", "AVENGERS: INFINITY WAR", "AVENGERS: ENDGAME"],
+  },
+  {
+    name: "SOUL STONE",
+    status: "UNKNOWN",
+    housedIn: "VORMIR",
+    appearances: ["AVENGERS: INFINITY WAR", "AVENGERS: ENDGAME"],
+  },
+  {
+    name: "POWER STONE",
+    status: "UNKNOWN",
+    housedIn: "THE ORB",
+    appearances: ["GUARDIANS OF THE GALAXY", "AVENGERS: INFINITY WAR", "AVENGERS: ENDGAME"],
+  },
+  {
+    name: "MIND STONE",
+    status: "UNKNOWN",
+    housedIn: "LOKI'S SCEPTER",
+    appearances: ["THE AVENGERS", "AVENGERS: AGE OF ULTRON", "AVENGERS: ENDGAME"],
+  },
+];
 
 function generateEllipsePath(cx, cy, rx, ry) {
   return `M ${cx - rx} ${cy} A ${rx} ${ry} 0 1 0 ${cx + rx} ${cy} A ${rx} ${ry} 0 1 0 ${cx - rx} ${cy}`;
@@ -81,8 +127,11 @@ function OrbitItem({
   rotation,
   progress,
   fill,
+  isSelected,
+  isDimmed,
   onHoverStart,
   onHoverEnd,
+  onSelect,
 }) {
   const itemOffset = fill ? (index / totalItems) * 100 : 0;
   const offsetDistance = useTransform(progress, (p) => {
@@ -96,11 +145,20 @@ function OrbitItem({
 
   return (
     <motion.div
-      className="orbit-item"
+      className={`orbit-item${isSelected ? " orbit-item--selected" : ""}${isDimmed ? " orbit-item--dimmed" : ""}`}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
       onFocus={onHoverStart}
       onBlur={onHoverEnd}
+      onClick={onSelect}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelect();
+        }
+      }}
+      role="button"
+      tabIndex={0}
       style={{
         width: itemSize,
         height: itemSize,
@@ -144,10 +202,12 @@ export default function OrbitImages({
   paused = false,
   centerContent,
   responsive = false,
+  onAboutContinue,
 }) {
   const containerRef = useRef(null);
   const [scale, setScale] = useState(1);
   const [isHoverPaused, setIsHoverPaused] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const progress = useMotionValue(0);
 
   const designCenterX = baseWidth / 2;
@@ -216,11 +276,13 @@ export default function OrbitImages({
   }, [responsive, baseWidth]);
 
   useEffect(() => {
-    if (paused || isHoverPaused) {
+    if (paused || isHoverPaused || selectedIndex !== null) {
       return undefined;
     }
 
-    const controls = animate(progress, direction === "reverse" ? -100 : 100, {
+    const currentProgress = progress.get();
+    const nextProgress = currentProgress + (direction === "reverse" ? -100 : 100);
+    const controls = animate(progress, nextProgress, {
       duration,
       ease: easing,
       repeat: Infinity,
@@ -228,7 +290,22 @@ export default function OrbitImages({
     });
 
     return () => controls.stop();
-  }, [progress, duration, easing, direction, paused, isHoverPaused]);
+  }, [progress, duration, easing, direction, paused, isHoverPaused, selectedIndex]);
+
+  useEffect(() => {
+    if (selectedIndex === null) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setSelectedIndex(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIndex]);
 
   const containerWidth = responsive ? "100%" : typeof width === "number" ? width : "100%";
   const containerHeight = responsive
@@ -249,6 +326,8 @@ export default function OrbitImages({
       />
     </span>
   ));
+  const selectedStone = selectedIndex === null ? null : stoneDetails[selectedIndex] || stoneDetails[0];
+  const selectedImage = selectedIndex === null ? null : images[selectedIndex];
 
   return (
     <div
@@ -259,7 +338,7 @@ export default function OrbitImages({
         height: containerHeight,
         aspectRatio: responsive ? "1 / 1" : undefined,
       }}
-      aria-hidden="true"
+      aria-label="Infinity stones orbit"
     >
       <div
         className={
@@ -273,6 +352,62 @@ export default function OrbitImages({
           transform: responsive ? `translate(-50%, -50%) scale(${scale})` : undefined,
         }}
       >
+        {selectedStone && selectedImage && (
+          <motion.div
+            className="stone-hud"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <button
+              className="stone-hud-close"
+              type="button"
+              aria-label="Close stone details"
+              onClick={() => setSelectedIndex(null)}
+            />
+            <motion.div
+              className={`stone-hud-image-frame orbit-stone-${selectedIndex + 1}`}
+              initial={{ opacity: 0, scale: 0.82, y: 22 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.38, ease: "easeOut" }}
+            >
+              <img className="stone-hud-image" src={selectedImage} alt="" draggable={false} />
+            </motion.div>
+            <div className="stone-hud-status">
+              <span>STATUS:</span>
+              <strong>{selectedStone.status}</strong>
+            </div>
+            <div className="stone-hud-appearances">
+              <span>{selectedStone.identityLabel || "APPEARANCES:"}</span>
+              {selectedStone.appearances.map((appearance) => (
+                <strong key={appearance}>{appearance}</strong>
+              ))}
+            </div>
+            <div className="stone-hud-title">
+              <span>{selectedStone.basedLabel || "HOUSED IN:"}</span>
+              <strong>{selectedStone.housedIn}</strong>
+              <h2>{selectedStone.name}</h2>
+              {selectedIndex === 0 && (
+                <button
+                  className="stone-hud-continue"
+                  type="button"
+                  onClick={onAboutContinue}
+                >
+                  <DecryptedText
+                    text="ACCESS FILE ->"
+                    speed={60}
+                    maxIterations={10}
+                    sequential
+                    revealDirection="start"
+                    animateOn="hover"
+                    parentClassName="stone-hud-continue-text"
+                    encryptedClassName="stone-hud-continue-encrypted"
+                  />
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
         <div className="orbit-rotation-wrapper" style={{ transform: `rotate(${rotation}deg)` }}>
           {showPath && (
             <svg
@@ -296,8 +431,11 @@ export default function OrbitImages({
               rotation={rotation}
               progress={progress}
               fill={fill}
+              isSelected={selectedIndex === index}
+              isDimmed={selectedIndex !== null && selectedIndex !== index}
               onHoverStart={() => setIsHoverPaused(true)}
               onHoverEnd={() => setIsHoverPaused(false)}
+              onSelect={() => setSelectedIndex((current) => (current === index ? null : index))}
             />
           ))}
 
