@@ -2,18 +2,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import DecryptedText from "./DecryptedText.jsx";
 
+const ABOUT_STONE_INDEX = 4;
+
 const stoneDetails = [
   {
-    name: "ABOUT ME",
-    status: "GROWING DESIGNER",
-    basedLabel: "BASED IN:",
-    housedIn: "USER EXPERIENCE",
-    identityLabel: "IDENTITY:",
-    appearances: [
-      "OBSERVES USER PROBLEMS",
-      "STRUCTURES COMPLEX FLOWS",
-      "DESIGNS CLEAR EXPERIENCES",
-    ],
+    name: "POWER STONE",
+    status: "UNKNOWN",
+    housedIn: "THE ORB",
+    appearances: ["GUARDIANS OF THE GALAXY", "AVENGERS: INFINITY WAR", "AVENGERS: ENDGAME"],
   },
   {
     name: "SPACE STONE",
@@ -34,10 +30,16 @@ const stoneDetails = [
     appearances: ["AVENGERS: INFINITY WAR", "AVENGERS: ENDGAME"],
   },
   {
-    name: "POWER STONE",
-    status: "UNKNOWN",
-    housedIn: "THE ORB",
-    appearances: ["GUARDIANS OF THE GALAXY", "AVENGERS: INFINITY WAR", "AVENGERS: ENDGAME"],
+    name: "ABOUT ME",
+    status: "GROWING DESIGNER",
+    basedLabel: "BASED IN:",
+    housedIn: "USER EXPERIENCE",
+    identityLabel: "IDENTITY:",
+    appearances: [
+      "OBSERVES USER PROBLEMS",
+      "STRUCTURES COMPLEX FLOWS",
+      "DESIGNS CLEAR EXPERIENCES",
+    ],
   },
   {
     name: "MIND STONE",
@@ -120,7 +122,7 @@ function generateWavePath(cx, cy, w, amplitude, waves) {
 
 function OrbitItem({
   item,
-  index,
+  orbitIndex,
   totalItems,
   path,
   itemSize,
@@ -129,11 +131,13 @@ function OrbitItem({
   fill,
   isSelected,
   isDimmed,
+  isLocked,
+  isActive,
   onHoverStart,
   onHoverEnd,
   onSelect,
 }) {
-  const itemOffset = fill ? (index / totalItems) * 100 : 0;
+  const itemOffset = fill ? (orbitIndex / totalItems) * 100 : 0;
   const offsetDistance = useTransform(progress, (p) => {
     const offset = (((p + itemOffset) % 100) + 100) % 100;
     return `${offset}%`;
@@ -145,7 +149,7 @@ function OrbitItem({
 
   return (
     <motion.div
-      className={`orbit-item${isSelected ? " orbit-item--selected" : ""}${isDimmed ? " orbit-item--dimmed" : ""}`}
+      className={`orbit-item${isSelected ? " orbit-item--selected" : ""}${isDimmed ? " orbit-item--dimmed" : ""}${isLocked ? " orbit-item--locked" : ""}${isActive ? " orbit-item--active" : ""}`}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
       onFocus={onHoverStart}
@@ -203,12 +207,20 @@ export default function OrbitImages({
   centerContent,
   responsive = false,
   onAboutContinue,
+  onLockedSelect,
+  activeStoneIndex = null,
+  completedStoneIndexes = [],
 }) {
   const containerRef = useRef(null);
   const [scale, setScale] = useState(1);
   const [isHoverPaused, setIsHoverPaused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const progress = useMotionValue(0);
+  const completedStoneSet = useMemo(
+    () => new Set(completedStoneIndexes),
+    [completedStoneIndexes],
+  );
+  const canSelectStone = (index) => activeStoneIndex === null || index === activeStoneIndex;
 
   const designCenterX = baseWidth / 2;
   const designCenterY = baseWidth / 2;
@@ -293,6 +305,12 @@ export default function OrbitImages({
   }, [progress, duration, easing, direction, paused, isHoverPaused, selectedIndex]);
 
   useEffect(() => {
+    if (selectedIndex !== null && completedStoneSet.has(selectedIndex)) {
+      setSelectedIndex(null);
+    }
+  }, [completedStoneSet, selectedIndex]);
+
+  useEffect(() => {
     if (selectedIndex === null) {
       return undefined;
     }
@@ -316,16 +334,22 @@ export default function OrbitImages({
         ? width
         : "auto";
 
-  const items = images.map((image, index) => (
-    <span className={`orbit-stone orbit-stone-${index + 1}`} key={image}>
-      <img
-        src={image}
-        alt={`${altPrefix} ${index + 1}`}
-        draggable={false}
-        className="orbit-image"
-      />
-    </span>
-  ));
+  const items = images
+    .map((image, index) => ({ image, index }))
+    .filter(({ index }) => !completedStoneSet.has(index))
+    .map(({ image, index }) => ({
+      index,
+      item: (
+        <span className={`orbit-stone orbit-stone-${index + 1}`}>
+          <img
+            src={image}
+            alt={`${altPrefix} ${index + 1}`}
+            draggable={false}
+            className="orbit-image"
+          />
+        </span>
+      ),
+    }));
   const selectedStone = selectedIndex === null ? null : stoneDetails[selectedIndex] || stoneDetails[0];
   const selectedImage = selectedIndex === null ? null : images[selectedIndex];
 
@@ -387,7 +411,7 @@ export default function OrbitImages({
               <span>{selectedStone.basedLabel || "HOUSED IN:"}</span>
               <strong>{selectedStone.housedIn}</strong>
               <h2>{selectedStone.name}</h2>
-              {selectedIndex === 0 && (
+              {selectedIndex === ABOUT_STONE_INDEX && (
                 <button
                   className="stone-hud-continue"
                   type="button"
@@ -420,11 +444,11 @@ export default function OrbitImages({
             </svg>
           )}
 
-          {items.map((item, index) => (
+          {items.map(({ item, index }, orbitIndex) => (
             <OrbitItem
               key={index}
               item={item}
-              index={index}
+              orbitIndex={orbitIndex}
               totalItems={items.length}
               path={path}
               itemSize={itemSize}
@@ -433,9 +457,18 @@ export default function OrbitImages({
               fill={fill}
               isSelected={selectedIndex === index}
               isDimmed={selectedIndex !== null && selectedIndex !== index}
+              isLocked={!canSelectStone(index)}
+              isActive={activeStoneIndex === index}
               onHoverStart={() => setIsHoverPaused(true)}
               onHoverEnd={() => setIsHoverPaused(false)}
-              onSelect={() => setSelectedIndex((current) => (current === index ? null : index))}
+              onSelect={() => {
+                if (!canSelectStone(index)) {
+                  onLockedSelect?.(index);
+                  return;
+                }
+
+                setSelectedIndex((current) => (current === index ? null : index));
+              }}
             />
           ))}
 

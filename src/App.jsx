@@ -1,8 +1,15 @@
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ArcadeIntro from "./components/ArcadeIntro.jsx";
 import OrbitImages from "./components/OrbitImages.jsx";
+import TextType from "./components/TextType.jsx";
 import backgroundImage from "./assets/background.png";
 import noGauntlet from "./assets/no_Gauntlet.png";
+import oneGauntlet from "./assets/one_Gauntlet.png";
+import twoGauntlet from "./assets/two_Gauntlet.png";
+import threeGauntlet from "./assets/three_Gauntlet.png";
+import fourGauntlet from "./assets/four_Gauntlet.png";
+import fiveGauntlet from "./assets/five_Gauntlet.png";
+import guideImage from "./assets/guide.png";
 import stone1 from "./assets/stone1.png";
 import stone2 from "./assets/stone2.png";
 import stone3 from "./assets/stone3.png";
@@ -19,14 +26,74 @@ const stones = [
   stone6,
 ];
 
-function DesignerFileSection({ sectionRef }) {
+const gauntletImages = [
+  noGauntlet,
+  oneGauntlet,
+  twoGauntlet,
+  threeGauntlet,
+  fourGauntlet,
+  fiveGauntlet,
+];
+
+const ABOUT_STONE_INDEX = 4;
+const stoneUnlockOrder = [4, 1, 2, 3, 0, 5];
+
+function GuideDialog({ onClose }) {
   return (
-    <section ref={sectionRef} className="designer-file-section" aria-label="Designer file">
-      <div className="designer-file-shell">
+    <section
+      className="guide-dialog"
+      aria-label="Locked stone guide"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="guide-dialog-panel"
+        style={{ "--guide-bg": `url(${guideImage})` }}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          className="guide-dialog-close"
+          type="button"
+          aria-label="Close guide"
+          onClick={onClose}
+        />
+        <div className="guide-dialog-copy">
+          <span>LOCKED FILE</span>
+          <TextType
+            as="strong"
+            text="활성화된 스톤을 먼저 확인해주세요"
+            typingSpeed={58}
+            initialDelay={180}
+            cursorCharacter="_"
+            cursorClassName="guide-dialog-cursor"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DesignerFileSection({ onClose }) {
+  return (
+    <section
+      className="designer-file-section"
+      aria-label="Designer file"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div className="designer-file-shell" onClick={(event) => event.stopPropagation()}>
         <header className="designer-file-header">
           <div className="designer-file-mark" aria-hidden="true" />
           <h1>DESIGNER FILE</h1>
           <span>ABOUT ME</span>
+          <button
+            className="designer-file-close"
+            type="button"
+            aria-label="Close designer file"
+            onClick={onClose}
+          />
         </header>
 
         <div className="designer-file-grid">
@@ -112,22 +179,54 @@ function DesignerFileSection({ sectionRef }) {
 }
 
 export default function App() {
-  const designerFileRef = useRef(null);
   const [isDesignerFileUnlocked, setIsDesignerFileUnlocked] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [gauntletStep, setGauntletStep] = useState(0);
+  const activeStoneIndex = stoneUnlockOrder[gauntletStep] ?? null;
+  const completedStoneIndexes = stoneUnlockOrder.slice(0, gauntletStep);
+  const gauntletImage = gauntletImages[Math.min(gauntletStep, gauntletImages.length - 1)];
 
   const handleAboutContinue = () => {
     setIsDesignerFileUnlocked(true);
-    window.requestAnimationFrame(() => {
-      designerFileRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
   };
+
+  const closeDesignerFile = () => {
+    setIsDesignerFileUnlocked(false);
+    setGauntletStep((current) => Math.max(current, 1));
+  };
+
+  useEffect(() => {
+    if (!isDesignerFileUnlocked && !isGuideOpen) {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        if (isGuideOpen) {
+          setIsGuideOpen(false);
+        } else {
+          closeDesignerFile();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isDesignerFileUnlocked, isGuideOpen]);
 
   return (
     <main>
       <ArcadeIntro />
       <section
         className="portfolio-content gauntlet-section"
-        aria-label="Stone-free gauntlet"
+        aria-label="Infinity gauntlet"
         style={{ "--gauntlet-bg": `url(${backgroundImage})` }}
       >
         <div className="gauntlet-stage">
@@ -147,19 +246,28 @@ export default function App() {
             pathColor="rgba(162, 118, 255, 0.18)"
             pathWidth={1.5}
             showPath={false}
+            activeStoneIndex={activeStoneIndex}
+            completedStoneIndexes={completedStoneIndexes}
             onAboutContinue={handleAboutContinue}
+            onLockedSelect={() => setIsGuideOpen(true)}
             centerContent={
-              <img
-                className="gauntlet-image"
-                src={noGauntlet}
-                alt="Infinity gauntlet without stones"
-                draggable="false"
-              />
+              <div className="gauntlet-core">
+                <img
+                  key={gauntletImage}
+                  className="gauntlet-image"
+                  src={gauntletImage}
+                  alt="Infinity gauntlet"
+                  draggable="false"
+                />
+              </div>
             }
           />
         </div>
       </section>
-      {isDesignerFileUnlocked && <DesignerFileSection sectionRef={designerFileRef} />}
+      {isDesignerFileUnlocked && (
+        <DesignerFileSection onClose={closeDesignerFile} />
+      )}
+      {isGuideOpen && <GuideDialog onClose={() => setIsGuideOpen(false)} />}
     </main>
   );
 }
