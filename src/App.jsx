@@ -64,7 +64,7 @@ function GuideDialog({ onClose }) {
           <span>LOCKED FILE</span>
           <TextType
             as="strong"
-            text="?쒖꽦?붾맂 ?ㅽ넠??癒쇱? ?뺤씤?댁＜?몄슂"
+            text="활성화된 스톤을 먼저 확인해주세요"
             typingSpeed={58}
             initialDelay={180}
             cursorCharacter="_"
@@ -220,11 +220,6 @@ function ProjectFileSection({ onClose }) {
               VIEW PROJECT
             </a>
           </section>
-
-          <aside className="project-type-panel" aria-label="Project type">
-            <strong>UX/UI</strong>
-            <span>MOBILE APP</span>
-          </aside>
 
           <section className="project-features-panel">
             <h3>KEY FEATURES</h3>

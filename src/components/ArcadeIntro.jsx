@@ -189,9 +189,12 @@ export default function ArcadeIntro({ onIntroComplete }) {
               <button
                 key={leverIndex}
                 type="button"
-                className={`lever-button lever-button-${leverIndex + 1}`}
+                className={`lever-button lever-button-${leverIndex + 1}${
+                  leverStep === leverIndex && !isLeverAnimating
+                    ? " lever-button--active"
+                    : ""
+                }`}
                 aria-label={`Raise lever ${leverIndex + 1}`}
-                disabled={leverStep !== leverIndex || isLeverAnimating}
                 onClick={handleLeverClick}
               />
             ))}
