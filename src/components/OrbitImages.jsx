@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import DecryptedText from "./DecryptedText.jsx";
 
 const ABOUT_STONE_INDEX = 4;
+const JIBSA_STONE_INDEX = 1;
 
 const stoneDetails = [
   {
@@ -12,10 +14,14 @@ const stoneDetails = [
     appearances: ["GUARDIANS OF THE GALAXY", "AVENGERS: INFINITY WAR", "AVENGERS: ENDGAME"],
   },
   {
-    name: "SPACE STONE",
-    status: "UNKNOWN",
-    housedIn: "THE TESSERACT",
-    appearances: ["CAPTAIN AMERICA", "THE AVENGERS", "AVENGERS: ENDGAME"],
+    name: "JIBSA LIFE",
+    statusLabel: "PROJECT STATUS:",
+    status: "IN DEVELOPMENT",
+    basedLabel: "PROJECT FIELD:",
+    housedIn: "AI PET HEALTHCARE",
+    identityLabel: "CORE FEATURES:",
+    appearances: ["AI HEALTH CHECK", "PET CARE RECORD", "COMMUNITY VOTING"],
+    hasAccessFile: true,
   },
   {
     name: "TIME STONE",
@@ -40,6 +46,7 @@ const stoneDetails = [
       "STRUCTURES COMPLEX FLOWS",
       "DESIGNS CLEAR EXPERIENCES",
     ],
+    hasAccessFile: true,
   },
   {
     name: "MIND STONE",
@@ -207,6 +214,7 @@ export default function OrbitImages({
   centerContent,
   responsive = false,
   onAboutContinue,
+  onProjectContinue,
   onLockedSelect,
   activeStoneIndex = null,
   completedStoneIndexes = [],
@@ -352,87 +360,95 @@ export default function OrbitImages({
     }));
   const selectedStone = selectedIndex === null ? null : stoneDetails[selectedIndex] || stoneDetails[0];
   const selectedImage = selectedIndex === null ? null : images[selectedIndex];
+  const isAboutSelected = selectedIndex === ABOUT_STONE_INDEX;
+  const handleAccessFileClick = isAboutSelected
+    ? onAboutContinue
+    : selectedIndex === JIBSA_STONE_INDEX
+      ? onProjectContinue
+      : undefined;
+  const stoneHud = selectedStone && selectedImage && (
+    <motion.div
+      className={`stone-hud orbit-stone-${selectedIndex + 1}${isAboutSelected ? " stone-hud--about" : ""}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="stone-hud-circuit-lines" aria-hidden="true" />
+      <button
+        className="stone-hud-close"
+        type="button"
+        aria-label="Close stone details"
+        onClick={() => setSelectedIndex(null)}
+      />
+      <motion.div
+        className={`stone-hud-image-frame orbit-stone-${selectedIndex + 1}`}
+        initial={{ opacity: 0, scale: 0.82, y: 22 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.38, ease: "easeOut" }}
+      >
+        <img className="stone-hud-image" src={selectedImage} alt="" draggable={false} />
+      </motion.div>
+      <div className="stone-hud-status">
+        <span>{selectedStone.statusLabel || "STATUS:"}</span>
+        <strong>{selectedStone.status}</strong>
+      </div>
+      <div className="stone-hud-appearances">
+        <span>{selectedStone.identityLabel || "APPEARANCES:"}</span>
+        {selectedStone.appearances.map((appearance) => (
+          <strong key={appearance}>{appearance}</strong>
+        ))}
+      </div>
+      <div className="stone-hud-title">
+        <span>{selectedStone.basedLabel || "HOUSED IN:"}</span>
+        <strong>{selectedStone.housedIn}</strong>
+        <h2>{selectedStone.name}</h2>
+        {selectedStone.hasAccessFile && (
+          <button
+            className="stone-hud-continue"
+            type="button"
+            onClick={handleAccessFileClick}
+          >
+            <DecryptedText
+              text="ACCESS FILE ->"
+              speed={60}
+              maxIterations={10}
+              sequential
+              revealDirection="start"
+              animateOn="hover"
+              parentClassName="stone-hud-continue-text"
+              encryptedClassName="stone-hud-continue-encrypted"
+            />
+          </button>
+        )}
+      </div>
+    </motion.div>
+  );
 
   return (
-    <div
-      ref={containerRef}
-      className={`orbit-container ${className}`}
-      style={{
-        width: containerWidth,
-        height: containerHeight,
-        aspectRatio: responsive ? "1 / 1" : undefined,
-      }}
-      aria-label="Infinity stones orbit"
-    >
+    <>
       <div
-        className={
-          responsive
-            ? "orbit-scaling-container orbit-scaling-container--responsive"
-            : "orbit-scaling-container"
-        }
+        ref={containerRef}
+        className={`orbit-container ${className}${selectedIndex !== null ? " orbit-container--detail-open" : ""}`}
         style={{
-          width: responsive ? baseWidth : "100%",
-          height: responsive ? baseWidth : "100%",
-          transform: responsive ? `translate(-50%, -50%) scale(${scale})` : undefined,
+          width: containerWidth,
+          height: containerHeight,
+          aspectRatio: responsive ? "1 / 1" : undefined,
         }}
+        aria-label="Infinity stones orbit"
       >
-        {selectedStone && selectedImage && (
-          <motion.div
-            className="stone-hud"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <button
-              className="stone-hud-close"
-              type="button"
-              aria-label="Close stone details"
-              onClick={() => setSelectedIndex(null)}
-            />
-            <motion.div
-              className={`stone-hud-image-frame orbit-stone-${selectedIndex + 1}`}
-              initial={{ opacity: 0, scale: 0.82, y: 22 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.38, ease: "easeOut" }}
-            >
-              <img className="stone-hud-image" src={selectedImage} alt="" draggable={false} />
-            </motion.div>
-            <div className="stone-hud-status">
-              <span>STATUS:</span>
-              <strong>{selectedStone.status}</strong>
-            </div>
-            <div className="stone-hud-appearances">
-              <span>{selectedStone.identityLabel || "APPEARANCES:"}</span>
-              {selectedStone.appearances.map((appearance) => (
-                <strong key={appearance}>{appearance}</strong>
-              ))}
-            </div>
-            <div className="stone-hud-title">
-              <span>{selectedStone.basedLabel || "HOUSED IN:"}</span>
-              <strong>{selectedStone.housedIn}</strong>
-              <h2>{selectedStone.name}</h2>
-              {selectedIndex === ABOUT_STONE_INDEX && (
-                <button
-                  className="stone-hud-continue"
-                  type="button"
-                  onClick={onAboutContinue}
-                >
-                  <DecryptedText
-                    text="ACCESS FILE ->"
-                    speed={60}
-                    maxIterations={10}
-                    sequential
-                    revealDirection="start"
-                    animateOn="hover"
-                    parentClassName="stone-hud-continue-text"
-                    encryptedClassName="stone-hud-continue-encrypted"
-                  />
-                </button>
-              )}
-            </div>
-          </motion.div>
-        )}
-        <div className="orbit-rotation-wrapper" style={{ transform: `rotate(${rotation}deg)` }}>
+        <div
+          className={
+            responsive
+              ? "orbit-scaling-container orbit-scaling-container--responsive"
+              : "orbit-scaling-container"
+          }
+          style={{
+            width: responsive ? baseWidth : "100%",
+            height: responsive ? baseWidth : "100%",
+            transform: responsive ? `translate(-50%, -50%) scale(${scale})` : undefined,
+          }}
+        >
+          <div className="orbit-rotation-wrapper" style={{ transform: `rotate(${rotation}deg)` }}>
           {showPath && (
             <svg
               width="100%"
@@ -480,8 +496,10 @@ export default function OrbitImages({
               {centerContent}
             </div>
           )}
-        </div>
+          </div>
       </div>
-    </div>
+      </div>
+      {typeof document !== "undefined" && stoneHud ? createPortal(stoneHud, document.body) : null}
+    </>
   );
 }

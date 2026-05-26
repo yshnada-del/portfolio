@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import ArcadeIntro from "./components/ArcadeIntro.jsx";
 import OrbitImages from "./components/OrbitImages.jsx";
 import TextType from "./components/TextType.jsx";
@@ -10,6 +10,7 @@ import threeGauntlet from "./assets/three_Gauntlet.png";
 import fourGauntlet from "./assets/four_Gauntlet.png";
 import fiveGauntlet from "./assets/five_Gauntlet.png";
 import guideImage from "./assets/guide.png";
+import projectGuideImage from "./assets/project_guide01.png";
 import stone1 from "./assets/stone1.png";
 import stone2 from "./assets/stone2.png";
 import stone3 from "./assets/stone3.png";
@@ -37,6 +38,7 @@ const gauntletImages = [
 
 const ABOUT_STONE_INDEX = 4;
 const stoneUnlockOrder = [4, 1, 2, 3, 0, 5];
+const JIBSA_PROJECT_URL = "https://new-jibsalife.vercel.app";
 
 function GuideDialog({ onClose }) {
   return (
@@ -62,7 +64,7 @@ function GuideDialog({ onClose }) {
           <span>LOCKED FILE</span>
           <TextType
             as="strong"
-            text="활성화된 스톤을 먼저 확인해주세요"
+            text="?쒖꽦?붾맂 ?ㅽ넠??癒쇱? ?뺤씤?댁＜?몄슂"
             typingSpeed={58}
             initialDelay={180}
             cursorCharacter="_"
@@ -178,8 +180,93 @@ function DesignerFileSection({ onClose }) {
   );
 }
 
+function ProjectFileSection({ onClose }) {
+  return (
+    <section
+      className="project-file-section"
+      aria-label="Jibsa Life project file"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="project-file-shell"
+        style={{ "--project-guide-bg": `url(${projectGuideImage})` }}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          className="project-file-close"
+          type="button"
+          aria-label="Close project file"
+          onClick={onClose}
+        />
+
+        <div className="project-file-grid">
+          <div className="project-file-heading">
+            <h1>PROJECT FILE</h1>
+            <span>JIBSA LIFE</span>
+          </div>
+
+          <section className="project-hero-panel">
+            <h2>JIBSA LIFE</h2>
+            <p>AI 기반 반려동물 건강 기록과 커뮤니티 기능을 결합한</p>
+            <p>반려동물 헬스케어 모바일 앱 프로젝트</p>
+            <a
+              className="project-view-link"
+              href={JIBSA_PROJECT_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              VIEW PROJECT
+            </a>
+          </section>
+
+          <aside className="project-type-panel" aria-label="Project type">
+            <strong>UX/UI</strong>
+            <span>MOBILE APP</span>
+          </aside>
+
+          <section className="project-features-panel">
+            <h3>KEY FEATURES</h3>
+            {[
+              ["AI HEALTH CHECK", "CORE"],
+              ["AUTO CARE LOG", "CORE"],
+              ["VET CONSULTING", "PLUS"],
+              ["COMMUNITY VOTE", "ENGAGE"],
+            ].map(([feature, tag]) => (
+              <div className="project-feature-row" key={feature}>
+                <span aria-hidden="true" />
+                <strong>{feature}</strong>
+                <em>{tag}</em>
+              </div>
+            ))}
+          </section>
+
+          <aside className="project-scope-panel">
+            {[
+              ["RESEARCH", "78%"],
+              ["UX DESIGN", "82%"],
+              ["UI DESIGN", "84%"],
+              ["PROTOTYPE", "70%"],
+              ["DEVELOPMENT", "72%"],
+            ].map(([label, width]) => (
+              <div className="project-scope-row" key={label}>
+                <span>{label}</span>
+                <i><b style={{ width }} /></i>
+              </div>
+            ))}
+          </aside>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function App() {
+  const gauntletSectionRef = useRef(null);
+  const [isGauntletScrollLocked, setIsGauntletScrollLocked] = useState(false);
   const [isDesignerFileUnlocked, setIsDesignerFileUnlocked] = useState(false);
+  const [isProjectFileOpen, setIsProjectFileOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [gauntletStep, setGauntletStep] = useState(0);
   const activeStoneIndex = stoneUnlockOrder[gauntletStep] ?? null;
@@ -190,13 +277,22 @@ export default function App() {
     setIsDesignerFileUnlocked(true);
   };
 
+  const handleProjectContinue = () => {
+    setIsProjectFileOpen(true);
+  };
+
   const closeDesignerFile = () => {
     setIsDesignerFileUnlocked(false);
     setGauntletStep((current) => Math.max(current, 1));
   };
 
+  const closeProjectFile = () => {
+    setIsProjectFileOpen(false);
+    setGauntletStep((current) => Math.max(current, 2));
+  };
+
   useEffect(() => {
-    if (!isDesignerFileUnlocked && !isGuideOpen) {
+    if (!isDesignerFileUnlocked && !isProjectFileOpen && !isGuideOpen) {
       return undefined;
     }
 
@@ -207,6 +303,8 @@ export default function App() {
       if (event.key === "Escape") {
         if (isGuideOpen) {
           setIsGuideOpen(false);
+        } else if (isProjectFileOpen) {
+          closeProjectFile();
         } else {
           closeDesignerFile();
         }
@@ -219,13 +317,73 @@ export default function App() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isDesignerFileUnlocked, isGuideOpen]);
+  }, [isDesignerFileUnlocked, isProjectFileOpen, isGuideOpen]);
+
+  useEffect(() => {
+    if (!isGauntletScrollLocked) {
+      return undefined;
+    }
+
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+
+    const getGauntletTop = () => {
+      const gauntletSection = gauntletSectionRef.current;
+
+      if (!gauntletSection) {
+        return 0;
+      }
+
+      return gauntletSection.getBoundingClientRect().top + window.scrollY;
+    };
+
+    const lockScrollOnGauntlet = () => {
+      const gauntletTop = getGauntletTop();
+
+      window.scrollTo({
+        top: gauntletTop,
+        behavior: "auto",
+      });
+    };
+
+    const handleKeyDown = (event) => {
+      const scrollKeys = new Set([
+        "ArrowUp",
+        "ArrowDown",
+        "PageUp",
+        "PageDown",
+        "Home",
+        "End",
+        " ",
+      ]);
+
+      if (scrollKeys.has(event.key)) {
+        event.preventDefault();
+      }
+    };
+
+    lockScrollOnGauntlet();
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    window.addEventListener("resize", lockScrollOnGauntlet);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+      window.removeEventListener("resize", lockScrollOnGauntlet);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isGauntletScrollLocked]);
 
   return (
     <main>
-      <ArcadeIntro />
+      <ArcadeIntro onIntroComplete={() => setIsGauntletScrollLocked(true)} />
       <section
-        className="portfolio-content gauntlet-section"
+        ref={gauntletSectionRef}
+        className={`portfolio-content gauntlet-section${
+          isGauntletScrollLocked ? " gauntlet-section--locked" : ""
+        }`}
         aria-label="Infinity gauntlet"
         style={{ "--gauntlet-bg": `url(${backgroundImage})` }}
       >
@@ -249,6 +407,7 @@ export default function App() {
             activeStoneIndex={activeStoneIndex}
             completedStoneIndexes={completedStoneIndexes}
             onAboutContinue={handleAboutContinue}
+            onProjectContinue={handleProjectContinue}
             onLockedSelect={() => setIsGuideOpen(true)}
             centerContent={
               <div className="gauntlet-core">
@@ -267,7 +426,11 @@ export default function App() {
       {isDesignerFileUnlocked && (
         <DesignerFileSection onClose={closeDesignerFile} />
       )}
+      {isProjectFileOpen && (
+        <ProjectFileSection onClose={closeProjectFile} />
+      )}
       {isGuideOpen && <GuideDialog onClose={() => setIsGuideOpen(false)} />}
     </main>
   );
 }
+
