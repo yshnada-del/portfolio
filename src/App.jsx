@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import aboutFilm from './assets/about_film.png';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import allBackground from './assets/all_background.png';
 import crtTv from './assets/crt-tv.png';
 import noSignalVideo from './assets/NO SIGNAL.mp4';
+import tapeAll from './assets/tape-all.png';
 import tapeAbout from './assets/tape-about.png';
 import tapeProject01 from './assets/tape-project-01.png';
 import tapeProject02 from './assets/tape-project-02.png';
@@ -18,33 +19,26 @@ const tapes = [
   { id: 'contact', title: 'CONTACT', image: tapeContact },
 ];
 
-function VhsTape({ title, image, index, isDragging, onPointerDown }) {
+function VhsTape({ title, image, index }) {
   return (
     <div
-      className={`vhs-tape${isDragging ? ' vhs-tape--dragging' : ''}`}
-      style={{ '--stack-index': index }}
-      role="button"
-      tabIndex={0}
-      aria-label={`Drag ${title} tape to TV`}
-      onPointerDown={onPointerDown}
+      className="vhs-tape"
+      style={{ '--stack-index': index, '--stack-depth': tapes.length - index }}
+      aria-label={`${title} VHS tape`}
     >
       <img src={image} alt={`${title} VHS tape`} />
     </div>
   );
 }
 
-function CrtTv({ activeTapeId }) {
-  const isAboutPlaying = activeTapeId === 'about';
-
+function CrtTv({ isAllTapeInserted, screenRef }) {
   return (
     <>
-      <div className="tv-video-screen" aria-hidden="true">
-        {!isAboutPlaying && <video src={noSignalVideo} autoPlay muted loop playsInline />}
-        {isAboutPlaying && (
-          <div className="about-film-screen" style={{ '--about-film': `url(${aboutFilm})` }}>
-            <div className="about-film-strip about-film-strip--top" />
-            <div className="about-film-strip about-film-strip--bottom" />
-          </div>
+      <div className="tv-video-screen" ref={screenRef} aria-hidden="true">
+        {isAllTapeInserted ? (
+          <img className="tv-portfolio-preview" src={allBackground} alt="" />
+        ) : (
+          <video src={noSignalVideo} autoPlay muted loop playsInline />
         )}
       </div>
       <img className="tv-image" src={crtTv} alt="CRT television" />
@@ -52,20 +46,78 @@ function CrtTv({ activeTapeId }) {
   );
 }
 
+function LoadingOverlay({ isBootComplete }) {
+  return (
+    <div className={`portal-loading${isBootComplete ? ' portal-loading--complete' : ''}`} aria-hidden="true">
+      <div className="portal-loading__bar">
+        {Array.from({ length: 16 }, (_, index) => (
+          <span key={index} />
+        ))}
+      </div>
+      <p>LOADING</p>
+    </div>
+  );
+}
+
+function PortfolioScreen() {
+  return (
+    <section className="portfolio-screen" aria-label="Portfolio content">
+      <h2>PORTFOLIO</h2>
+    </section>
+  );
+}
+
 export default function App() {
   const tvRef = useRef(null);
+  const tvScreenRef = useRef(null);
   const dragTimerRef = useRef(null);
-  const [insertedTapeIds, setInsertedTapeIds] = useState([]);
-  const [activeTapeId, setActiveTapeId] = useState(null);
+  const portalTimerRef = useRef(null);
   const [dragState, setDragState] = useState(null);
   const [isOverTv, setIsOverTv] = useState(false);
+  const [isAllTapeInserted, setIsAllTapeInserted] = useState(false);
+  const [cameraStyle, setCameraStyle] = useState({});
+  const [isPortalEntering, setIsPortalEntering] = useState(false);
+  const [isPortalExiting, setIsPortalExiting] = useState(false);
+  const [hasBootStarted, setHasBootStarted] = useState(false);
+  const [isBootComplete, setIsBootComplete] = useState(false);
 
-  const visibleTapes = useMemo(
-    () => tapes.filter((tape) => !insertedTapeIds.includes(tape.id)),
-    [insertedTapeIds],
-  );
-  const dragPhase = dragState?.phase;
-  const draggedTapeId = dragState?.tape.id;
+  const resetPortal = () => {
+    if (portalTimerRef.current) {
+      window.clearTimeout(portalTimerRef.current);
+    }
+
+    setCameraStyle({});
+    setIsPortalEntering(false);
+    setIsPortalExiting(false);
+    setHasBootStarted(false);
+    setIsBootComplete(false);
+    setIsAllTapeInserted(false);
+  };
+
+  const exitPortal = () => {
+    if (isPortalExiting) {
+      return;
+    }
+
+    if (portalTimerRef.current) {
+      window.clearTimeout(portalTimerRef.current);
+    }
+
+    setIsPortalExiting(true);
+    setHasBootStarted(false);
+    setIsBootComplete(false);
+    setCameraStyle((current) => ({
+      ...current,
+      '--portal-translate-x': '0px',
+      '--portal-translate-y': '0px',
+      '--portal-scale': 1,
+      '--portal-fade': 1,
+    }));
+
+    portalTimerRef.current = window.setTimeout(() => {
+      resetPortal();
+    }, 920);
+  };
 
   const isPointOverTv = (x, y) => {
     const tvRect = tvRef.current?.getBoundingClientRect();
@@ -85,7 +137,42 @@ export default function App() {
     );
   };
 
-  const startDrag = (event, tape, index) => {
+  const enterPortal = useCallback((event) => {
+    event?.preventDefault?.();
+
+    if (isPortalEntering || hasBootStarted) {
+      return;
+    }
+
+    const tvRect = tvRef.current?.getBoundingClientRect();
+
+    if (!tvRect) {
+      return;
+    }
+
+    const tvCenterX = tvRect.left + tvRect.width * 0.5;
+    const tvCenterY = tvRect.top + tvRect.height * 0.46;
+    const targetScale = Math.min(
+      window.innerWidth / (tvRect.width * 1.08),
+      window.innerHeight / (tvRect.height * 1.08),
+    );
+
+    setCameraStyle({
+      '--portal-origin-x': `${tvCenterX}px`,
+      '--portal-origin-y': `${tvCenterY}px`,
+      '--portal-translate-x': `${window.innerWidth * 0.5 - tvCenterX}px`,
+      '--portal-translate-y': `${window.innerHeight * 0.48 - tvCenterY}px`,
+      '--portal-scale': Math.max(targetScale, 1),
+      '--portal-fade': 0,
+    });
+    setIsPortalEntering(true);
+
+    portalTimerRef.current = window.setTimeout(() => {
+      setHasBootStarted(true);
+    }, 920);
+  }, [hasBootStarted, isPortalEntering]);
+
+  const startAllTapeDrag = (event) => {
     if (event.button !== 0) {
       return;
     }
@@ -96,8 +183,6 @@ export default function App() {
     event.currentTarget.setPointerCapture?.(event.pointerId);
 
     setDragState({
-      tape,
-      index,
       phase: 'dragging',
       pointer: { x: event.clientX, y: event.clientY },
       offset: {
@@ -113,14 +198,12 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (!draggedTapeId || dragPhase !== 'dragging') {
+    if (dragState?.phase !== 'dragging') {
       return undefined;
     }
 
     const handlePointerMove = (event) => {
-      const overTv = isPointOverTv(event.clientX, event.clientY);
-
-      setIsOverTv(overTv);
+      setIsOverTv(isPointOverTv(event.clientX, event.clientY));
       setDragState((current) => {
         if (!current || current.phase !== 'dragging') {
           return current;
@@ -160,8 +243,7 @@ export default function App() {
       });
 
       dragTimerRef.current = window.setTimeout(() => {
-        setInsertedTapeIds((current) => [...current, draggedTapeId]);
-        setActiveTapeId(draggedTapeId);
+        setIsAllTapeInserted(true);
         setDragState(null);
       }, 440);
     };
@@ -173,15 +255,84 @@ export default function App() {
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
     };
-  }, [dragPhase, draggedTapeId]);
+  }, [dragState?.phase]);
 
   useEffect(() => {
     return () => {
       if (dragTimerRef.current) {
         window.clearTimeout(dragTimerRef.current);
       }
+      if (portalTimerRef.current) {
+        window.clearTimeout(portalTimerRef.current);
+      }
     };
   }, []);
+
+  useEffect(() => {
+    if (!isAllTapeInserted || isPortalEntering || hasBootStarted) {
+      return undefined;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      enterPortal();
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [enterPortal, hasBootStarted, isAllTapeInserted, isPortalEntering]);
+
+  useEffect(() => {
+    if (!hasBootStarted || isBootComplete) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      setIsBootComplete(true);
+    }, 2800);
+
+    return () => window.clearTimeout(timer);
+  }, [hasBootStarted, isBootComplete]);
+
+  useEffect(() => {
+    if (!hasBootStarted) {
+      return undefined;
+    }
+
+    let touchStartY = 0;
+
+    const handleWheel = (event) => {
+      if (event.deltaY >= -8) {
+        return;
+      }
+
+      event.preventDefault();
+      exitPortal();
+    };
+
+    const handleTouchStart = (event) => {
+      touchStartY = event.touches[0]?.clientY ?? 0;
+    };
+
+    const handleTouchMove = (event) => {
+      const touchY = event.touches[0]?.clientY ?? touchStartY;
+
+      if (touchY - touchStartY < 12) {
+        return;
+      }
+
+      event.preventDefault();
+      exitPortal();
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, [hasBootStarted, isPortalExiting]);
 
   const dragX = dragState
     ? (dragState.target?.x ?? dragState.pointer.x) - dragState.offset.x
@@ -192,32 +343,56 @@ export default function App() {
 
   return (
     <main className="intro-page">
-      <section className="desk-scene" aria-label="Retro VHS portfolio intro">
+      <section
+        className={`desk-scene${isAllTapeInserted ? ' desk-scene--portal-active' : ''}`}
+        style={cameraStyle}
+        aria-label="Retro VHS portfolio intro"
+      >
         <div className="scene-copy">
-          <p className="eyebrow">RETRO VHS PORTFOLIO</p>
-          <h1>Insert a tape to play my work.</h1>
+          <h1>
+            Insert the tape.
+            <span>Play the archive.</span>
+          </h1>
         </div>
 
         <div className="vhs-stack" aria-label="Portfolio section tapes">
-          {visibleTapes.map((tape, index) => (
-            <VhsTape
-              key={tape.id}
-              {...tape}
-              index={index}
-              isDragging={dragState?.tape.id === tape.id}
-              onPointerDown={(event) => startDrag(event, tape, index)}
-            />
+          {tapes.map((tape, index) => (
+            <VhsTape key={tape.id} {...tape} index={index} />
           ))}
         </div>
 
+        {!isAllTapeInserted && (
+          <>
+            <div className="drag-hint" aria-hidden="true">
+              <span className="drag-hint__text">&#53580;&#51060;&#54532;&#47484; TV&#50640; &#45347;&#50612;&#51452;&#49464;&#50836;.</span>
+              <span className="drag-hint__hands">
+                <span>&#9756;</span>
+                <span>&#9756;</span>
+                <span>&#9756;</span>
+              </span>
+            </div>
+
+            <div className="all-tape-slot">
+              <button
+                className={`all-tape${dragState ? ' all-tape--dragging' : ''}`}
+                type="button"
+                aria-label="Drag ALL IN ONE tape to TV"
+                onPointerDown={startAllTapeDrag}
+              >
+                <img src={tapeAll} alt="ALL IN ONE VHS tape" />
+              </button>
+            </div>
+          </>
+        )}
+
         <div className={`tv-stage${isOverTv ? ' tv-stage--drop-target' : ''}`} ref={tvRef}>
-          <CrtTv activeTapeId={activeTapeId} />
+          <CrtTv isAllTapeInserted={isAllTapeInserted} screenRef={tvScreenRef} />
         </div>
 
         {dragState && (
           <div
-            className={`vhs-drag-ghost${
-              dragState.phase === 'inserting' ? ' vhs-drag-ghost--inserting' : ''
+            className={`all-tape-ghost${
+              dragState.phase === 'inserting' ? ' all-tape-ghost--inserting' : ''
             }`}
             style={{
               left: `${dragX}px`,
@@ -227,10 +402,21 @@ export default function App() {
             }}
             aria-hidden="true"
           >
-            <img src={dragState.tape.image} alt="" />
+            <img src={tapeAll} alt="" />
           </div>
         )}
       </section>
+
+      {isAllTapeInserted && hasBootStarted && isBootComplete && <PortfolioScreen />}
+
+      {isAllTapeInserted && hasBootStarted && (
+        <div className={`portal-boot-layer${isBootComplete ? ' portal-boot-layer--complete' : ''}`}>
+          <div className="portal-boot-frame">
+            <img src={allBackground} alt="" />
+            <LoadingOverlay isBootComplete={isBootComplete} />
+          </div>
+        </div>
+      )}
     </main>
   );
 }
