@@ -19,6 +19,25 @@ const tapes = [
   { id: 'contact', title: 'CONTACT', image: tapeContact },
 ];
 
+const portfolioPanels = [
+  'ABOUT ME',
+  'PROJECT 01',
+  'PROJECT 02',
+  'PROJECT 03',
+  'PROJECT 04',
+  'CONTACT ME',
+];
+
+const panelSliceCount = 18;
+const panelSlices = Array.from({ length: panelSliceCount }, (_, index) => index);
+
+const getLoopOffset = (index, progress, total) => {
+  const half = total / 2;
+  const rawOffset = ((index - progress + half) % total + total) % total - half;
+
+  return rawOffset;
+};
+
 function VhsTape({ title, image, index }) {
   return (
     <div
@@ -60,9 +79,84 @@ function LoadingOverlay({ isBootComplete }) {
 }
 
 function PortfolioScreen() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let frameId = 0;
+    let startTime = 0;
+    const duration = 18000;
+
+    const animate = (time) => {
+      if (!startTime) {
+        startTime = time;
+      }
+
+      setProgress(((time - startTime) / duration) * portfolioPanels.length);
+      frameId = window.requestAnimationFrame(animate);
+    };
+
+    frameId = window.requestAnimationFrame(animate);
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, []);
+
   return (
     <section className="portfolio-screen" aria-label="Portfolio content">
-      <h2>PORTFOLIO</h2>
+      <div className="portfolio-stage">
+        {portfolioPanels.map((title, index) => {
+          const offset = getLoopOffset(index, progress, portfolioPanels.length);
+          const distance = Math.abs(offset);
+          const side = Math.sign(offset);
+          const curve = Math.max(0, 1 - distance / 0.82);
+          const scale = Math.max(0.5, 1.18 - distance * 0.14);
+          const z = 210 - distance * 70;
+          const x = offset * 245;
+          const rotateY = side * -18 * Math.min(distance, 1.35);
+          const opacity = Math.max(0.34, 1 - distance * 0.13);
+          const layer = Math.round((10 - distance) * 10);
+
+          return (
+            <article
+              className="portfolio-panel"
+              key={title}
+              style={{
+                '--panel-index': index,
+                '--panel-x': `${x}px`,
+                '--panel-z': `${z}px`,
+                '--panel-rotate': `${rotateY}deg`,
+                '--panel-scale': scale,
+                '--panel-opacity': opacity,
+                '--panel-curve': curve,
+                zIndex: layer,
+              }}
+            >
+              <div className="portfolio-panel__surface" aria-hidden="true">
+                {panelSlices.map((sliceIndex) => {
+                  const sliceCenter = (sliceIndex + 0.5) / panelSliceCount - 0.5;
+                  const sliceAngle = sliceCenter * 72 * curve;
+                  const sliceDepth = Math.cos(sliceCenter * Math.PI) * 104 * curve;
+
+                  return (
+                    <span
+                      className="portfolio-panel__slice"
+                      key={sliceIndex}
+                      style={{
+                        '--slice-index': sliceIndex,
+                        '--slice-angle': `${sliceAngle}deg`,
+                        '--slice-depth': `${sliceDepth}px`,
+                      }}
+                    />
+                  );
+                })}
+              </div>
+              <div className="portfolio-panel__content">
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <h2>{title}</h2>
+              </div>
+            </article>
+          );
+        })}
+      </div>
     </section>
   );
 }

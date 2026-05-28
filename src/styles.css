@@ -739,20 +739,156 @@ h1 span {
   position: fixed;
   inset: 0;
   z-index: 28;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 100svh;
-  background: #f7f4eb;
-  color: #111;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 46%, rgba(255, 255, 255, 0.12), transparent 34rem),
+    linear-gradient(180deg, #050505 0%, #0d1010 48%, #020202 100%);
+  color: #f7f4eb;
   animation: portfolioScreenIn 420ms ease both;
 }
 
-.portfolio-screen h2 {
+.portfolio-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.82), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.82)),
+    radial-gradient(ellipse at 50% 50%, transparent 48%, rgba(0, 0, 0, 0.52) 100%);
+  pointer-events: none;
+}
+
+.portfolio-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 5px);
+  opacity: 0.28;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.portfolio-stage {
+  position: relative;
+  width: 100vw;
+  height: min(84vh, 780px);
+  perspective: 1050px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.portfolio-panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(170px, 21vw, 320px);
+  aspect-ratio: 0.68;
+  transform:
+    translate3d(calc(-50% + var(--panel-x)), -50%, var(--panel-z))
+    rotateY(var(--panel-rotate))
+    scale(var(--panel-scale));
+  opacity: var(--panel-opacity);
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.portfolio-panel__surface,
+.portfolio-panel__content {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.portfolio-panel__surface {
+  filter: drop-shadow(0 34px 48px rgba(0, 0, 0, 0.58));
+}
+
+.portfolio-panel__slice {
+  --slice-width: calc(100% / 18);
+  position: absolute;
+  top: 0;
+  left: calc(var(--slice-index) * var(--slice-width));
+  width: calc(var(--slice-width) + 0.9px);
+  height: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.32);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.2), transparent 34%),
+    linear-gradient(25deg, transparent 43%, rgba(255, 255, 255, 0.2) 44%, rgba(255, 255, 255, 0.2) 48%, transparent 49%),
+    linear-gradient(135deg, hsl(calc(var(--panel-index) * 47 + 186) 78% 48%), hsl(calc(var(--panel-index) * 47 + 326) 82% 42%));
+  background-size:
+    1800% 100%,
+    1800% 100%,
+    1800% 100%;
+  background-position:
+    calc(var(--slice-index) * -100%) 0,
+    calc(var(--slice-index) * -100%) 0,
+    calc(var(--slice-index) * -100%) 0;
+  box-shadow:
+    inset 0 0 18px rgba(255, 255, 255, 0.08),
+    inset calc(var(--slice-index) * -0.7px) 0 16px rgba(0, 0, 0, 0.14),
+    inset 0 -44px 68px rgba(0, 0, 0, 0.22);
+  transform:
+    translateZ(var(--slice-depth))
+    rotateY(var(--slice-angle));
+  transform-origin: center center;
+  backface-visibility: hidden;
+}
+
+.portfolio-panel__slice:first-child {
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.portfolio-panel__slice:last-child {
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.portfolio-panel__surface::before {
+  content: "";
+  position: absolute;
+  inset: clamp(12px, 1.4vw, 18px);
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  transform: translateZ(calc(108px * var(--panel-curve)));
+  pointer-events: none;
+}
+
+.portfolio-panel__content {
+  display: grid;
+  align-content: end;
+  gap: clamp(8px, 1vw, 16px);
+  z-index: 3;
+  padding: clamp(14px, 2.1vw, 30px);
+  transform: translateZ(calc(118px * var(--panel-curve)));
+  pointer-events: none;
+}
+
+.portfolio-panel__content span {
+  width: fit-content;
+  padding: 5px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(0.72rem, 1vw, 0.92rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.portfolio-panel__content h2 {
   margin: 0;
-  font-size: clamp(3rem, 10vw, 10rem);
-  line-height: 0.9;
+  max-width: 8ch;
+  color: #fff;
+  font-size: clamp(1.8rem, 4vw, 4.7rem);
+  line-height: 0.88;
   font-weight: 900;
   letter-spacing: 0;
+  text-shadow: 0 4px 22px rgba(0, 0, 0, 0.44);
 }
 
 @keyframes portfolioScreenIn {
