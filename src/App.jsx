@@ -107,12 +107,12 @@ function PortfolioScreen() {
           const offset = getLoopOffset(index, progress, portfolioPanels.length);
           const distance = Math.abs(offset);
           const side = Math.sign(offset);
-          const curve = Math.max(0, 1 - distance / 0.82);
-          const scale = Math.max(0.5, 1.18 - distance * 0.14);
-          const z = 210 - distance * 70;
-          const x = offset * 245;
-          const rotateY = side * -18 * Math.min(distance, 1.35);
-          const opacity = Math.max(0.34, 1 - distance * 0.13);
+          const curve = Math.max(0, 1 - distance / 0.72);
+          const scale = Math.max(0.42, 1.08 - distance * 0.12);
+          const z = 70 - distance * 92;
+          const x = offset * 210;
+          const rotateY = side * -36 * Math.min(distance, 1.25);
+          const opacity = Math.max(0.5, 1 - distance * 0.08);
           const layer = Math.round((10 - distance) * 10);
 
           return (
@@ -127,14 +127,22 @@ function PortfolioScreen() {
                 '--panel-scale': scale,
                 '--panel-opacity': opacity,
                 '--panel-curve': curve,
+                '--panel-frame-opacity': 1 - curve * 0.65,
+                '--panel-content-z': `${24 + 78 * curve}px`,
                 zIndex: layer,
               }}
             >
               <div className="portfolio-panel__surface" aria-hidden="true">
                 {panelSlices.map((sliceIndex) => {
                   const sliceCenter = (sliceIndex + 0.5) / panelSliceCount - 0.5;
-                  const sliceAngle = sliceCenter * 72 * curve;
-                  const sliceDepth = Math.cos(sliceCenter * Math.PI) * 104 * curve;
+                  const maxAngle = 54;
+                  const sliceAngle = sliceCenter * maxAngle;
+                  const arcRatio = Math.sin((sliceAngle * Math.PI) / 180) / Math.sin((maxAngle * 0.5 * Math.PI) / 180);
+                  const flatX = (sliceIndex + 0.5) / panelSliceCount * 100;
+                  const curvedX = 50 + arcRatio * 48;
+                  const sliceX = flatX + (curvedX - flatX) * curve;
+                  const sliceRotate = -sliceAngle * curve;
+                  const sliceDepth = (Math.cos((sliceAngle * Math.PI) / 180) - Math.cos((maxAngle * 0.5 * Math.PI) / 180)) * 190 * curve;
 
                   return (
                     <span
@@ -142,7 +150,8 @@ function PortfolioScreen() {
                       key={sliceIndex}
                       style={{
                         '--slice-index': sliceIndex,
-                        '--slice-angle': `${sliceAngle}deg`,
+                        '--slice-x': `${sliceX}%`,
+                        '--slice-angle': `${sliceRotate}deg`,
                         '--slice-depth': `${sliceDepth}px`,
                       }}
                     />

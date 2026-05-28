@@ -777,7 +777,7 @@ h1 span {
   position: relative;
   width: 100vw;
   height: min(84vh, 780px);
-  perspective: 1050px;
+  perspective: 880px;
   perspective-origin: 50% 50%;
   transform-style: preserve-3d;
 }
@@ -786,7 +786,7 @@ h1 span {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: clamp(170px, 21vw, 320px);
+  width: clamp(190px, 24vw, 390px);
   aspect-ratio: 0.68;
   transform:
     translate3d(calc(-50% + var(--panel-x)), -50%, var(--panel-z))
@@ -807,18 +807,17 @@ h1 span {
 }
 
 .portfolio-panel__surface {
-  filter: drop-shadow(0 34px 48px rgba(0, 0, 0, 0.58));
+  overflow: visible;
+  filter: drop-shadow(0 34px 48px rgba(0, 0, 0, 0.62));
 }
 
 .portfolio-panel__slice {
   --slice-width: calc(100% / 18);
   position: absolute;
   top: 0;
-  left: calc(var(--slice-index) * var(--slice-width));
-  width: calc(var(--slice-width) + 0.9px);
+  left: var(--slice-x);
+  width: calc(var(--slice-width) + 1.5px);
   height: 100%;
-  border-top: 1px solid rgba(255, 255, 255, 0.32);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   background:
     linear-gradient(155deg, rgba(255, 255, 255, 0.2), transparent 34%),
     linear-gradient(25deg, transparent 43%, rgba(255, 255, 255, 0.2) 44%, rgba(255, 255, 255, 0.2) 48%, transparent 49%),
@@ -832,10 +831,10 @@ h1 span {
     calc(var(--slice-index) * -100%) 0,
     calc(var(--slice-index) * -100%) 0;
   box-shadow:
-    inset 0 0 18px rgba(255, 255, 255, 0.08),
-    inset calc(var(--slice-index) * -0.7px) 0 16px rgba(0, 0, 0, 0.14),
+    inset 0 0 12px rgba(255, 255, 255, 0.06),
     inset 0 -44px 68px rgba(0, 0, 0, 0.22);
   transform:
+    translateX(-50%)
     translateZ(var(--slice-depth))
     rotateY(var(--slice-angle));
   transform-origin: center center;
@@ -843,11 +842,11 @@ h1 span {
 }
 
 .portfolio-panel__slice:first-child {
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-left: 1px solid rgba(255, 255, 255, 0.24);
 }
 
 .portfolio-panel__slice:last-child {
-  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.24);
 }
 
 .portfolio-panel__surface::before {
@@ -856,7 +855,8 @@ h1 span {
   inset: clamp(12px, 1.4vw, 18px);
   z-index: 2;
   border: 1px solid rgba(255, 255, 255, 0.26);
-  transform: translateZ(calc(108px * var(--panel-curve)));
+  opacity: var(--panel-frame-opacity);
+  transform: translateZ(4px);
   pointer-events: none;
 }
 
@@ -866,7 +866,8 @@ h1 span {
   gap: clamp(8px, 1vw, 16px);
   z-index: 3;
   padding: clamp(14px, 2.1vw, 30px);
-  transform: translateZ(calc(118px * var(--panel-curve)));
+  opacity: calc(1 - var(--panel-curve) * 0.08);
+  transform: translateZ(var(--panel-content-z));
   pointer-events: none;
 }
 
