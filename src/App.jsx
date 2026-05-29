@@ -28,16 +28,6 @@ const portfolioPanels = [
   'CONTACT ME',
 ];
 
-const panelSliceCount = 18;
-const panelSlices = Array.from({ length: panelSliceCount }, (_, index) => index);
-
-const getLoopOffset = (index, progress, total) => {
-  const half = total / 2;
-  const rawOffset = ((index - progress + half) % total + total) % total - half;
-
-  return rawOffset;
-};
-
 function VhsTape({ title, image, index }) {
   return (
     <div
@@ -79,92 +69,15 @@ function LoadingOverlay({ isBootComplete }) {
 }
 
 function PortfolioScreen() {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    let frameId = 0;
-    let startTime = 0;
-    const duration = 18000;
-
-    const animate = (time) => {
-      if (!startTime) {
-        startTime = time;
-      }
-
-      setProgress(((time - startTime) / duration) * portfolioPanels.length);
-      frameId = window.requestAnimationFrame(animate);
-    };
-
-    frameId = window.requestAnimationFrame(animate);
-
-    return () => window.cancelAnimationFrame(frameId);
-  }, []);
-
   return (
     <section className="portfolio-screen" aria-label="Portfolio content">
-      <div className="portfolio-stage">
-        {portfolioPanels.map((title, index) => {
-          const offset = getLoopOffset(index, progress, portfolioPanels.length);
-          const distance = Math.abs(offset);
-          const side = Math.sign(offset);
-          const curve = Math.max(0, 1 - distance / 0.72);
-          const scale = Math.max(0.42, 1.08 - distance * 0.12);
-          const z = 70 - distance * 92;
-          const x = offset * 210;
-          const rotateY = side * -36 * Math.min(distance, 1.25);
-          const opacity = Math.max(0.5, 1 - distance * 0.08);
-          const layer = Math.round((10 - distance) * 10);
-
-          return (
-            <article
-              className="portfolio-panel"
-              key={title}
-              style={{
-                '--panel-index': index,
-                '--panel-x': `${x}px`,
-                '--panel-z': `${z}px`,
-                '--panel-rotate': `${rotateY}deg`,
-                '--panel-scale': scale,
-                '--panel-opacity': opacity,
-                '--panel-curve': curve,
-                '--panel-frame-opacity': 1 - curve * 0.65,
-                '--panel-content-z': `${24 + 78 * curve}px`,
-                zIndex: layer,
-              }}
-            >
-              <div className="portfolio-panel__surface" aria-hidden="true">
-                {panelSlices.map((sliceIndex) => {
-                  const sliceCenter = (sliceIndex + 0.5) / panelSliceCount - 0.5;
-                  const maxAngle = 54;
-                  const sliceAngle = sliceCenter * maxAngle;
-                  const arcRatio = Math.sin((sliceAngle * Math.PI) / 180) / Math.sin((maxAngle * 0.5 * Math.PI) / 180);
-                  const flatX = (sliceIndex + 0.5) / panelSliceCount * 100;
-                  const curvedX = 50 + arcRatio * 48;
-                  const sliceX = flatX + (curvedX - flatX) * curve;
-                  const sliceRotate = -sliceAngle * curve;
-                  const sliceDepth = (Math.cos((sliceAngle * Math.PI) / 180) - Math.cos((maxAngle * 0.5 * Math.PI) / 180)) * 190 * curve;
-
-                  return (
-                    <span
-                      className="portfolio-panel__slice"
-                      key={sliceIndex}
-                      style={{
-                        '--slice-index': sliceIndex,
-                        '--slice-x': `${sliceX}%`,
-                        '--slice-angle': `${sliceRotate}deg`,
-                        '--slice-depth': `${sliceDepth}px`,
-                      }}
-                    />
-                  );
-                })}
-              </div>
-              <div className="portfolio-panel__content">
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <h2>{title}</h2>
-              </div>
-            </article>
-          );
-        })}
+      <div className="portfolio-grid">
+        {portfolioPanels.map((title, index) => (
+          <article className="portfolio-card" key={title}>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <h2>{title}</h2>
+          </article>
+        ))}
       </div>
     </section>
   );
