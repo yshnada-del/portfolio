@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import aboutMe from './assets/about_me.png';
 import allBackground from './assets/all_background.png';
+import contactImage from './assets/contact.png';
 import crtTv from './assets/crt-tv.png';
+import jibsalife from './assets/jibsalife.png';
+import matmut from './assets/matmut.png';
 import noSignalVideo from './assets/NO SIGNAL.mp4';
+import pizzahut from './assets/pizzahut.png';
 import tapeAll from './assets/tape-all.png';
 import tapeAbout from './assets/tape-about.png';
 import tapeProject01 from './assets/tape-project-01.png';
@@ -9,6 +14,7 @@ import tapeProject02 from './assets/tape-project-02.png';
 import tapeProject03 from './assets/tape-project-03.png';
 import tapeProject04 from './assets/tape-project-04.png';
 import tapeContact from './assets/tape-contact.png';
+import simmons from './assets/simmons.png';
 
 const tapes = [
   { id: 'about', title: 'ABOUT ME', image: tapeAbout },
@@ -19,14 +25,16 @@ const tapes = [
   { id: 'contact', title: 'CONTACT', image: tapeContact },
 ];
 
-const portfolioPanels = [
-  'ABOUT ME',
-  'PROJECT 01',
-  'PROJECT 02',
-  'PROJECT 03',
-  'PROJECT 04',
-  'CONTACT ME',
+const filmFrames = [
+  { title: 'ABOUT ME', number: '01', image: aboutMe, hideLabel: true, href: aboutMe },
+  { title: 'PROJECT 01', number: '02', image: jibsalife, hideLabel: true, href: jibsalife },
+  { title: 'PROJECT 02', number: '03', image: simmons, hideLabel: true, href: simmons },
+  { title: 'PROJECT 03', number: '04', image: matmut, hideLabel: true, href: matmut },
+  { title: 'PROJECT 04', number: '05', image: pizzahut, hideLabel: true, href: pizzahut },
+  { title: 'CONTACT ME', number: '06', image: contactImage, hideLabel: true, fit: 'contain', href: contactImage },
 ];
+
+const filmSegments = Array.from({ length: 25 }, (_, index) => index);
 
 function VhsTape({ title, image, index }) {
   return (
@@ -69,15 +77,150 @@ function LoadingOverlay({ isBootComplete }) {
 }
 
 function PortfolioScreen() {
+  const screenRef = useRef(null);
+  const segmentRefs = useRef([]);
+  const motionRef = useRef({
+    curveAmount: 0,
+    curvePos: 0,
+    rotationX: 20,
+    rotationDirection: -1,
+    isPaused: false,
+    lastTime: 0,
+  });
+  const frameRef = useRef(null);
+  const repeatedFrames = [...filmFrames, ...filmFrames, ...filmFrames];
+
+  const renderFilmStrip = () => (
+    <ul
+      className="film-strip"
+    >
+      {repeatedFrames.map((frame, frameIndex) => (
+        <li
+          className={`film-strip__frame${frame.hideLabel ? ' film-strip__frame--image-only' : ''}${
+            frame.fit === 'contain' ? ' film-strip__frame--contain' : ''
+          }`}
+          key={`${frame.title}-${frameIndex}`}
+        >
+          <a
+            className="film-strip__link"
+            href={frame.href}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`${frame.title} 이미지 열기`}
+            onPointerEnter={() => {
+              motionRef.current.isPaused = true;
+            }}
+            onPointerLeave={() => {
+              motionRef.current.isPaused = false;
+            }}
+            onFocus={() => {
+              motionRef.current.isPaused = true;
+            }}
+            onBlur={() => {
+              motionRef.current.isPaused = false;
+            }}
+          >
+            <img src={frame.image} alt="" />
+            {!frame.hideLabel && (
+              <>
+                <span>{frame.number}</span>
+                <h2>{frame.title}</h2>
+              </>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+
+  const renderSegment = (index = 0) => (
+    <div
+      className="film-flow__segment"
+      data-offset={index}
+      key={index}
+      ref={(node) => {
+        segmentRefs.current[index] = node;
+      }}
+    >
+      <div className="film-flow__window">{renderFilmStrip()}</div>
+      {index < filmSegments.length - 1 && renderSegment(index + 1)}
+    </div>
+  );
+
+  useEffect(() => {
+    const screen = screenRef.current;
+
+    if (!screen) {
+      return undefined;
+    }
+
+    const animate = (time = 0) => {
+      const motion = motionRef.current;
+      const delta = motion.lastTime ? Math.min(time - motion.lastTime, 34) : 16.7;
+      const step = delta / 16.7;
+
+      motion.lastTime = time;
+
+      if (motion.isPaused) {
+        frameRef.current = window.requestAnimationFrame(animate);
+        return;
+      }
+
+      motion.rotationX += motion.rotationDirection * 0.022 * step;
+
+      if (motion.rotationX <= -20) {
+        motion.rotationX = -20;
+        motion.rotationDirection = 1;
+      }
+
+      if (motion.rotationX >= 20) {
+        motion.rotationX = 20;
+        motion.rotationDirection = -1;
+      }
+
+      screen.style.setProperty('--film-rotation-x', `${motion.rotationX}deg`);
+
+      motion.curveAmount += step * 0.334;
+      segmentRefs.current.forEach((segment, index) => {
+        if (!segment) {
+          return;
+        }
+
+        const r = Math.cos(motion.curveAmount / 20 + index / 5);
+        const shade = Math.abs(Math.floor(r * 10)) / 10;
+
+        segment.style.setProperty('--segment-rotate-y', `${r * 0.8}deg`);
+        segment.style.setProperty('--segment-bright', `${r >= 0 ? shade * 0.025 : 0}`);
+        segment.style.setProperty('--segment-dark', `${r <= 0 ? shade * 0.025 : 0}`);
+        segment.style.setProperty('--strip-offset', `${-(index * 100) - motion.curvePos}px`);
+
+        motion.curvePos += 0.3 * step;
+      });
+
+      if (motion.curvePos >= 2880) {
+        motion.curvePos = 0;
+      }
+
+      frameRef.current = window.requestAnimationFrame(animate);
+    };
+
+    frameRef.current = window.requestAnimationFrame(animate);
+
+    return () => {
+      if (frameRef.current) {
+        window.cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <section className="portfolio-screen" aria-label="Portfolio content">
-      <div className="portfolio-grid">
-        {portfolioPanels.map((title, index) => (
-          <article className="portfolio-card" key={title}>
-            <span>{String(index + 1).padStart(2, '0')}</span>
-            <h2>{title}</h2>
-          </article>
-        ))}
+    <section className="portfolio-screen" ref={screenRef} aria-label="Portfolio content">
+      <div className="film-flow" aria-label="Portfolio sections">
+        <div className="film-flow__stage">
+          <div className="film-flow__ribbon">
+            {renderSegment()}
+          </div>
+        </div>
       </div>
     </section>
   );
