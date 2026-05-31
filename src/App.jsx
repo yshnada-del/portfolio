@@ -1,12 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import aboutMe from './assets/about_me.png';
+import aboutMePage from './assets/about_me_page.svg';
 import allBackground from './assets/all_background.png';
 import contactImage from './assets/contact.png';
+import cssIcon from './assets/css.png';
 import crtTv from './assets/crt-tv.png';
+import figmaIcon from './assets/figma.png';
+import htmlIcon from './assets/html.png';
+import illustIcon from './assets/illust.png';
+import javascriptIcon from './assets/javascript.png';
 import jibsalife from './assets/jibsalife.png';
+import mailIcon from './assets/mail.png';
 import matmut from './assets/matmut.png';
 import noSignalVideo from './assets/NO SIGNAL.mp4';
+import phoneIcon from './assets/phone.png';
 import pizzahut from './assets/pizzahut.png';
+import photoshopIcon from './assets/photoshop.png';
+import reactIcon from './assets/react.png';
+import earthIcon from './assets/earth.png';
 import tapeAll from './assets/tape-all.png';
 import tapeAbout from './assets/tape-about.png';
 import tapeProject01 from './assets/tape-project-01.png';
@@ -26,7 +37,7 @@ const tapes = [
 ];
 
 const filmFrames = [
-  { title: 'ABOUT ME', number: '01', image: aboutMe, hideLabel: true, href: aboutMe },
+  { title: 'ABOUT ME', number: '01', image: aboutMePage, hideLabel: true, fit: 'contain', href: aboutMePage },
   { title: 'PROJECT 01', number: '02', image: jibsalife, hideLabel: true, href: jibsalife },
   { title: 'PROJECT 02', number: '03', image: simmons, hideLabel: true, href: simmons },
   { title: 'PROJECT 03', number: '04', image: matmut, hideLabel: true, href: matmut },
@@ -35,6 +46,33 @@ const filmFrames = [
 ];
 
 const filmSegments = Array.from({ length: 25 }, (_, index) => index);
+
+const aboutSkillIcons = [
+  { name: 'Figma', image: figmaIcon, className: 'about-skill-icon--figma' },
+  { name: 'Photoshop', image: photoshopIcon, className: 'about-skill-icon--photoshop' },
+  { name: 'Illustrator', image: illustIcon, className: 'about-skill-icon--illust' },
+  { name: 'HTML', image: htmlIcon, className: 'about-skill-icon--html' },
+  { name: 'CSS', image: cssIcon, className: 'about-skill-icon--css' },
+  { name: 'JavaScript', image: javascriptIcon, className: 'about-skill-icon--javascript' },
+  { name: 'React', image: reactIcon, className: 'about-skill-icon--react' },
+];
+
+const aboutContactIcons = [
+  { name: 'Mail', image: mailIcon, className: 'about-contact-icon--mail' },
+  { name: 'Phone', image: phoneIcon, className: 'about-contact-icon--phone' },
+  { name: 'Website', image: earthIcon, className: 'about-contact-icon--earth' },
+];
+
+const getAboutTargetRect = () => {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const width = Math.min(viewportWidth - 40, (viewportHeight - 40) * (1448 / 1086), 1448);
+  const height = width * (1086 / 1448);
+  const left = (viewportWidth - width) / 2;
+  const top = (viewportHeight - height) / 2;
+
+  return { left, top, width, height };
+};
 
 function VhsTape({ title, image, index }) {
   return (
@@ -76,9 +114,212 @@ function LoadingOverlay({ isBootComplete }) {
   );
 }
 
+function AboutMeOverlay({ transition, onClose }) {
+  if (!transition) {
+    return null;
+  }
+
+  const rect = transition.isExpanded ? transition.target : transition.from;
+  const isOpen = transition.phase === 'open';
+  const skillItems = [
+    ['Figma', 'Fg', '90%'],
+    ['Photoshop', 'Ps', '85%'],
+    ['Illustrator', 'Ai', '80%'],
+    ['React', 'Re', '72%'],
+    ['Vite', 'Vi', '75%'],
+    ['GitHub', 'Gh', '82%'],
+    ['Vercel', 'Ve', '78%'],
+  ];
+
+  return (
+    <section
+      className={`about-portal${transition.isExpanded ? ' about-portal--expanded' : ''}${
+        isOpen ? ' about-portal--open' : ''
+      }`}
+      aria-label="About me"
+    >
+      <button className="about-portal__close" type="button" onClick={onClose} aria-label="Close about me">
+        CLOSE
+      </button>
+      <div className="about-page-shell" aria-hidden={!isOpen}>
+        <img src={aboutMePage} alt="Yoo Seung Hyun about me profile" />
+        <div className="about-skill-icons">
+          {aboutSkillIcons.map((skill) => (
+            <img className={`about-skill-icon ${skill.className}`} src={skill.image} alt="" key={skill.name} />
+          ))}
+        </div>
+        <div className="about-contact-icons">
+          {aboutContactIcons.map((icon) => (
+            <img className={`about-contact-icon ${icon.className}`} src={icon.image} alt="" key={icon.name} />
+          ))}
+        </div>
+      </div>
+      <div className="about-resume" aria-hidden={!isOpen}>
+        <aside className="about-resume__profile">
+          <div className="about-resume__headline">
+            <h2>YOO SEUNG HYUN</h2>
+            <p>UX/UI Designer</p>
+          </div>
+          <div className="about-resume__photo" aria-hidden="true" />
+          <ul className="about-resume__contact" aria-label="Contact">
+            <li>
+              <span className="contact-icon">M</span>
+              <span>yshnada@gmail.com</span>
+            </li>
+            <li>
+              <span className="contact-icon">T</span>
+              <span>+82 10-1234-5678</span>
+            </li>
+            <li>
+              <span className="contact-icon">W</span>
+              <span>portfolio archive</span>
+            </li>
+          </ul>
+        </aside>
+
+        <div className="about-resume__main">
+          <section className="resume-card resume-card--education">
+            <div className="resume-card__title">
+              <h3>EDUCATION</h3>
+              <span />
+            </div>
+            <div className="timeline">
+              <article>
+                <span />
+                <p className="timeline__date">2020 - 2024</p>
+                <h4>B.Sc. in Visual Communication Design</h4>
+                <p>Hongik University, Seoul, Korea</p>
+              </article>
+              <article>
+                <span />
+                <p className="timeline__date">2018 - 2020</p>
+                <h4>High School Diploma</h4>
+                <p>Seoul Arts High School, Korea</p>
+              </article>
+            </div>
+          </section>
+
+          <section className="resume-card resume-card--skills">
+            <div className="resume-card__title">
+              <h3>TOOLS &amp; SKILLS</h3>
+              <span />
+            </div>
+            <ul className="skill-grid">
+              {skillItems.map(([name, mark, percent]) => (
+                <li key={name}>
+                  <span className={`skill-logo skill-logo--${mark.toLowerCase()}`}>{mark}</span>
+                  <p>{name}</p>
+                  <strong>{percent}</strong>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="resume-card resume-card--experience">
+            <div className="resume-card__title">
+              <h3>EXPERIENCE</h3>
+              <span />
+            </div>
+            <div className="timeline">
+              <article>
+                <span />
+                <p className="timeline__date">2024.03 - Present</p>
+                <h4>UX/UI Designer (Intern) · Design Studio ODD</h4>
+                <p>Designed user flows, wireframes, and UI for web and mobile projects.</p>
+              </article>
+              <article>
+                <span />
+                <p className="timeline__date">2023.07 - 2023.12</p>
+                <h4>UX Design Intern · PixelLab Co.</h4>
+                <p>Conducted user research and usability tests to improve product experience.</p>
+              </article>
+              <article>
+                <span />
+                <p className="timeline__date">2022.09 - 2023.02</p>
+                <h4>UI/UX Project Member · University Team Project</h4>
+                <p>Led UI design and prototyping for a task management web app.</p>
+              </article>
+            </div>
+          </section>
+
+          <section className="resume-card resume-card--exhibition">
+            <div className="resume-card__title">
+              <h3>EXHIBITION</h3>
+              <span />
+            </div>
+            <ul className="plain-list plain-list--exhibition">
+              <li>
+                <span className="list-icon">I</span>
+                <strong>2024</strong>
+                <p>Digital Wave Showcase - Seoul</p>
+                <time>Dec 2024</time>
+              </li>
+              <li>
+                <span className="list-icon">I</span>
+                <strong>2023</strong>
+                <p>Hongik Graduation Exhibition</p>
+                <time>Dec 2023</time>
+              </li>
+              <li>
+                <span className="list-icon">I</span>
+                <strong>2022</strong>
+                <p>Young Designer Exhibition - Busan</p>
+                <time>Oct 2022</time>
+              </li>
+            </ul>
+          </section>
+
+          <section className="resume-card resume-card--awards">
+            <div className="resume-card__title">
+              <h3>AWARDS</h3>
+              <span />
+            </div>
+            <ul className="plain-list">
+              <li>
+                <span className="list-icon">A</span>
+                <strong>2024</strong>
+                <p>K-Design Award - UI/UX Category</p>
+                <time>Nov 2024</time>
+              </li>
+              <li>
+                <span className="list-icon">A</span>
+                <strong>2023</strong>
+                <p>Hongik Design Competition - Silver Prize</p>
+                <time>Oct 2023</time>
+              </li>
+              <li>
+                <span className="list-icon">A</span>
+                <strong>2022</strong>
+                <p>UX Challenge - Honorable Mention</p>
+                <time>Aug 2022</time>
+              </li>
+            </ul>
+          </section>
+
+          <section className="resume-card resume-card--blank" aria-hidden="true" />
+        </div>
+      </div>
+      <div
+        className="about-portal__image"
+        style={{
+          left: `${rect.left}px`,
+          top: `${rect.top}px`,
+          width: `${rect.width}px`,
+          height: `${rect.height}px`,
+        }}
+      >
+        <img src={transition.image} alt="About me" />
+      </div>
+    </section>
+  );
+}
+
 function PortfolioScreen() {
   const screenRef = useRef(null);
   const segmentRefs = useRef([]);
+  const aboutTimerRef = useRef(null);
+  const aboutFrameRef = useRef(null);
+  const [aboutTransition, setAboutTransition] = useState(null);
   const motionRef = useRef({
     curveAmount: 0,
     curvePos: 0,
@@ -89,6 +330,67 @@ function PortfolioScreen() {
   });
   const frameRef = useRef(null);
   const repeatedFrames = [...filmFrames, ...filmFrames, ...filmFrames];
+
+  const openAboutMe = (event, frame) => {
+    if (frame.title !== 'ABOUT ME') {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (aboutTimerRef.current) {
+      window.clearTimeout(aboutTimerRef.current);
+    }
+
+    if (aboutFrameRef.current) {
+      window.cancelAnimationFrame(aboutFrameRef.current);
+    }
+
+    motionRef.current.isPaused = true;
+
+    const from = event.currentTarget.getBoundingClientRect();
+    const target = getAboutTargetRect();
+
+    setAboutTransition({
+      phase: 'opening',
+      image: aboutMePage,
+      from: {
+        left: from.left,
+        top: from.top,
+        width: from.width,
+        height: from.height,
+      },
+      target,
+      isExpanded: false,
+    });
+
+    aboutFrameRef.current = window.requestAnimationFrame(() => {
+      setAboutTransition((current) => (current ? { ...current, isExpanded: true } : current));
+    });
+
+    aboutTimerRef.current = window.setTimeout(() => {
+      setAboutTransition((current) => (current ? { ...current, phase: 'open' } : current));
+    }, 760);
+  };
+
+  const closeAboutMe = () => {
+    if (aboutTimerRef.current) {
+      window.clearTimeout(aboutTimerRef.current);
+    }
+
+    setAboutTransition((current) => (current ? { ...current, phase: 'closing', isExpanded: false } : current));
+
+    aboutTimerRef.current = window.setTimeout(() => {
+      setAboutTransition(null);
+      motionRef.current.isPaused = false;
+    }, 680);
+  };
+
+  useEffect(() => {
+    if (aboutTransition) {
+      motionRef.current.isPaused = true;
+    }
+  }, [aboutTransition]);
 
   const renderFilmStrip = () => (
     <ul
@@ -107,6 +409,7 @@ function PortfolioScreen() {
             target="_blank"
             rel="noreferrer"
             aria-label={`${frame.title} 이미지 열기`}
+            onClick={(event) => openAboutMe(event, frame)}
             onPointerEnter={() => {
               motionRef.current.isPaused = true;
             }}
@@ -210,6 +513,12 @@ function PortfolioScreen() {
       if (frameRef.current) {
         window.cancelAnimationFrame(frameRef.current);
       }
+      if (aboutFrameRef.current) {
+        window.cancelAnimationFrame(aboutFrameRef.current);
+      }
+      if (aboutTimerRef.current) {
+        window.clearTimeout(aboutTimerRef.current);
+      }
     };
   }, []);
 
@@ -222,6 +531,7 @@ function PortfolioScreen() {
           </div>
         </div>
       </div>
+      <AboutMeOverlay transition={aboutTransition} onClose={closeAboutMe} />
     </section>
   );
 }
