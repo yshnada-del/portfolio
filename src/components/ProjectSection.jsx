@@ -82,6 +82,14 @@ function ProjectVisual({ type, image, title }) {
     );
   }
 
+  if (type === 'figma-frame') {
+    return (
+      <div className="archive-image-preview archive-image-preview--figma-frame">
+        <img src={image} alt={`${title} preview`} />
+      </div>
+    );
+  }
+
   return null;
 }
 
@@ -118,9 +126,15 @@ function getProjectWorks(project) {
   }));
 }
 
-function ProjectWorkItem({ item, project, index }) {
+function ProjectWorkItem({ item, project, index, layoutIndex = index, isDuplicate = false }) {
   return (
-    <article className="project-work-card" data-work-reveal style={{ '--work-index': index }}>
+    <article
+      className={`project-work-card${isDuplicate ? ' project-work-card--duplicate' : ''}`}
+      data-work-reveal
+      data-work-index={layoutIndex}
+      style={{ '--work-index': index }}
+      aria-hidden={isDuplicate ? 'true' : undefined}
+    >
       <div className="project-work-card__header">
         <span>{String(index + 1).padStart(2, '0')}</span>
         <div>
@@ -137,37 +151,161 @@ function ProjectWorkItem({ item, project, index }) {
 
 export default function ProjectSection({ project }) {
   const frameRef = useRef(null);
+  const canvasRef = useRef(null);
   const works = project.works ?? getProjectWorks(project);
+  const imageSources = project.images?.length ? project.images : [project.image].filter(Boolean);
+  const galleryWorks = works;
+  const metaLabels = project.metaLabels ?? {
+    role: 'ROLE',
+    period: 'PERIOD',
+    tools: 'TOOLS',
+    contribution: 'CONTRIB',
+  };
+  const actionLinks = project.actionLinks ?? [
+    { label: 'View Case Study', href: project.caseStudyUrl ?? '#' },
+    { label: 'GitHub', href: project.githubUrl ?? '#' },
+    { label: 'Live Site', href: project.liveUrl ?? '#' },
+  ];
 
   useEffect(() => {
     const frame = frameRef.current;
+    const canvas = canvasRef.current;
     const section = frame?.closest('.film-section--project-scroll');
     const gallery = frame?.querySelector('.project-frame__gallery');
 
-    if (!frame || !section || !gallery) {
+    if (!frame || !canvas || !section || !gallery) {
       return undefined;
     }
 
     let frameId = 0;
+    let motionId = 0;
+    let scrollTarget = 0;
+    let scrollCurrent = 0;
+    let scrollBase = 0;
+    let scrollReady = false;
+    let imageReady = false;
+    let destroyed = false;
+    const images = [];
 
-    const updateGalleryPosition = () => {
-      frameId = 0;
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+    const isCompactViewport = () => window.matchMedia('(max-width: 760px)').matches;
 
-      if (window.matchMedia('(max-width: 1120px)').matches) {
-        frame.style.setProperty('--gallery-y', '0px');
+    const drawImageFull = (context, img, x, y, width, height) => {
+      context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, x, y, width, height);
+    };
+
+    const renderGallery = (scrollValue) => {
+      const cards = Array.from(gallery.querySelectorAll('.project-work-card'));
+
+      if (isCompactViewport()) {
+        const context = canvas.getContext('2d');
+        context?.clearRect(0, 0, canvas.width, canvas.height);
+        cards.forEach((card) => {
+          card.style.removeProperty('--plane-scale');
+          card.style.removeProperty('--plane-y');
+          card.style.removeProperty('--plane-opacity');
+          card.classList.add('is-visible');
+        });
         return;
       }
 
-      const rect = section.getBoundingClientRect();
-      const scrollable = Math.max(rect.height - window.innerHeight, 1);
-      const progress = Math.min(Math.max(-rect.top / scrollable, 0), 1);
-      const viewport = window.innerHeight;
-      const galleryHeight = gallery.scrollHeight;
-      const startY = viewport * 0.02;
-      const endY = Math.min(-(galleryHeight - viewport * 0.82), startY);
-      const y = startY + (endY - startY) * progress;
+      if (!imageReady || images.length === 0) {
+        return;
+      }
 
-      frame.style.setProperty('--gallery-y', `${y}px`);
+      const context = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const nextWidth = Math.max(1, Math.round(rect.width * ratio));
+      const nextHeight = Math.max(1, Math.round(rect.height * ratio));
+
+      if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+        canvas.width = nextWidth;
+        canvas.height = nextHeight;
+      }
+
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      context.clearRect(0, 0, rect.width, rect.height);
+
+      const itemCount = images.length;
+      const planeWidth = rect.width;
+      const heights = images.map((img) => planeWidth / (img.naturalWidth / img.naturalHeight));
+      const totalHeight = heights.reduce((sum, height) => sum + height, 0);
+
+      if (!scrollReady && heights[0]) {
+        scrollCurrent = -(rect.height / 2 - heights[0] / 2);
+        scrollTarget = scrollCurrent;
+        scrollBase = scrollCurrent;
+        scrollReady = true;
+      }
+
+      let y = -scrollValue;
+      const wrapLimit = totalHeight * 0.85;
+
+      while (y < -wrapLimit) {
+        y += wrapLimit;
+      }
+
+      while (y > 0) {
+        y -= wrapLimit;
+      }
+
+      let placedCount = 0;
+      const placed = new Uint8Array(itemCount);
+      const maxIterations = itemCount * 5;
+
+      for (let iteration = 0; iteration < maxIterations; iteration += 1) {
+        const index = iteration % itemCount;
+        const currentImage = images[index];
+        const naturalHeight = heights[index];
+        const centerY = y + naturalHeight / 2;
+        const distance = Math.abs(centerY - rect.height / 2) / rect.height;
+        const scale = clamp(1 - distance * 0.3, 0.85, 1);
+        const drawWidth = planeWidth * scale;
+        const drawHeight = naturalHeight * scale;
+        const drawX = planeWidth - drawWidth;
+
+        if (!placed[index] && y + drawHeight > -drawHeight && y < rect.height + drawHeight) {
+          placed[index] = 1;
+          placedCount += 1;
+          context.save();
+          context.globalAlpha = clamp(0.9 + (scale - 0.85) * 0.66, 0.9, 1);
+          drawImageFull(context, currentImage, drawX, y, drawWidth, drawHeight);
+          context.restore();
+        }
+
+        y += drawHeight;
+
+        if (placedCount === itemCount && y > rect.height) {
+          break;
+        }
+      }
+
+      cards.forEach((card) => {
+        card.classList.remove('is-visible');
+      });
+    };
+
+    const animateGallery = () => {
+      const delta = scrollTarget - scrollCurrent;
+      scrollCurrent += delta * 0.09;
+
+      if (Math.abs(delta) < 0.5) {
+        scrollCurrent = scrollTarget;
+        renderGallery(scrollCurrent);
+        motionId = 0;
+        return;
+      }
+
+      renderGallery(scrollCurrent);
+      motionId = window.requestAnimationFrame(animateGallery);
+    };
+
+    const updateGalleryPosition = () => {
+      frameId = 0;
+      if (!motionId) {
+        motionId = window.requestAnimationFrame(animateGallery);
+      }
     };
 
     const scheduleUpdate = () => {
@@ -178,19 +316,113 @@ export default function ProjectSection({ project }) {
       frameId = window.requestAnimationFrame(updateGalleryPosition);
     };
 
+    const scrollParent = section.closest('.archive-page');
+
+    const moveToTarget = () => {
+      if (!motionId) {
+        motionId = window.requestAnimationFrame(animateGallery);
+      }
+    };
+
+    const onWheel = (event) => {
+      if (isCompactViewport()) {
+        return;
+      }
+
+      event.preventDefault();
+      scrollTarget += event.deltaY;
+      moveToTarget();
+    };
+
+    const onNativeScroll = () => {
+      if (isCompactViewport() || !scrollReady) {
+        return;
+      }
+
+      const sectionStart = section.offsetTop;
+      const sectionRange = Math.max(1, section.offsetHeight - window.innerHeight);
+      const sectionScroll = clamp(window.scrollY - sectionStart, 0, sectionRange);
+      scrollTarget = scrollBase + sectionScroll;
+      moveToTarget();
+    };
+
+    const onKeyDown = (event) => {
+      if (isCompactViewport()) {
+        return;
+      }
+
+      const keyStep = window.innerHeight * 0.72;
+      const keys = {
+        ArrowDown: keyStep,
+        ArrowRight: keyStep,
+        PageDown: keyStep,
+        ' ': keyStep,
+        ArrowUp: -keyStep,
+        ArrowLeft: -keyStep,
+        PageUp: -keyStep,
+      };
+
+      if (!(event.key in keys)) {
+        return;
+      }
+
+      event.preventDefault();
+      scrollTarget += keys[event.key];
+      moveToTarget();
+    };
+
+    let loadedCount = 0;
+
+    imageSources.forEach((source) => {
+      const img = new Image();
+      img.onload = () => {
+        if (destroyed) {
+          return;
+        }
+
+        loadedCount += 1;
+
+        if (loadedCount === imageSources.length) {
+          imageReady = true;
+          scrollReady = false;
+          updateGalleryPosition();
+        }
+      };
+      img.src = source;
+      images.push(img);
+    });
+
+    if (imageSources.length === 0) {
+      imageReady = true;
+    }
+
+    if (destroyed) {
+        return;
+      }
+
     updateGalleryPosition();
-    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('wheel', onWheel, { passive: false, capture: true });
+    window.addEventListener('scroll', onNativeScroll, { passive: true });
+    window.addEventListener('keydown', onKeyDown);
     window.addEventListener('resize', scheduleUpdate);
 
     return () => {
+      destroyed = true;
+
       if (frameId) {
         window.cancelAnimationFrame(frameId);
       }
 
-      window.removeEventListener('scroll', scheduleUpdate);
+      if (motionId) {
+        window.cancelAnimationFrame(motionId);
+      }
+
+      window.removeEventListener('wheel', onWheel, { capture: true });
+      window.removeEventListener('scroll', onNativeScroll);
+      window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('resize', scheduleUpdate);
     };
-  }, [works.length]);
+  }, [imageSources.join('|'), works.length]);
 
   return (
     <FilmSection
@@ -207,21 +439,33 @@ export default function ProjectSection({ project }) {
           <p className="project-frame__tagline">{project.tagline}</p>
           <p className="project-frame__description">{project.description}</p>
           <ul className="project-frame__meta">
-            <ProjectMeta label="ROLE" value={project.role} />
-            <ProjectMeta label="PERIOD" value={project.period} />
-            <ProjectMeta label="TOOLS" value={project.tools} />
-            <ProjectMeta label="CONTRIB" value={project.contribution ?? project.role} />
+            <ProjectMeta label={metaLabels.role} value={project.role} />
+            <ProjectMeta label={metaLabels.period} value={project.period} />
+            <ProjectMeta label={metaLabels.tools} value={project.tools} />
+            <ProjectMeta label={metaLabels.contribution} value={project.contribution ?? project.role} />
           </ul>
           <div className="project-frame__actions">
-            {/* Replace these placeholder links with the real project URLs later. */}
-            <a href={project.caseStudyUrl ?? '#'}>View Case Study</a>
-            <a href={project.githubUrl ?? '#'}>GitHub</a>
-            <a href={project.liveUrl ?? '#'}>Live Site</a>
+            {actionLinks.map((link) => (
+              <a href={link.href ?? '#'} target={link.target} rel={link.rel} key={link.label}>
+                <span>{link.label}</span>
+                <span className="project-frame__action-icon" aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+            ))}
           </div>
         </aside>
+        <canvas className="project-frame__canvas" ref={canvasRef} aria-hidden="true" />
         <div className="project-frame__gallery" aria-label={`${project.title} work gallery`}>
-          {works.map((item, index) => (
-            <ProjectWorkItem item={item} project={project} index={index} key={item.key ?? `${project.id}-${index}`} />
+          {galleryWorks.map((item, index) => (
+            <ProjectWorkItem
+              item={item}
+              project={project}
+              index={index % works.length}
+              layoutIndex={index}
+              isDuplicate={index >= works.length}
+              key={`${item.key ?? `${project.id}-${index}`}-${index}`}
+            />
           ))}
         </div>
       </div>

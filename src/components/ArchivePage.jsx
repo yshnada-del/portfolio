@@ -7,12 +7,43 @@ import illustratorIcon from '../assets/illust.png';
 import javascriptIcon from '../assets/javascript.png';
 import photoshopIcon from '../assets/photoshop.png';
 import pizzahut from '../assets/pizzahut.png';
+import project01Frame01 from '../assets/project-01-frame-01.png';
+import project01Frame02 from '../assets/project-01-frame-02.png';
+import project01Frame03 from '../assets/project-01-frame-03.png';
+import project01Frame04 from '../assets/project-01-frame-04.png';
+import project01Frame05 from '../assets/project-01-frame-05.png';
+import project01Frame06 from '../assets/project-01-frame-06.png';
+import project01Frame07 from '../assets/project-01-frame-07.png';
+import project01Frame08 from '../assets/project-01-frame-08.png';
+import project01Frame09 from '../assets/project-01-frame-09.png';
+import project01Frame10 from '../assets/project-01-frame-10.png';
+import project01Frame11 from '../assets/project-01-frame-11.png';
+import project01Frame12 from '../assets/project-01-frame-12.png';
+import project01Frame13 from '../assets/project-01-frame-13.png';
+import project01Frame14 from '../assets/project-01-frame-14.png';
 import reactIcon from '../assets/react.png';
 import simmons from '../assets/simmons.png';
 import ArchiveNav from './ArchiveNav.jsx';
 import ContactSection from './ContactSection.jsx';
 import FilmSection from './FilmSection.jsx';
 import ProjectSection from './ProjectSection.jsx';
+
+const project01Frames = [
+  project01Frame01,
+  project01Frame02,
+  project01Frame03,
+  project01Frame04,
+  project01Frame05,
+  project01Frame06,
+  project01Frame07,
+  project01Frame08,
+  project01Frame09,
+  project01Frame10,
+  project01Frame11,
+  project01Frame12,
+  project01Frame13,
+  project01Frame14,
+];
 
 const projects = [
   {
@@ -24,10 +55,23 @@ const projects = [
     tagline: '반려동물 예방 건강 관리 서비스',
     description:
       '사진 기반 AI 분석과 오늘의 요약, 커뮤니티 기능을 통해 반려동물의 건강 관리를 더 쉽고 꾸준하게 도와주는 서비스입니다.',
-    role: 'Planning Lead / UX Research / UI Design / Front-end Build',
-    period: '2025.04 - 2025.06',
-    tools: 'Figma / React / JavaScript / Firebase',
-    visualType: 'mobile-light',
+    role: '\uae30\ud68d\ud300\uc7a5 / \ub514\uc790\uc778 \uc11c\ube0c',
+    period: '2025.04~2025.05',
+    tools: 'Figma / ChatGPT / Claud / Photoshop / Gemini',
+    contribution: '77% / 100%\uae30\uc900',
+    metaLabels: {
+      role: '\uc5ed\ud560',
+      period: '\uae30\uac04',
+      tools: '\ud234',
+      contribution: '\uae30\uc5ec\ub3c4',
+    },
+    actionLinks: [
+      { label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30', href: '#' },
+      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: '#' },
+    ],
+    visualType: 'figma-frame',
+    image: project01Frame01,
+    images: project01Frames,
     tone: 'ivory',
   },
   {
@@ -597,6 +641,7 @@ function ArchiveAbout() {
 
 export default function ArchivePage() {
   const [activeId, setActiveId] = useState(getPageIdFromHash);
+  const activeProject = projects.find((project) => project.id === activeId);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -647,7 +692,17 @@ export default function ArchivePage() {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [activeId]);
 
-  const activeProject = projects.find((project) => project.id === activeId);
+  useEffect(() => {
+    const className = 'archive-project-detail-lock';
+    document.documentElement.classList.toggle(className, Boolean(activeProject));
+    document.body.classList.toggle(className, Boolean(activeProject));
+
+    return () => {
+      document.documentElement.classList.remove(className);
+      document.body.classList.remove(className);
+    };
+  }, [activeProject]);
+
   const pageClass = `archive-page${activeId === 'about' ? ' archive-page--about' : ''}${
     activeProject ? ' archive-page--project-detail' : ''
   }`;
