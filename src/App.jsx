@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import ArchivePage from './components/ArchivePage.jsx';
 import aboutMe from './assets/about_me.png';
 import aboutMePage from './assets/about_me_page.svg';
 import allBackground from './assets/all_background.png';
@@ -37,12 +38,12 @@ const tapes = [
 ];
 
 const filmFrames = [
-  { title: 'ABOUT ME', number: '01', image: aboutMePage, hideLabel: true, fit: 'contain', href: aboutMePage },
-  { title: 'PROJECT 01', number: '02', image: jibsalife, hideLabel: true, href: jibsalife },
-  { title: 'PROJECT 02', number: '03', image: simmons, hideLabel: true, href: simmons },
-  { title: 'PROJECT 03', number: '04', image: matmut, hideLabel: true, href: matmut },
-  { title: 'PROJECT 04', number: '05', image: pizzahut, hideLabel: true, href: pizzahut },
-  { title: 'CONTACT ME', number: '06', image: contactImage, hideLabel: true, fit: 'contain', href: contactImage },
+  { id: 'about', title: 'ABOUT ME', number: '01', image: aboutMePage, hideLabel: true, fit: 'contain', href: '/archive#about' },
+  { id: 'project-01', title: 'PROJECT 01', number: '02', image: jibsalife, hideLabel: true, href: '/archive#project-01' },
+  { id: 'project-02', title: 'PROJECT 02', number: '03', image: simmons, hideLabel: true, href: '/archive#project-02' },
+  { id: 'project-03', title: 'PROJECT 03', number: '04', image: matmut, hideLabel: true, href: '/archive#project-03' },
+  { id: 'project-04', title: 'PROJECT 04', number: '05', image: pizzahut, hideLabel: true, href: '/archive#project-04' },
+  { id: 'contact', title: 'CONTACT ME', number: '06', image: contactImage, hideLabel: true, fit: 'contain', href: '/archive#contact' },
 ];
 
 const filmSegments = Array.from({ length: 25 }, (_, index) => index);
@@ -121,57 +122,42 @@ function AboutMeOverlay({ transition, onClose }) {
 
   const rect = transition.isExpanded ? transition.target : transition.from;
   const isOpen = transition.phase === 'open';
+  const portalClass = 'about-portal' + (transition.isExpanded ? ' about-portal--expanded' : '') + (isOpen ? ' about-portal--open' : '');
   const skillItems = [
-    ['Figma', 'Fg', '90%'],
-    ['Photoshop', 'Ps', '85%'],
-    ['Illustrator', 'Ai', '80%'],
-    ['React', 'Re', '72%'],
-    ['Vite', 'Vi', '75%'],
-    ['GitHub', 'Gh', '82%'],
-    ['Vercel', 'Ve', '78%'],
+    { name: 'Figma', image: figmaIcon, percent: '90%', value: 90 },
+    { name: 'Photoshop', image: photoshopIcon, percent: '85%', value: 85 },
+    { name: 'Illustrator', image: illustIcon, percent: '80%', value: 80 },
+    { name: 'HTML', image: htmlIcon, percent: '82%', value: 82 },
+    { name: 'CSS', image: cssIcon, percent: '78%', value: 78 },
+    { name: 'JavaScript', image: javascriptIcon, percent: '76%', value: 76 },
+    { name: 'React', image: reactIcon, percent: '72%', value: 72 },
   ];
 
   return (
-    <section
-      className={`about-portal${transition.isExpanded ? ' about-portal--expanded' : ''}${
-        isOpen ? ' about-portal--open' : ''
-      }`}
-      aria-label="About me"
-    >
+    <section className={portalClass} aria-label="About me">
       <button className="about-portal__close" type="button" onClick={onClose} aria-label="Close about me">
         CLOSE
       </button>
-      <div className="about-page-shell" aria-hidden={!isOpen}>
-        <img src={aboutMePage} alt="Yoo Seung Hyun about me profile" />
-        <div className="about-skill-icons">
-          {aboutSkillIcons.map((skill) => (
-            <img className={`about-skill-icon ${skill.className}`} src={skill.image} alt="" key={skill.name} />
-          ))}
-        </div>
-        <div className="about-contact-icons">
-          {aboutContactIcons.map((icon) => (
-            <img className={`about-contact-icon ${icon.className}`} src={icon.image} alt="" key={icon.name} />
-          ))}
-        </div>
-      </div>
       <div className="about-resume" aria-hidden={!isOpen}>
         <aside className="about-resume__profile">
           <div className="about-resume__headline">
             <h2>YOO SEUNG HYUN</h2>
             <p>UX/UI Designer</p>
           </div>
-          <div className="about-resume__photo" aria-hidden="true" />
+          <div className="about-resume__photo">
+            <img src={aboutMe} alt="Yoo Seung Hyun profile" />
+          </div>
           <ul className="about-resume__contact" aria-label="Contact">
             <li>
-              <span className="contact-icon">M</span>
+              <img className="contact-icon" src={mailIcon} alt="" />
               <span>yshnada@gmail.com</span>
             </li>
             <li>
-              <span className="contact-icon">T</span>
-              <span>+82 10-1234-5678</span>
+              <img className="contact-icon" src={phoneIcon} alt="" />
+              <span>+82 10-4114-2912</span>
             </li>
             <li>
-              <span className="contact-icon">W</span>
+              <img className="contact-icon" src={earthIcon} alt="" />
               <span>portfolio archive</span>
             </li>
           </ul>
@@ -186,15 +172,21 @@ function AboutMeOverlay({ transition, onClose }) {
             <div className="timeline">
               <article>
                 <span />
-                <p className="timeline__date">2020 - 2024</p>
-                <h4>B.Sc. in Visual Communication Design</h4>
-                <p>Hongik University, Seoul, Korea</p>
+                <p className="timeline__date">2011.03 - 2014.02</p>
+                <h4>{'\uc0c1\ub3d9\uace0\ub4f1\ud559\uad50'}</h4>
+                <p>{'\uc774\uacfc \uc878\uc5c5'}</p>
               </article>
               <article>
                 <span />
-                <p className="timeline__date">2018 - 2020</p>
-                <h4>High School Diploma</h4>
-                <p>Seoul Arts High School, Korea</p>
+                <p className="timeline__date">2014.03 - 2019.02</p>
+                <h4>{'\uad6d\uc81c\ud328\uc158\ub514\uc790\uc778\uc804\ubb38\ud559\uad50'}</h4>
+                <p>{'\ud328\uc158\ub514\uc790\uc778\uacfc \uc804\ubb38 \ud559\uc0ac \uc878\uc5c5'}</p>
+              </article>
+              <article>
+                <span />
+                <p className="timeline__date">2025.12 - 2026.06</p>
+                <h4>{'\uc774\uc820\uc544\uce74\ub370\ubbf8DX\uad50\uc721\uc13c\ud130'}</h4>
+                <p>{'UXUI\ub514\uc790\uc778&\uc6f9\uae30\ud68d \ud504\ub860\ud2b8\uc5d4\ub4dc \ubd80\ud2b8\ucea0\ud504'}</p>
               </article>
             </div>
           </section>
@@ -205,11 +197,13 @@ function AboutMeOverlay({ transition, onClose }) {
               <span />
             </div>
             <ul className="skill-grid">
-              {skillItems.map(([name, mark, percent]) => (
-                <li key={name}>
-                  <span className={`skill-logo skill-logo--${mark.toLowerCase()}`}>{mark}</span>
-                  <p>{name}</p>
-                  <strong>{percent}</strong>
+              {skillItems.map((skill) => (
+                <li key={skill.name}>
+                  <span className="skill-logo" style={{ '--skill-percent': skill.value }}>
+                    <img src={skill.image} alt="" />
+                  </span>
+                  <p>{skill.name}</p>
+                  <strong>{skill.percent}</strong>
                 </li>
               ))}
             </ul>
@@ -223,21 +217,21 @@ function AboutMeOverlay({ transition, onClose }) {
             <div className="timeline">
               <article>
                 <span />
-                <p className="timeline__date">2024.03 - Present</p>
-                <h4>UX/UI Designer (Intern) · Design Studio ODD</h4>
-                <p>Designed user flows, wireframes, and UI for web and mobile projects.</p>
+                <p className="timeline__date">2020.12 - 2021.07</p>
+                <h4>{'\uc2ac\ub9c1\uc2a4\ud1a4'}</h4>
+                <p>{'\ud328\uc158\ub514\uc790\uc778'}</p>
               </article>
               <article>
                 <span />
-                <p className="timeline__date">2023.07 - 2023.12</p>
-                <h4>UX Design Intern · PixelLab Co.</h4>
-                <p>Conducted user research and usability tests to improve product experience.</p>
+                <p className="timeline__date">2021.09 - 2023.06</p>
+                <h4>{'\uc5d8 \ub85c\uaf2c'}</h4>
+                <p>{'\ud328\uc158 \uc0ac\uc5c5 \uc6b4\uc601'}</p>
               </article>
               <article>
                 <span />
-                <p className="timeline__date">2022.09 - 2023.02</p>
-                <h4>UI/UX Project Member · University Team Project</h4>
-                <p>Led UI design and prototyping for a task management web app.</p>
+                <p className="timeline__date">2023.07 - 2025.12</p>
+                <h4>{'\uc81c\uc774\uc564\uc5d0\uc2a4\ucee4\ub125\ud130'}</h4>
+                <p>{'\uc81c\uc870 \ubc0f \ub0a9\ud488'}</p>
               </article>
             </div>
           </section>
@@ -250,21 +244,18 @@ function AboutMeOverlay({ transition, onClose }) {
             <ul className="plain-list plain-list--exhibition">
               <li>
                 <span className="list-icon">I</span>
-                <strong>2024</strong>
-                <p>Digital Wave Showcase - Seoul</p>
-                <time>Dec 2024</time>
+                <strong>2018.07</strong>
+                <p>{'\uac15\ub0a8\ud398\uc2a4\ud2f0\ubc8c \ud328\uc158\uc1fc \uc2e0\uc9c4 \ub514\uc790\uc774\ub108 \ucf58\ud14c\uc2a4\ud2b8 \ucc38\uac00'}</p>
               </li>
               <li>
                 <span className="list-icon">I</span>
-                <strong>2023</strong>
-                <p>Hongik Graduation Exhibition</p>
-                <time>Dec 2023</time>
+                <strong>2019.03</strong>
+                <p>{'K\ud328\uc158\uc624\ub514\uc158 \ucc38\uac00'}</p>
               </li>
               <li>
                 <span className="list-icon">I</span>
-                <strong>2022</strong>
-                <p>Young Designer Exhibition - Busan</p>
-                <time>Oct 2022</time>
+                <strong>2019.06</strong>
+                <p>{'\ucf00\uc774\ube0c\ub79c\ub4dc NIX \ub370\ub2d8 \ucf58\ud14c\uc2a4\ud2b8 \ucc38\uac00'}</p>
               </li>
             </ul>
           </section>
@@ -277,35 +268,30 @@ function AboutMeOverlay({ transition, onClose }) {
             <ul className="plain-list">
               <li>
                 <span className="list-icon">A</span>
-                <strong>2024</strong>
-                <p>K-Design Award - UI/UX Category</p>
-                <time>Nov 2024</time>
+                <strong>2018.11</strong>
+                <p>{'\ud328\uc158\ub514\uc790\uc778\uc804\ubb38\ud559\uad50 \uc6b0\uc218\uc791\ud488\uc0c1'}</p>
               </li>
               <li>
                 <span className="list-icon">A</span>
-                <strong>2023</strong>
-                <p>Hongik Design Competition - Silver Prize</p>
-                <time>Oct 2023</time>
+                <strong>2018.11</strong>
+                <p>{'\ud328\uc158\ub514\uc790\uc778\uc804\ubb38\ud559\uad50 \ud611\ub825\uc0ac\uc0c1'}</p>
               </li>
               <li>
                 <span className="list-icon">A</span>
-                <strong>2022</strong>
-                <p>UX Challenge - Honorable Mention</p>
-                <time>Aug 2022</time>
+                <strong>2026.04</strong>
+                <p>{'\uc774\uc820\uc544\uce74\ub370\ubbf8DX\uad50\uc721\uc13c\ud130 \ud504\ub85c\uc81d\ud2b8 \uc6b0\uc218\uc0c1'}</p>
               </li>
             </ul>
           </section>
-
-          <section className="resume-card resume-card--blank" aria-hidden="true" />
         </div>
       </div>
       <div
         className="about-portal__image"
         style={{
-          left: `${rect.left}px`,
-          top: `${rect.top}px`,
-          width: `${rect.width}px`,
-          height: `${rect.height}px`,
+          left: String(rect.left) + 'px',
+          top: String(rect.top) + 'px',
+          width: String(rect.width) + 'px',
+          height: String(rect.height) + 'px',
         }}
       >
         <img src={transition.image} alt="About me" />
@@ -332,45 +318,12 @@ function PortfolioScreen() {
   const repeatedFrames = [...filmFrames, ...filmFrames, ...filmFrames];
 
   const openAboutMe = (event, frame) => {
-    if (frame.title !== 'ABOUT ME') {
+    if (!frame.id) {
       return;
     }
 
     event.preventDefault();
-
-    if (aboutTimerRef.current) {
-      window.clearTimeout(aboutTimerRef.current);
-    }
-
-    if (aboutFrameRef.current) {
-      window.cancelAnimationFrame(aboutFrameRef.current);
-    }
-
-    motionRef.current.isPaused = true;
-
-    const from = event.currentTarget.getBoundingClientRect();
-    const target = getAboutTargetRect();
-
-    setAboutTransition({
-      phase: 'opening',
-      image: aboutMePage,
-      from: {
-        left: from.left,
-        top: from.top,
-        width: from.width,
-        height: from.height,
-      },
-      target,
-      isExpanded: false,
-    });
-
-    aboutFrameRef.current = window.requestAnimationFrame(() => {
-      setAboutTransition((current) => (current ? { ...current, isExpanded: true } : current));
-    });
-
-    aboutTimerRef.current = window.setTimeout(() => {
-      setAboutTransition((current) => (current ? { ...current, phase: 'open' } : current));
-    }, 760);
+    window.location.href = `/archive#${frame.id}`;
   };
 
   const closeAboutMe = () => {
@@ -537,6 +490,18 @@ function PortfolioScreen() {
 }
 
 export default function App() {
+  if (window.location.pathname === '/archive') {
+    return <ArchivePage />;
+  }
+
+  if (new URLSearchParams(window.location.search).get('view') === 'reel') {
+    return (
+      <main className="intro-page">
+        <PortfolioScreen />
+      </main>
+    );
+  }
+
   const tvRef = useRef(null);
   const tvScreenRef = useRef(null);
   const dragTimerRef = useRef(null);
