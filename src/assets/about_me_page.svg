@@ -1,159 +1,39 @@
 <svg width="1448" height="1086" viewBox="0 0 1448 1086" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <filter id="boardShadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#7C91C6" flood-opacity="0.2"/>
-    </filter>
-    <filter id="cardShadow" x="-12%" y="-12%" width="124%" height="124%">
-      <feDropShadow dx="0" dy="16" stdDeviation="22" flood-color="#6B82B8" flood-opacity="0.11"/>
-    </filter>
+    <radialGradient id="redGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(345 278) rotate(44) scale(620 520)">
+      <stop stop-color="#5A1713" stop-opacity="0.62"/>
+      <stop offset="0.58" stop-color="#1A0F0D" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#080807" stop-opacity="0"/>
+    </radialGradient>
     <linearGradient id="bg" x1="0" y1="0" x2="1448" y2="1086" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#EEF4FF"/>
-      <stop offset="0.5" stop-color="#FFFFFF"/>
-      <stop offset="1" stop-color="#EAF2FF"/>
+      <stop stop-color="#160B09"/>
+      <stop offset="0.48" stop-color="#0B0B0A"/>
+      <stop offset="1" stop-color="#080807"/>
     </linearGradient>
-    <linearGradient id="cardBg" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#FFFFFF"/>
-      <stop offset="1" stop-color="#FAFCFF"/>
-    </linearGradient>
+    <pattern id="scan" width="1" height="7" patternUnits="userSpaceOnUse">
+      <rect width="1" height="1" fill="#F1EADB" fill-opacity="0.035"/>
+      <rect y="3" width="1" height="1" fill="#000000" fill-opacity="0.16"/>
+    </pattern>
+    <pattern id="specks" width="38" height="31" patternUnits="userSpaceOnUse">
+      <circle cx="6" cy="9" r="1.1" fill="#F1EADB" fill-opacity="0.08"/>
+      <circle cx="24" cy="22" r="0.9" fill="#F1EADB" fill-opacity="0.05"/>
+    </pattern>
     <style>
-      text{font-family:Pretendard,sans-serif}
-      .card{fill:url(#cardBg);stroke:#DCE8FF;stroke-width:1.1;filter:url(#cardShadow)}
-      .line{stroke:#B8CEFF;stroke-width:1}
-      .dotline{stroke:#93B8FF;stroke-width:1.3;stroke-dasharray:4 4}
-      .section{font-size:23px;font-weight:900;letter-spacing:-0.55px;fill:#1F6FFF}
-      .name{font-size:38px;font-weight:900;letter-spacing:-1.2px;fill:#061A41}
-      .role{font-size:23px;font-weight:850;letter-spacing:-0.5px;fill:#1F6FFF}
-      .date{font-size:14px;font-weight:850;letter-spacing:-0.15px;fill:#1F6FFF}
-      .strong{font-size:14px;font-weight:850;letter-spacing:-0.25px;fill:#061A41}
-      .copy{font-size:12.5px;font-weight:500;letter-spacing:-0.15px;fill:#596783}
-      .contact{font-size:18px;font-weight:650;letter-spacing:-0.35px;fill:#061A41}
-      .skillName{font-size:12.5px;font-weight:500;fill:#111827}
-      .percent{font-size:13.5px;font-weight:850;fill:#1F6FFF}
+      .title {
+        fill: #F1EADB;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 154px;
+        font-weight: 900;
+        letter-spacing: 0;
+      }
     </style>
   </defs>
-
   <rect width="1448" height="1086" fill="url(#bg)"/>
-  <rect x="30" y="25" width="1388" height="1036" rx="36" fill="#FFFFFF" fill-opacity="0.86" filter="url(#boardShadow)"/>
-
-  <rect class="card" x="58" y="61" width="384" height="968" rx="24"/>
-  <text class="name" x="250" y="174" text-anchor="middle">YOO SEUNG HYUN</text>
-  <text class="role" x="250" y="219" text-anchor="middle">UX/UI Designer</text>
-  <rect x="102" y="271" width="300" height="395" rx="28" fill="#EEF2FA" stroke="#FFFFFF" stroke-width="4"/>
-  <circle cx="252" cy="405" r="58" fill="#C3CBDF"/>
-  <path d="M132 666C132 545 174 475 252 475C330 475 372 545 372 666H132Z" fill="#C3CBDF"/>
-  <line x1="105" y1="799" x2="405" y2="799" stroke="#C3D4FF"/>
-  <text class="contact" x="168" y="769">yshnada@gmail.com</text>
-  <line x1="105" y1="873" x2="405" y2="873" stroke="#C3D4FF"/>
-  <text class="contact" x="168" y="844">+82 10-4114-2912</text>
-  <line x1="105" y1="947" x2="405" y2="947" stroke="#C3D4FF"/>
-  <text class="contact" x="168" y="921">portfolio archive</text>
-
-  <text class="section" x="504" y="88">EDUCATION</text>
-  <line class="line" x1="650" y1="82" x2="895" y2="82"/>
-  <line class="dotline" x1="508" y1="130" x2="508" y2="342"/>
-  <circle cx="508" cy="129" r="8" fill="#1F6FFF"/>
-  <text class="date" x="538" y="134">2011.03 - 2014.02</text>
-  <text class="strong" x="538" y="161">상동고등학교</text>
-  <text class="copy" x="538" y="184">이과 졸업</text>
-  <circle cx="508" cy="218" r="8" fill="#1F6FFF"/>
-  <text class="date" x="538" y="223">2014.03 - 2019.02</text>
-  <text class="strong" x="538" y="250">국제패션디자인전문학교</text>
-  <text class="copy" x="538" y="273">패션디자인과 전문 학사 졸업</text>
-  <circle cx="508" cy="307" r="8" fill="#1F6FFF"/>
-  <text class="date" x="538" y="312">2025.12 - 2026.06</text>
-  <text class="strong" x="538" y="339">이젠아카데미DX교육센터</text>
-  <text class="copy" x="538" y="362">UXUI디자인&amp;웹기획 프론트엔드 부트캠프</text>
-
-  <text class="section" x="953" y="88">TOOLS &amp; SKILLS</text>
-  <line class="line" x1="1142" y1="82" x2="1362" y2="82"/>
-  <g transform="translate(970 120)">
-    <g transform="translate(0 0)">
-      <circle cx="34" cy="34" r="30" fill="#FFFFFF" stroke="#D9E7FF"/>
-      <circle cx="34" cy="34" r="25" stroke="#E7EEF9" stroke-width="5"/>
-      <circle cx="34" cy="34" r="25" stroke="#1F6FFF" stroke-width="5" pathLength="100" stroke-dasharray="90 100" transform="rotate(-90 34 34)" fill="none"/>
-      <text class="skillName" x="34" y="84" text-anchor="middle">Figma</text>
-      <text class="percent" x="34" y="110" text-anchor="middle">90%</text>
-    </g>
-    <g transform="translate(104 0)">
-      <circle cx="34" cy="34" r="30" fill="#FFFFFF" stroke="#D9E7FF"/>
-      <circle cx="34" cy="34" r="25" stroke="#E7EEF9" stroke-width="5"/>
-      <circle cx="34" cy="34" r="25" stroke="#1F6FFF" stroke-width="5" pathLength="100" stroke-dasharray="85 100" transform="rotate(-90 34 34)" fill="none"/>
-      <text class="skillName" x="34" y="84" text-anchor="middle">Photoshop</text>
-      <text class="percent" x="34" y="110" text-anchor="middle">85%</text>
-    </g>
-    <g transform="translate(208 0)">
-      <circle cx="34" cy="34" r="30" fill="#FFFFFF" stroke="#D9E7FF"/>
-      <circle cx="34" cy="34" r="25" stroke="#E7EEF9" stroke-width="5"/>
-      <circle cx="34" cy="34" r="25" stroke="#1F6FFF" stroke-width="5" pathLength="100" stroke-dasharray="80 100" transform="rotate(-90 34 34)" fill="none"/>
-      <text class="skillName" x="34" y="84" text-anchor="middle">Illustrator</text>
-      <text class="percent" x="34" y="110" text-anchor="middle">80%</text>
-    </g>
-    <g transform="translate(312 0)">
-      <circle cx="34" cy="34" r="30" fill="#FFFFFF" stroke="#D9E7FF"/>
-      <circle cx="34" cy="34" r="25" stroke="#E7EEF9" stroke-width="5"/>
-      <circle cx="34" cy="34" r="25" stroke="#1F6FFF" stroke-width="5" pathLength="100" stroke-dasharray="82 100" transform="rotate(-90 34 34)" fill="none"/>
-      <text class="skillName" x="34" y="84" text-anchor="middle">HTML</text>
-      <text class="percent" x="34" y="110" text-anchor="middle">82%</text>
-    </g>
-    <g transform="translate(0 150)">
-      <circle cx="34" cy="34" r="30" fill="#FFFFFF" stroke="#D9E7FF"/>
-      <circle cx="34" cy="34" r="25" stroke="#E7EEF9" stroke-width="5"/>
-      <circle cx="34" cy="34" r="25" stroke="#1F6FFF" stroke-width="5" pathLength="100" stroke-dasharray="78 100" transform="rotate(-90 34 34)" fill="none"/>
-      <text class="skillName" x="34" y="84" text-anchor="middle">CSS</text>
-      <text class="percent" x="34" y="110" text-anchor="middle">78%</text>
-    </g>
-    <g transform="translate(104 150)">
-      <circle cx="34" cy="34" r="30" fill="#FFFFFF" stroke="#D9E7FF"/>
-      <circle cx="34" cy="34" r="25" stroke="#E7EEF9" stroke-width="5"/>
-      <circle cx="34" cy="34" r="25" stroke="#1F6FFF" stroke-width="5" pathLength="100" stroke-dasharray="76 100" transform="rotate(-90 34 34)" fill="none"/>
-      <text class="skillName" x="34" y="84" text-anchor="middle">JavaScript</text>
-      <text class="percent" x="34" y="110" text-anchor="middle">76%</text>
-    </g>
-    <g transform="translate(208 150)">
-      <circle cx="34" cy="34" r="30" fill="#FFFFFF" stroke="#D9E7FF"/>
-      <circle cx="34" cy="34" r="25" stroke="#E7EEF9" stroke-width="5"/>
-      <circle cx="34" cy="34" r="25" stroke="#1F6FFF" stroke-width="5" pathLength="100" stroke-dasharray="72 100" transform="rotate(-90 34 34)" fill="none"/>
-      <text class="skillName" x="34" y="84" text-anchor="middle">React</text>
-      <text class="percent" x="34" y="110" text-anchor="middle">72%</text>
-    </g>
-  </g>
-
-  <text class="section" x="504" y="460">EXPERIENCE</text>
-  <line class="line" x1="650" y1="453" x2="895" y2="453"/>
-  <line class="dotline" x1="508" y1="501" x2="508" y2="746"/>
-  <circle cx="508" cy="500" r="8" fill="#1F6FFF"/>
-  <text class="date" x="538" y="505">2020.12 - 2021.07</text>
-  <text class="strong" x="538" y="532">슬링스톤</text>
-  <text class="copy" x="538" y="555">패션디자인</text>
-  <circle cx="508" cy="612" r="8" fill="#1F6FFF"/>
-  <text class="date" x="538" y="617">2021.09 - 2023.06</text>
-  <text class="strong" x="538" y="644">엘 로꼬</text>
-  <text class="copy" x="538" y="667">패션 사업 운영</text>
-  <circle cx="508" cy="724" r="8" fill="#1F6FFF"/>
-  <text class="date" x="538" y="729">2023.07 - 2025.12</text>
-  <text class="strong" x="538" y="756">제이앤에스커넥터</text>
-  <text class="copy" x="538" y="779">제조 및 납품</text>
-
-  <text class="section" x="953" y="460">EXHIBITION</text>
-  <line class="line" x1="1092" y1="453" x2="1362" y2="453"/>
-  <line class="dotline" x1="979" y1="501" x2="979" y2="725"/>
-  <circle cx="979" cy="500" r="8" fill="#1F6FFF"/>
-  <text class="date" x="1009" y="505">2018.07</text>
-  <text class="strong" x="1009" y="532">강남페스티벌 패션쇼</text>
-  <text class="strong" x="1009" y="555">신진 디자이너 콘테스트 참가</text>
-  <circle cx="979" cy="616" r="8" fill="#1F6FFF"/>
-  <text class="date" x="1009" y="621">2019.03</text>
-  <text class="strong" x="1009" y="648">K패션오디션 참가</text>
-  <circle cx="979" cy="732" r="8" fill="#1F6FFF"/>
-  <text class="date" x="1009" y="737">2019.06</text>
-  <text class="strong" x="1009" y="764">케이브랜즈 NIX 데님 콘테스트 참가</text>
-
-  <text class="section" x="500" y="878">AWARDS</text>
-  <line class="line" x1="604" y1="871" x2="895" y2="871"/>
-  <text class="date" x="504" y="914">2018.11</text>
-  <text class="copy" x="584" y="914">패션디자인전문학교 우수작품상</text>
-  <text class="date" x="504" y="956">2018.11</text>
-  <text class="copy" x="584" y="956">패션디자인전문학교 협력사상</text>
-  <text class="date" x="504" y="998">2026.04</text>
-  <text class="copy" x="584" y="998">이젠아카데미DX교육센터 프로젝트 우수상</text>
+  <rect width="1448" height="1086" fill="url(#redGlow)"/>
+  <rect width="1448" height="1086" fill="url(#scan)" opacity="0.9"/>
+  <rect width="1448" height="1086" fill="url(#specks)" opacity="0.5"/>
+  <rect x="34" y="208" width="1376" height="640" stroke="#F1EADB" stroke-opacity="0.035"/>
+  <rect x="70" y="246" width="1304" height="564" stroke="#F1EADB" stroke-opacity="0.026"/>
+  <line x1="724" y1="0" x2="724" y2="1086" stroke="#F1EADB" stroke-opacity="0.06" stroke-width="4"/>
+  <text class="title" x="724" y="568" text-anchor="middle">ABOUT ME</text>
 </svg>

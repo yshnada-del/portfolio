@@ -2,10 +2,26 @@ import { useEffect, useRef } from 'react';
 import FilmSection from './FilmSection.jsx';
 
 function ProjectMeta({ label, value }) {
+  const isTools = String(label).toLowerCase() === 'tools' || label === '툴';
+  const tools = isTools && typeof value === 'string' ? value.split(' / ') : [];
+  const groupedTools =
+    tools.length > 1
+      ? [...tools.slice(0, -2), tools.slice(-2).join(' / ')]
+      : tools;
+
   return (
     <li>
       <span>{label}</span>
-      <strong>{value}</strong>
+      <strong>
+        {groupedTools.length > 0
+          ? groupedTools.map((tool, index) => (
+              <span className="project-frame__meta-tool" key={tool}>
+                {tool}
+                {index < groupedTools.length - 1 ? ' / ' : ''}
+              </span>
+            ))
+          : value}
+      </strong>
     </li>
   );
 }

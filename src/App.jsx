@@ -38,12 +38,12 @@ const tapes = [
 ];
 
 const filmFrames = [
-  { id: 'about', title: 'ABOUT ME', number: '01', image: aboutMePage, hideLabel: true, fit: 'contain', href: '/archive#about' },
+  { id: 'about', title: 'ABOUT ME', number: '01', image: aboutMePage, hideLabel: true, href: '/archive#about' },
   { id: 'project-01', title: 'PROJECT 01', number: '02', image: jibsalife, hideLabel: true, href: '/archive#project-01' },
   { id: 'project-02', title: 'PROJECT 02', number: '03', image: simmons, hideLabel: true, href: '/archive#project-02' },
   { id: 'project-03', title: 'PROJECT 03', number: '04', image: matmut, hideLabel: true, href: '/archive#project-03' },
   { id: 'project-04', title: 'PROJECT 04', number: '05', image: pizzahut, hideLabel: true, href: '/archive#project-04' },
-  { id: 'contact', title: 'CONTACT ME', number: '06', image: contactImage, hideLabel: true, fit: 'contain', href: '/archive#contact' },
+  { id: 'contact', title: 'CONTACT ME', number: '06', image: contactImage, hideLabel: true, href: '/archive#contact' },
 ];
 
 const filmSegments = Array.from({ length: 25 }, (_, index) => index);
@@ -306,6 +306,7 @@ function PortfolioScreen() {
   const aboutTimerRef = useRef(null);
   const aboutFrameRef = useRef(null);
   const [aboutTransition, setAboutTransition] = useState(null);
+  const [hoverCue, setHoverCue] = useState(null);
   const motionRef = useRef({
     curveAmount: 0,
     curvePos: 0,
@@ -363,17 +364,25 @@ function PortfolioScreen() {
             rel="noreferrer"
             aria-label={`${frame.title} 이미지 열기`}
             onClick={(event) => openAboutMe(event, frame)}
-            onPointerEnter={() => {
+            onPointerEnter={(event) => {
               motionRef.current.isPaused = true;
+              setHoverCue({ x: event.clientX, y: event.clientY });
+            }}
+            onPointerMove={(event) => {
+              setHoverCue({ x: event.clientX, y: event.clientY });
             }}
             onPointerLeave={() => {
               motionRef.current.isPaused = false;
+              setHoverCue(null);
             }}
-            onFocus={() => {
+            onFocus={(event) => {
               motionRef.current.isPaused = true;
+              const rect = event.currentTarget.getBoundingClientRect();
+              setHoverCue({ x: rect.left + rect.width * 0.5, y: rect.top + rect.height * 0.62 });
             }}
             onBlur={() => {
               motionRef.current.isPaused = false;
+              setHoverCue(null);
             }}
           >
             <img src={frame.image} alt="" />
@@ -484,6 +493,18 @@ function PortfolioScreen() {
           </div>
         </div>
       </div>
+      {hoverCue && (
+        <div
+          className="film-hover-cue"
+          style={{
+            left: `${hoverCue.x}px`,
+            top: `${hoverCue.y}px`,
+          }}
+          aria-hidden="true"
+        >
+          click me!
+        </div>
+      )}
       <AboutMeOverlay transition={aboutTransition} onClose={closeAboutMe} />
     </section>
   );

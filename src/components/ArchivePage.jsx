@@ -21,6 +21,23 @@ import project01Frame11 from '../assets/project-01-frame-11.png';
 import project01Frame12 from '../assets/project-01-frame-12.png';
 import project01Frame13 from '../assets/project-01-frame-13.png';
 import project01Frame14 from '../assets/project-01-frame-14.png';
+import project02Frame01 from '../assets/project-02-frame-01.png';
+import project02Frame02 from '../assets/project-02-frame-02.png';
+import project02Frame03 from '../assets/project-02-frame-03.png';
+import project02Frame04 from '../assets/project-02-frame-04.png';
+import project02Frame05 from '../assets/project-02-frame-05.png';
+import project02Frame06 from '../assets/project-02-frame-06.png';
+import project02Frame07 from '../assets/project-02-frame-07.png';
+import project02Frame08 from '../assets/project-02-frame-08.png';
+import project02Frame09 from '../assets/project-02-frame-09.png';
+import project03Frame01 from '../assets/project-03-frame-01.png';
+import project03Frame02 from '../assets/project-03-frame-02.png';
+import project03Frame03 from '../assets/project-03-frame-03.png';
+import project03Frame04 from '../assets/project-03-frame-04.png';
+import project03Frame05 from '../assets/project-03-frame-05.png';
+import project03Frame06 from '../assets/project-03-frame-06.png';
+import project03Frame07 from '../assets/project-03-frame-07.png';
+import project03Frame08 from '../assets/project-03-frame-08.png';
 import reactIcon from '../assets/react.png';
 import simmons from '../assets/simmons.png';
 import ArchiveNav from './ArchiveNav.jsx';
@@ -45,6 +62,29 @@ const project01Frames = [
   project01Frame14,
 ];
 
+const project02Frames = [
+  project02Frame01,
+  project02Frame02,
+  project02Frame03,
+  project02Frame04,
+  project02Frame05,
+  project02Frame06,
+  project02Frame07,
+  project02Frame08,
+  project02Frame09,
+];
+
+const project03Frames = [
+  project03Frame01,
+  project03Frame02,
+  project03Frame03,
+  project03Frame04,
+  project03Frame05,
+  project03Frame06,
+  project03Frame07,
+  project03Frame08,
+];
+
 const projects = [
   {
     id: 'project-01',
@@ -58,7 +98,7 @@ const projects = [
     role: '\uae30\ud68d\ud300\uc7a5 / \ub514\uc790\uc778 \uc11c\ube0c',
     period: '2025.04~2025.05',
     tools: 'Figma / ChatGPT / Claud / Photoshop / Gemini',
-    contribution: '77% / 100%\uae30\uc900',
+    contribution: '77%',
     metaLabels: {
       role: '\uc5ed\ud560',
       period: '\uae30\uac04',
@@ -66,8 +106,11 @@ const projects = [
       contribution: '\uae30\uc5ec\ub3c4',
     },
     actionLinks: [
-      { label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30', href: '#' },
-      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: '#' },
+      {
+        label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30',
+        href: 'https://www.figma.com/deck/vPODZnqJbzTF6O0WegjbXd/-%ED%8C%80%ED%94%8C2-1%EC%A1%B0--%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_jibsalife-%EC%A7%91%EC%82%AC%EC%9D%B8%EC%83%9D--%EB%94%94%EB%B2%A8%EB%A1%AD--%EB%B3%B5%EC%82%AC---%EB%B3%B5%EC%82%AC-?node-id=3096-681&viewport=-227%2C-237%2C1.05&t=c9X2Yp7rsTyeXW2E-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1',
+      },
+      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://new-jibsalife.vercel.app' },
     ],
     visualType: 'figma-frame',
     image: project01Frame01,
@@ -79,16 +122,31 @@ const projects = [
     scene: '03',
     edgeLabel: 'PROJECT 02',
     number: 'PROJECT 02',
-    title: 'SIMMONS',
-    tagline: '프리미엄 침대 브랜드 웹 리디자인',
+    title: '시몬스',
+    tagline: '반려동물 예방 건강 관리 서비스',
     description:
-      '브랜드의 고급스러운 분위기를 유지하면서 사용자가 제품과 브랜드 스토리를 자연스럽게 탐색할 수 있도록 개선한 웹 리디자인 프로젝트입니다.',
-    role: 'UI/UX Design / Front-end Develop',
-    period: '2025.04 - 2025.05',
-    tools: 'Figma / React / GSAP / Lenis',
-    visualType: 'desktop-burgundy',
-    image: simmons,
-    tone: 'burgundy',
+      '사진 기반 AI 분석과 오늘의 요약, 커뮤니티 기능을 통해 반려동물의 건강 관리를 더 쉽고 꾸준하게 도와주는 서비스입니다.',
+    role: '\uac1c\ubc1c\ud300\uc7a5 / \ub514\uc790\uc778 \uc11c\ube0c',
+    period: '2026.02 ~ 2026.03',
+    tools: '\ud53c\uadf8\ub9c8 / \ucc57\uc9c0\ud53c\ud2f0 / \ud074\ub85c\ub4dc / \ud3ec\ud1a0\uc0f5 / \uc77c\ub7ec\uc2a4\ud2b8 / \uc81c\ubbf8\ub098\uc774 / \ubbf8\ub4dc\uc800\ub2c8 / \ucf54\ub371\uc2a4 / vs code / \uae43\ud5c8\ube0c / html / css / js',
+    contribution: '88%',
+    metaLabels: {
+      role: '\uc5ed\ud560',
+      period: '\uae30\uac04',
+      tools: '\ud234',
+      contribution: '\uae30\uc5ec\ub3c4',
+    },
+    actionLinks: [
+      {
+        label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30',
+        href: 'https://www.figma.com/deck/8N2z3T5LdaTjsSxzl5yGqw/-%ED%8C%80%ED%94%8C1-4%EC%A1%B0--%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_SIMMONS-%EC%84%B8%EA%B8%B0%EC%B0%A8%EC%9D%B4---%EB%B3%B5%EC%82%AC---%EB%B3%B5%EC%82%AC---%EB%B3%B5%EC%82%AC-?node-id=4001-539&viewport=-227%2C-237%2C1.05&t=gjnt6gZefkgiHKZm-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1',
+      },
+      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://hyunjireal.github.io/resimmons/' },
+    ],
+    visualType: 'figma-frame',
+    image: project02Frame01,
+    images: project02Frames,
+    tone: 'ivory',
   },
   {
     id: 'project-03',
@@ -96,30 +154,58 @@ const projects = [
     edgeLabel: 'PROJECT 03',
     number: 'PROJECT 03',
     title: '맛과멋',
-    tagline: '취향 기반 장소 추천 서비스',
+    tagline: '스타일 기반 장소 큐레이션 서비스',
     description:
-      '사용자의 착장 분위기와 상황을 바탕으로 어울리는 식당과 장소를 추천하는 서비스입니다. 장소 중심이 아니라 사용자의 스타일과 무드를 기준으로 추천 흐름을 설계했습니다.',
-    role: 'UX Research / UI Design / Front-end Develop',
-    period: '2026.03 - 2026.05',
-    tools: 'Figma / React / Supabase / Kakao API',
-    visualType: 'mobile-dark',
-    tone: 'dark',
+      '사용자의 착장과 무드, 상황을 기반으로 오늘의 스타일에 어울리는 식당과 장소를 추천하는 모바일 서비스입니다.',
+    role: '\uae30\ud68d \uac1c\ubc1c \ub514\uc790\uc778',
+    period: '2026.04 ~ 2026.05',
+    tools: '\ud53c\uadf8\ub9c8 / \ucc57\uc9c0\ud53c\ud2f0 / \ud074\ub85c\ub4dc / \ud3ec\ud1a0\uc0f5 / \uc81c\ubbf8\ub098\uc774 / \uc77c\ub7ec\uc2a4\ud2b8 / \ubbf8\ub4dc\uc800\ub2c8 / \ucf54\ub371\uc2a4 / vs code / \uae43\ud5c8\ube0c / html / css / js',
+    contribution: '100%',
+    metaLabels: {
+      role: '\uc5ed\ud560',
+      period: '\uae30\uac04',
+      tools: '\ud234',
+      contribution: '\uae30\uc5ec\ub3c4',
+    },
+    actionLinks: [
+      { label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30', href: 'https://yshnada-del.github.io/landingpage/' },
+      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://yshnada-del.github.io/matmut/' },
+    ],
+    visualType: 'figma-frame',
+    image: project03Frame01,
+    images: project03Frames,
+    tone: 'ivory',
   },
   {
     id: 'project-04',
     scene: '05',
     edgeLabel: 'PROJECT 04',
     number: 'PROJECT 04',
-    title: 'PIZZA HUT',
-    tagline: '프로모션 랜딩페이지 리디자인',
+    title: '집사인생',
+    tagline: '반려동물 예방 건강 관리 서비스',
     description:
-      '강렬한 프로모션 메시지와 제품 이미지를 중심으로 사용자의 시선을 빠르게 끌고, 주문 행동으로 자연스럽게 이어지도록 설계한 랜딩페이지입니다.',
-    role: 'UI Design / Front-end Develop',
-    period: '2026.04 - 2026.05',
-    tools: 'Figma / React / GSAP',
-    visualType: 'desktop-pizza',
-    image: pizzahut,
-    tone: 'dark',
+      '사진 기반 AI 분석과 오늘의 요약, 커뮤니티 기능을 통해 반려동물의 건강 관리를 더 쉽고 꾸준하게 도와주는 서비스입니다.',
+    role: '\uae30\ud68d\ud300\uc7a5 / \ub514\uc790\uc778 \uc11c\ube0c',
+    period: '2025.04~2025.05',
+    tools: 'Figma / ChatGPT / Claud / Photoshop / Gemini',
+    contribution: '77%',
+    metaLabels: {
+      role: '\uc5ed\ud560',
+      period: '\uae30\uac04',
+      tools: '\ud234',
+      contribution: '\uae30\uc5ec\ub3c4',
+    },
+    actionLinks: [
+      {
+        label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30',
+        href: 'https://www.figma.com/deck/vPODZnqJbzTF6O0WegjbXd/-%ED%8C%80%ED%94%8C2-1%EC%A1%B0--%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_jibsalife-%EC%A7%91%EC%82%AC%EC%9D%B8%EC%83%9D--%EB%94%94%EB%B2%A8%EB%A1%AD--%EB%B3%B5%EC%82%AC---%EB%B3%B5%EC%82%AC-?node-id=3096-681&viewport=-227%2C-237%2C1.05&t=c9X2Yp7rsTyeXW2E-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1',
+      },
+      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://new-jibsalife.vercel.app' },
+    ],
+    visualType: 'figma-frame',
+    image: project01Frame01,
+    images: project01Frames,
+    tone: 'ivory',
   },
 ];
 
@@ -146,8 +232,8 @@ const aboutScrollScenes = [
     title: 'EXPERIENCE',
     type: 'timeline',
     items: [
-      ['2020.12 - 2021.07', '슬릭스톤', '패션디자인'],
-      ['2021.09 - 2023.06', '앨 로고', '패션 사업 운영'],
+      ['2020.12 - 2021.07', '슬링스톤', '패션디자인'],
+      ['2021.09 - 2023.06', '엘 로꼬', '패션 사업 운영'],
       ['2023.07 - 2025.12', '제이앤에스커넥터', '제조 및 납품'],
     ],
   },
@@ -338,8 +424,8 @@ function AboutScrollAbout() {
         const localProgress = Math.min(Math.max(rawSceneProgress, 0), 0.9999);
         const isActive = progress >= 0.16 && index === activeIndex;
         const isTitlePhase = isActive && localProgress < 0.34;
-        const isContentPhase = isActive && localProgress >= 0.34 && localProgress < 0.68;
-        const contentProgress = isContentPhase ? (localProgress - 0.34) / 0.34 : 0;
+        const isContentPhase = isActive && localProgress >= 0.34;
+        const contentProgress = isContentPhase ? Math.min((localProgress - 0.34) / 0.34, 1) : 0;
         const labelOpacity = isTitlePhase || isContentPhase ? 1 : 0;
         const contentOpacity = isContentPhase ? 1 : 0;
         const revealY = isContentPhase ? (1 - contentProgress) * 180 : 180;
@@ -443,7 +529,7 @@ function AboutScrollSceneContent({ scene }) {
           </div>
           <div>
             <dt>Location</dt>
-            <dd>Seoul, Korea</dd>
+            <dd>Bucheon, Korea</dd>
           </div>
         </dl>
       </div>
@@ -704,8 +790,8 @@ export default function ArchivePage() {
   }, [activeProject]);
 
   const pageClass = `archive-page${activeId === 'about' ? ' archive-page--about' : ''}${
-    activeProject ? ' archive-page--project-detail' : ''
-  }`;
+    activeId === 'contact' ? ' archive-page--contact' : ''
+  }${activeProject ? ' archive-page--project-detail' : ''}`;
 
   return (
     <main className={pageClass}>

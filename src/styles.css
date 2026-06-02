@@ -971,9 +971,47 @@ h1 span {
   cursor: pointer;
 }
 
+.film-strip__link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: radial-gradient(ellipse at 50% 50%, rgba(230, 189, 69, 0.16), transparent 58%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.film-strip__link:hover::before,
+.film-strip__link:focus-visible::before {
+  opacity: 1;
+}
+
 .film-strip__link:focus-visible {
   outline: 3px solid rgba(255, 246, 222, 0.86);
   outline-offset: -6px;
+}
+
+.film-hover-cue {
+  position: fixed;
+  z-index: 120;
+  left: 0;
+  top: 0;
+  padding: 0.26em 0.62em 0.32em;
+  color: #111;
+  font-family: "Comic Sans MS", "Segoe Print", cursive;
+  font-size: clamp(0.92rem, 1.05vw, 1.18rem);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: 999px;
+  background: rgba(244, 239, 223, 0.94);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.32),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.16);
+  pointer-events: none;
+  transform: translate(18px, 14px) rotate(-5deg);
 }
 
 .about-portal {
@@ -3737,7 +3775,7 @@ img.contact-icon {
 
 .project-frame__meta li {
   grid-template-columns: 1fr;
-  gap: 2px;
+  gap: 12px;
   padding: 0;
   border-top: 0;
   font-family: inherit;
@@ -3746,6 +3784,8 @@ img.contact-icon {
 }
 
 .project-frame__meta {
+  display: grid;
+  gap: 12px;
   grid-column: 2;
   grid-row: 1;
   align-self: start;
@@ -3755,6 +3795,12 @@ img.contact-icon {
 .project-frame__meta strong {
   font-weight: 760;
   line-height: 1.18;
+}
+
+.project-frame__meta strong .project-frame__meta-tool {
+  color: inherit;
+  font-weight: inherit;
+  white-space: nowrap;
 }
 
 .film-section--dark .project-frame__meta li,
@@ -4900,6 +4946,246 @@ img.contact-icon {
   }
 }
 
+/* Actual final About title sizing: prevent scene titles from covering the content. */
+.film-section--about-flight .about-scroll-scene {
+  grid-template-columns: minmax(210px, 30%) minmax(0, 70%);
+  gap: clamp(18px, 2.6vw, 54px);
+}
+
+.film-section--about-flight .about-scroll-scene__label h2 {
+  max-width: none;
+  font-size: clamp(1.9rem, 2.65vw, 3.9rem);
+  line-height: 0.92;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.film-section--about-flight .about-scroll-scene__content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+}
+
+@media (max-width: 980px) {
+  .film-section--about-flight .about-scroll-scene {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .film-section--about-flight .about-scroll-scene__label {
+    min-height: auto;
+  }
+
+  .film-section--about-flight .about-scroll-scene__label h2 {
+    font-size: clamp(1.65rem, 6.8vw, 3.7rem);
+  }
+}
+
+@media (max-width: 520px) {
+  .film-section--about-flight .about-scroll-scene__label h2 {
+    font-size: clamp(1.3rem, 6.6vw, 2.2rem);
+  }
+}
+
+.film-section--about-flight .about-info__contact div:first-child,
+.film-section--about-flight .about-awards li:first-child {
+  border-top: 0;
+}
+
+/* Film-edge treatment across ABOUT ME through CONTACT ME. */
+.film-section .film-section__sprockets,
+.film-section--about-flight .film-section__sprockets,
+.film-section--project-scroll .film-section__sprockets {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 24;
+  width: clamp(44px, 4.8vw, 72px);
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 27px,
+      rgba(235, 238, 232, 0.92) 27px 44px,
+      transparent 44px 78px
+    ),
+    linear-gradient(90deg, #111 0%, #050505 34%, #050505 66%, #111 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 0 24px rgba(0, 0, 0, 0.76);
+}
+
+.film-section .film-section__sprockets--left,
+.film-section--about-flight .film-section__sprockets--left,
+.film-section--project-scroll .film-section__sprockets--left {
+  left: 0;
+}
+
+.film-section .film-section__sprockets--right,
+.film-section--about-flight .film-section__sprockets--right,
+.film-section--project-scroll .film-section__sprockets--right {
+  right: 0;
+}
+
+.film-section .film-section__sprockets::before,
+.film-section--about-flight .film-section__sprockets::before,
+.film-section--project-scroll .film-section__sprockets::before {
+  content: "WY-1999-1126";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: rgba(238, 238, 232, 0.68);
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: clamp(0.55rem, 0.68vw, 0.72rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  writing-mode: vertical-rl;
+  transform: translate(-50%, -50%);
+}
+
+.film-section .film-section__sprockets::after,
+.film-section--about-flight .film-section__sprockets::after,
+.film-section--project-scroll .film-section__sprockets::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: clamp(74px, 8vh, 112px);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 8px solid rgba(238, 238, 232, 0.74);
+  transform: translateX(-50%);
+}
+
+.film-section .film-section__edge-label,
+.film-section--about-flight .film-section__edge-label,
+.film-section--project-scroll .film-section__edge-label {
+  display: none;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 46;
+}
+
+@media (max-width: 760px) {
+  .film-section .film-section__sprockets,
+  .film-section--about-flight .film-section__sprockets,
+  .film-section--project-scroll .film-section__sprockets {
+    width: 30px;
+  }
+
+  .film-section .film-section__sprockets::before,
+  .film-section--about-flight .film-section__sprockets::before,
+  .film-section--project-scroll .film-section__sprockets::before {
+    font-size: 0.48rem;
+  }
+}
+
+/* Centered archive navigation pill. */
+.archive-page .archive-nav,
+.archive-page--project-detail .archive-nav {
+  position: fixed;
+  top: clamp(14px, 2.2vw, 30px);
+  left: 50%;
+  right: auto;
+  z-index: 80;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0;
+  align-items: center;
+  justify-items: center;
+  width: min(calc(100% - 64px), 1680px);
+  min-height: clamp(70px, 7.4vw, 128px);
+  padding: 0 clamp(22px, 3vw, 54px);
+  border: 0;
+  border-radius: clamp(32px, 4.6vw, 70px);
+  background: rgba(18, 18, 18, 0.94);
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(14px);
+  transform: translateX(-50%);
+}
+
+.archive-page .archive-nav__exit,
+.archive-page--project-detail .archive-nav__exit {
+  display: none;
+}
+
+.archive-page .archive-nav a,
+.archive-page--project-detail .archive-nav a {
+  color: rgba(255, 255, 255, 0.92);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: clamp(1rem, 1.85vw, 2.1rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.archive-page .archive-nav a:hover,
+.archive-page .archive-nav a:focus-visible,
+.archive-page .archive-nav a.is-active,
+.archive-page--project-detail .archive-nav a:hover,
+.archive-page--project-detail .archive-nav a:focus-visible,
+.archive-page--project-detail .archive-nav a.is-active {
+  color: #fff8e6;
+  text-shadow: 0 0 18px rgba(255, 248, 230, 0.28);
+  outline: none;
+}
+
+@media (max-width: 900px) {
+  .archive-page .archive-nav,
+  .archive-page--project-detail .archive-nav {
+    width: calc(100% - 20px);
+    min-height: 54px;
+    padding: 0 14px;
+    border-radius: 28px;
+  }
+
+  .archive-page .archive-nav a,
+  .archive-page--project-detail .archive-nav a {
+    font-size: clamp(0.66rem, 2.45vw, 1rem);
+  }
+}
+
+/* Keep About scene section titles from INFORMATION through EXHIBITION on one line. */
+.about-scroll-scene {
+  grid-template-columns: minmax(220px, 31%) minmax(0, 69%);
+}
+
+.film-section--about-flight .about-scroll-scene__label h2 {
+  max-width: none;
+  font-size: clamp(2rem, 3vw, 4.4rem);
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.film-section--about-flight .about-scroll-scene__content {
+  z-index: 2;
+}
+
+@media (max-width: 980px) {
+  .about-scroll-scene {
+    grid-template-columns: 1fr;
+  }
+
+  .film-section--about-flight .about-scroll-scene__label h2 {
+    font-size: clamp(1.8rem, 7vw, 4.2rem);
+  }
+}
+
+@media (max-width: 520px) {
+  .film-section--about-flight .about-scroll-scene__label h2 {
+    font-size: clamp(1.35rem, 7.2vw, 2.35rem);
+  }
+}
+
 /* Final type tuning for the restored About information scene. */
 .film-section--about-flight .about-scroll-watermark {
   opacity: max(0.16, var(--about-watermark-opacity));
@@ -6024,4 +6310,1339 @@ img.contact-icon {
     grid-template-columns: 1fr;
     gap: 8px;
   }
+}
+
+/* Final override at EOF: keep About titles small and out of the content column. */
+.film-section--about-flight .about-scroll-scene {
+  grid-template-columns: minmax(210px, 30%) minmax(0, 70%);
+  gap: clamp(18px, 2.6vw, 54px);
+}
+
+.film-section--about-flight .about-scroll-scene__label h2 {
+  max-width: none;
+  font-size: clamp(1.9rem, 2.65vw, 3.9rem);
+  line-height: 0.92;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.film-section--about-flight .about-scroll-scene__content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+}
+
+@media (max-width: 980px) {
+  .film-section--about-flight .about-scroll-scene {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .film-section--about-flight .about-scroll-scene__label {
+    min-height: auto;
+  }
+
+  .film-section--about-flight .about-scroll-scene__label h2 {
+    font-size: clamp(1.65rem, 6.8vw, 3.7rem);
+  }
+}
+
+@media (max-width: 520px) {
+  .film-section--about-flight .about-scroll-scene__label h2 {
+    font-size: clamp(1.3rem, 6.6vw, 2.2rem);
+  }
+}
+
+/* EOF final: reserve space so vertical film edges never cover project content. */
+.archive-page {
+  --film-edge-width: clamp(42px, 3.8vw, 72px);
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 46;
+  width: var(--film-edge-width);
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--left {
+  left: 0;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--right {
+  right: 0;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__content {
+  background:
+    linear-gradient(
+      90deg,
+      #040404 0 var(--film-edge-width),
+      rgba(244, 239, 223, 0.98) var(--film-edge-width) 50vw,
+      #040404 50vw calc(100% - var(--film-edge-width)),
+      #040404 calc(100% - var(--film-edge-width)) 100%
+    );
+}
+
+.archive-page--project-detail .project-frame__copy {
+  width: 50vw;
+  padding-left: calc(var(--film-edge-width) + clamp(18px, 2.2vw, 42px));
+  padding-right: clamp(18px, 2.2vw, 42px);
+}
+
+.archive-page--project-detail .project-frame__actions {
+  left: calc(var(--film-edge-width) + clamp(12px, 1vw, 18px));
+}
+
+.archive-page--project-detail .project-frame__gallery,
+.archive-page--project-detail .project-frame__canvas {
+  left: 50vw;
+  width: calc(50vw - var(--film-edge-width));
+}
+
+.archive-page--project-detail .archive-nav {
+  width: min(calc(100% - (var(--film-edge-width) * 2) - 32px), 1500px);
+}
+
+@media (max-width: 900px) {
+  .archive-page {
+    --film-edge-width: 32px;
+  }
+}
+
+/* EOF final: compact top navigation placed above the film area. */
+.archive-page .archive-nav,
+.archive-page--project-detail .archive-nav {
+  top: clamp(10px, 1.2vw, 22px);
+  left: auto;
+  right: calc(var(--film-edge-width, 0px) + clamp(16px, 2vw, 38px));
+  display: flex;
+  gap: clamp(14px, 1.6vw, 28px);
+  width: auto;
+  min-height: auto;
+  padding: clamp(8px, 0.75vw, 12px) clamp(12px, 1vw, 18px);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  transform: none;
+}
+
+.archive-page .archive-nav a,
+.archive-page--project-detail .archive-nav a {
+  font-size: clamp(0.72rem, 0.82vw, 0.94rem);
+  font-weight: 800;
+  color: rgba(238, 232, 216, 0.82);
+}
+
+@media (max-width: 900px) {
+  .archive-page .archive-nav,
+  .archive-page--project-detail .archive-nav {
+    left: 50%;
+    right: auto;
+    width: calc(100% - 28px);
+    justify-content: center;
+    overflow-x: auto;
+    transform: translateX(-50%);
+  }
+}
+
+/* EOF final: centered nav, active underline, hidden back button, safer film edges. */
+.archive-page {
+  --film-edge-width: clamp(56px, 5.2vw, 92px);
+}
+
+.archive-page .archive-nav,
+.archive-page--project-detail .archive-nav {
+  left: 50%;
+  right: auto;
+  top: clamp(10px, 1.2vw, 22px);
+  justify-content: center;
+  gap: clamp(24px, 2.4vw, 48px);
+  width: min(calc(100% - (var(--film-edge-width) * 2) - 48px), 980px);
+  padding: clamp(8px, 0.75vw, 12px) 0;
+  transform: translateX(-50%);
+}
+
+.archive-page .archive-nav__exit,
+.archive-page--project-detail .archive-nav__exit {
+  display: none;
+}
+
+.archive-page .archive-nav a,
+.archive-page--project-detail .archive-nav a {
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.archive-page .archive-nav a.is-active::after,
+.archive-page--project-detail .archive-nav a.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: currentColor;
+  border-radius: 999px;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__content {
+  background:
+    linear-gradient(
+      90deg,
+      #040404 0 var(--film-edge-width),
+      rgba(244, 239, 223, 0.98) var(--film-edge-width) 50vw,
+      #040404 50vw calc(100% - var(--film-edge-width)),
+      #040404 calc(100% - var(--film-edge-width)) 100%
+    );
+}
+
+.archive-page--project-detail .project-frame__copy {
+  padding-left: calc(var(--film-edge-width) + clamp(30px, 3.2vw, 68px));
+}
+
+.archive-page--project-detail .project-frame__actions {
+  left: calc(var(--film-edge-width) + clamp(20px, 1.8vw, 34px));
+}
+
+.archive-page--project-detail .project-frame__gallery,
+.archive-page--project-detail .project-frame__canvas {
+  left: 50vw;
+  width: calc(50vw - var(--film-edge-width));
+}
+
+.film-section .film-section__sprockets,
+.film-section--about-flight .film-section__sprockets,
+.film-section--project-scroll .film-section__sprockets {
+  width: var(--film-edge-width);
+  background:
+    radial-gradient(
+      rounded rectangle at 50% 36px,
+      transparent 0 18px,
+      #050505 19px
+    );
+  background:
+    repeating-linear-gradient(
+      0deg,
+      #050505 0 22px,
+      transparent 22px 64px,
+      #050505 64px 98px
+    ),
+    #050505;
+}
+
+.film-section .film-section__sprockets::before,
+.film-section--about-flight .film-section__sprockets::before,
+.film-section--project-scroll .film-section__sprockets::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 24px,
+      #f2f2ec 24px 64px,
+      transparent 64px 110px
+    );
+  border-radius: 0;
+  mask:
+    radial-gradient(24px 24px at 50% 44px, #000 98%, transparent 100%) 0 0 / 100% 110px repeat-y;
+  -webkit-mask:
+    radial-gradient(24px 24px at 50% 44px, #000 98%, transparent 100%) 0 0 / 100% 110px repeat-y;
+}
+
+.film-section .film-section__sprockets::after,
+.film-section--about-flight .film-section__sprockets::after,
+.film-section--project-scroll .film-section__sprockets::after {
+  display: none;
+}
+
+/* EOF final: rounded-rectangle sprocket holes like the reference film strip. */
+.film-section .film-section__sprockets,
+.film-section--about-flight .film-section__sprockets,
+.film-section--project-scroll .film-section__sprockets {
+  width: var(--film-edge-width);
+  background: #050505;
+}
+
+.film-section .film-section__sprockets::before,
+.film-section--about-flight .film-section__sprockets::before,
+.film-section--project-scroll .film-section__sprockets::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='92' height='116' viewBox='0 0 92 116' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='24' y='22' width='44' height='44' rx='8' fill='%23f4f4ef'/%3E%3C/svg%3E");
+  background-repeat: repeat-y;
+  background-position: center top;
+  background-size: 100% 116px;
+  -webkit-mask: none;
+  mask: none;
+}
+
+.archive-page--project-detail .project-frame__copy {
+  padding-left: calc(var(--film-edge-width) + clamp(48px, 4.6vw, 96px));
+}
+
+/* EOF final: clean vertical film strips without clipped holes. */
+.archive-page {
+  --film-edge-width: clamp(58px, 4.4vw, 78px);
+}
+
+.film-section .film-section__sprockets,
+.film-section--about-flight .film-section__sprockets,
+.film-section--project-scroll .film-section__sprockets,
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 46;
+  width: var(--film-edge-width);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06), transparent 18%, transparent 82%, rgba(255, 255, 255, 0.04)),
+    #030303;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 0 30px rgba(0, 0, 0, 0.86);
+}
+
+.film-section .film-section__sprockets--left,
+.film-section--about-flight .film-section__sprockets--left,
+.film-section--project-scroll .film-section__sprockets--left,
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--left {
+  left: 0;
+}
+
+.film-section .film-section__sprockets--right,
+.film-section--about-flight .film-section__sprockets--right,
+.film-section--project-scroll .film-section__sprockets--right,
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--right {
+  right: 0;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets {
+  position: fixed;
+}
+
+.film-section .film-section__sprockets::before,
+.film-section--about-flight .film-section__sprockets::before,
+.film-section--project-scroll .film-section__sprockets::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  bottom: 22px;
+  width: clamp(26px, 2.4vw, 38px);
+  transform: translateX(-50%);
+  background-image: url("data:image/svg+xml,%3Csvg width='38' height='112' viewBox='0 0 38 112' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='18' width='36' height='42' rx='7' fill='%23f5f5ef'/%3E%3C/svg%3E");
+  background-repeat: repeat-y;
+  background-position: center top;
+  background-size: 100% 112px;
+}
+
+.film-section .film-section__sprockets::after,
+.film-section--about-flight .film-section__sprockets::after,
+.film-section--project-scroll .film-section__sprockets::after {
+  display: none;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__content {
+  background:
+    linear-gradient(
+      90deg,
+      #040404 0 var(--film-edge-width),
+      rgba(244, 239, 223, 0.98) var(--film-edge-width) 50vw,
+      #040404 50vw calc(100% - var(--film-edge-width)),
+      #040404 calc(100% - var(--film-edge-width)) 100%
+    );
+}
+
+.archive-page--project-detail .project-frame__copy {
+  padding-left: calc(var(--film-edge-width) + clamp(52px, 4.8vw, 104px));
+}
+
+/* EOF final: project detail film should not crop content; use a center hinge instead. */
+.archive-page--project-detail {
+  --film-edge-width: 0px;
+  --film-hinge-width: clamp(34px, 3vw, 54px);
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets {
+  display: none;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__content {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(244, 239, 223, 0.98) 0 calc(50vw - (var(--film-hinge-width) / 2)),
+      #050505 calc(50vw - (var(--film-hinge-width) / 2)) calc(50vw + (var(--film-hinge-width) / 2)),
+      #101010 calc(50vw + (var(--film-hinge-width) / 2)) 100%
+    );
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__content::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: calc(50vw - (var(--film-hinge-width) / 2));
+  z-index: 45;
+  display: block;
+  width: var(--film-hinge-width);
+  pointer-events: none;
+  background: #030303;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__content::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: calc(50vw - 18px);
+  z-index: 46;
+  display: block;
+  width: 36px;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='36' height='96' viewBox='0 0 36 96' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='6' y='18' width='24' height='24' rx='0' fill='%23f5f5ef'/%3E%3C/svg%3E");
+  background-repeat: repeat-y;
+  background-position: center top;
+  background-size: 36px 96px;
+}
+
+.archive-page--project-detail .project-frame__copy {
+  width: calc(50vw - (var(--film-hinge-width) / 2));
+  padding-left: clamp(72px, 8vw, 150px);
+  padding-right: clamp(24px, 3vw, 56px);
+}
+
+.archive-page--project-detail .project-frame__actions {
+  left: clamp(28px, 3vw, 56px);
+}
+
+.archive-page--project-detail .project-frame__gallery,
+.archive-page--project-detail .project-frame__canvas {
+  left: calc(50vw + (var(--film-hinge-width) / 2));
+  width: calc(50vw - (var(--film-hinge-width) / 2));
+}
+
+/* EOF final: separate back arrow from the right-aligned archive nav. */
+.archive-page .archive-nav__exit,
+.archive-page--project-detail .archive-nav__exit {
+  position: fixed;
+  left: calc(var(--film-edge-width, 0px) + clamp(14px, 1.8vw, 34px));
+  top: clamp(12px, 1.3vw, 24px);
+  z-index: 90;
+  display: grid;
+  width: clamp(38px, 3.2vw, 54px);
+  aspect-ratio: 1;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #050505 !important;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: clamp(1.4rem, 2vw, 2rem);
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  text-shadow: none;
+  transform: none;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.34);
+}
+
+.archive-page .archive-nav__exit::before,
+.archive-page--project-detail .archive-nav__exit::before {
+  content: "";
+}
+
+/* EOF final: side film strips stay, project images fill their panel, no center hinge. */
+.archive-page--project-detail {
+  --film-edge-width: clamp(58px, 4.4vw, 78px);
+  --film-hinge-width: 0px;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets {
+  display: block;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 46;
+  width: var(--film-edge-width);
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--left {
+  left: 0;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--right {
+  right: 0;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__content {
+  background:
+    linear-gradient(
+      90deg,
+      #040404 0 var(--film-edge-width),
+      rgba(244, 239, 223, 0.98) var(--film-edge-width) 50vw,
+      #101010 50vw calc(100% - var(--film-edge-width)),
+      #040404 calc(100% - var(--film-edge-width)) 100%
+    );
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__content::before,
+.archive-page--project-detail .film-section--project-scroll .film-section__content::after {
+  display: none;
+}
+
+.archive-page--project-detail .project-frame__copy {
+  width: 50vw;
+  padding-left: calc(var(--film-edge-width) + clamp(44px, 4.2vw, 92px));
+  padding-right: clamp(24px, 3vw, 56px);
+}
+
+.archive-page--project-detail .project-frame__number {
+  left: calc(var(--film-edge-width) + clamp(20px, 1.8vw, 34px));
+  top: clamp(18px, 1.6vw, 30px);
+  font-family: inherit;
+  font-size: clamp(0.76rem, 0.88vw, 0.94rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  box-shadow: inset 0 -1px currentColor;
+}
+
+.archive-page--project-detail .project-frame__actions {
+  left: calc(var(--film-edge-width) + clamp(20px, 1.8vw, 34px));
+}
+
+.archive-page--project-detail .project-frame__gallery,
+.archive-page--project-detail .project-frame__canvas {
+  left: 50vw;
+  width: calc(50vw - var(--film-edge-width));
+}
+
+.archive-page--project-detail .project-frame__canvas {
+  background: transparent;
+}
+
+/* EOF final: user correction - side film only, image panel must be filled by the canvas. */
+.archive-page--project-detail {
+  --film-edge-width: clamp(56px, 4.2vw, 76px);
+  --film-hinge-width: 0px;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets {
+  display: block;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: var(--film-edge-width);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.04)),
+    #030303;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--left {
+  left: 0;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--right {
+  right: 0;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets::before {
+  left: 50%;
+  top: clamp(18px, 1.6vw, 28px);
+  bottom: clamp(18px, 1.6vw, 28px);
+  width: clamp(28px, 2.3vw, 38px);
+  transform: translateX(-50%);
+  background-image: url("data:image/svg+xml,%3Csvg width='38' height='96' viewBox='0 0 38 96' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='4' y='18' width='30' height='30' rx='0' fill='%23f5f5ef'/%3E%3C/svg%3E");
+  background-size: 100% 96px;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__content {
+  background:
+    linear-gradient(
+      90deg,
+      #040404 0 var(--film-edge-width),
+      rgba(244, 239, 223, 0.98) var(--film-edge-width) 50vw,
+      transparent 50vw calc(100% - var(--film-edge-width)),
+      #040404 calc(100% - var(--film-edge-width)) 100%
+    );
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__content::before,
+.archive-page--project-detail .film-section--project-scroll .film-section__content::after {
+  display: none;
+}
+
+.archive-page--project-detail .project-frame__copy {
+  width: 50vw;
+  padding-left: calc(var(--film-edge-width) + clamp(48px, 4.8vw, 100px));
+  padding-right: clamp(24px, 3vw, 56px);
+}
+
+.archive-page--project-detail .project-frame__number {
+  left: calc(var(--film-edge-width) + clamp(24px, 2vw, 42px));
+  top: clamp(22px, 1.9vw, 36px);
+  font-family: inherit;
+  font-size: clamp(0.76rem, 0.88vw, 0.94rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  box-shadow: inset 0 -1px currentColor;
+}
+
+.archive-page--project-detail .project-frame__actions {
+  left: calc(var(--film-edge-width) + clamp(24px, 2vw, 42px));
+}
+
+.archive-page--project-detail .project-frame__gallery,
+.archive-page--project-detail .project-frame__canvas {
+  left: 50vw;
+  width: calc(50vw - var(--film-edge-width));
+}
+
+.archive-page--project-detail .project-frame__canvas {
+  z-index: 31;
+  background: transparent;
+}
+
+/* EOF final: keep project action links visible above film/canvas layers. */
+.archive-page--project-detail .project-frame__actions {
+  z-index: 70;
+  left: calc(var(--film-edge-width) + clamp(24px, 2vw, 42px));
+  right: auto;
+  bottom: clamp(18px, 1.7vw, 34px);
+  display: flex;
+  gap: clamp(16px, 1.5vw, 28px);
+  color: #111;
+  pointer-events: auto;
+}
+
+.archive-page--project-detail .project-frame__actions a {
+  color: #111;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* EOF final: fill the empty project-image gutter with the left ivory panel color. */
+.archive-page--project-detail .film-section--project-scroll .film-section__content {
+  background:
+    linear-gradient(
+      90deg,
+      #040404 0 var(--film-edge-width),
+      rgba(244, 239, 223, 0.98) var(--film-edge-width) 50vw,
+      rgba(244, 239, 223, 0.98) 50vw calc(100% - var(--film-edge-width)),
+      #040404 calc(100% - var(--film-edge-width)) 100%
+    );
+}
+
+/* EOF final: align project title/meta with the bottom action links. */
+.archive-page--project-detail .project-frame__copy {
+  grid-template-columns: clamp(150px, 12.6vw, 210px) minmax(260px, 380px);
+  gap: clamp(12px, 1.4vw, 24px);
+  padding-left: calc(var(--film-edge-width) + clamp(24px, 2vw, 42px));
+}
+
+.archive-page--project-detail .project-frame__actions a:nth-child(2) {
+  box-shadow: none;
+}
+
+/* EOF final: PROJECT 01 has no underline; bottom action links keep theirs. */
+.archive-page--project-detail .project-frame__number {
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.archive-page--project-detail .project-frame__actions a,
+.archive-page--project-detail .project-frame__actions a:nth-child(2) {
+  box-shadow: inset 0 -1px currentColor;
+}
+
+/* EOF final: top nav is HOME / ABOUT / PROJECT / CONTACT only. */
+.archive-page .archive-nav,
+.archive-page--project-detail .archive-nav {
+  width: min(calc(100% - (var(--film-edge-width) * 2) - 48px), 640px);
+  gap: clamp(30px, 3vw, 60px);
+}
+
+.archive-page .archive-nav__exit,
+.archive-page--project-detail .archive-nav__exit {
+  display: none !important;
+}
+
+/* EOF final: animate only the side film strips. Left moves down, right moves up. */
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets::before {
+  animation-duration: 3.6s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--left::before {
+  animation-name: filmSprocketsDown;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--right::before {
+  animation-name: filmSprocketsUp;
+}
+
+@keyframes filmSprocketsDown {
+  from {
+    background-position: center 0;
+  }
+
+  to {
+    background-position: center 96px;
+  }
+}
+
+@keyframes filmSprocketsUp {
+  from {
+    background-position: center 0;
+  }
+
+  to {
+    background-position: center -96px;
+  }
+}
+
+/* EOF final: frosted pill navigation with scroll-direction hide/show. */
+.archive-page .archive-nav,
+.archive-page--project-detail .archive-nav {
+  position: fixed;
+  left: 50%;
+  right: auto;
+  top: clamp(14px, 1.4vw, 26px);
+  z-index: 90;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(86px, 1fr));
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  width: min(calc(100% - (var(--film-edge-width, 0px) * 2) - 40px), 680px);
+  min-height: clamp(50px, 4.4vw, 66px);
+  padding: clamp(6px, 0.65vw, 10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.055) 45%, rgba(255, 255, 255, 0.035)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 5px),
+    rgba(255, 255, 255, 0.045);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -16px 28px rgba(255, 255, 255, 0.03),
+    0 18px 48px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(24px) saturate(1.18);
+  -webkit-backdrop-filter: blur(24px) saturate(1.18);
+  transform: translate(-50%, 0);
+  transition:
+    opacity 260ms ease,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 260ms ease;
+}
+
+.archive-page .archive-nav::before,
+.archive-page--project-detail .archive-nav::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.22), transparent 58%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06), transparent 22% 78%, rgba(255, 255, 255, 0.06));
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.archive-page .archive-nav.archive-nav--hidden,
+.archive-page--project-detail .archive-nav.archive-nav--hidden {
+  opacity: 0;
+  filter: blur(2px);
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% - 24px));
+}
+
+.archive-page .archive-nav a,
+.archive-page--project-detail .archive-nav a {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(38px, 3.2vw, 48px);
+  padding: 0 clamp(12px, 1.4vw, 24px);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: inherit;
+  font-size: clamp(0.82rem, 1vw, 1.04rem);
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.18);
+  white-space: nowrap;
+  box-shadow: none;
+  transition:
+    color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.archive-page .archive-nav a:hover,
+.archive-page .archive-nav a:focus-visible,
+.archive-page--project-detail .archive-nav a:hover,
+.archive-page--project-detail .archive-nav a:focus-visible {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.archive-page .archive-nav a.is-active,
+.archive-page--project-detail .archive-nav a.is-active {
+  color: rgba(12, 12, 12, 0.9);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.58));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    inset 0 -10px 18px rgba(255, 255, 255, 0.18),
+    0 9px 24px rgba(0, 0, 0, 0.16);
+  text-shadow: none;
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+}
+
+.archive-page .archive-nav a.is-active::after,
+.archive-page--project-detail .archive-nav a.is-active::after {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .archive-page .archive-nav,
+  .archive-page--project-detail .archive-nav {
+    grid-template-columns: repeat(4, max-content);
+    gap: 4px;
+    width: calc(100% - 24px);
+    min-height: 48px;
+    overflow-x: auto;
+    justify-content: start;
+    padding: 6px;
+  }
+
+  .archive-page .archive-nav a,
+  .archive-page--project-detail .archive-nav a {
+    min-width: 76px;
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 0.76rem;
+  }
+}
+
+/* EOF final: compositor-friendly side film animation, independent from the image canvas. */
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets {
+  overflow: hidden;
+  contain: paint;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets::before {
+  top: -96px;
+  bottom: -96px;
+  animation-duration: 2.6s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  background-position: center 0;
+  will-change: transform;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--left::before {
+  animation-name: filmSprocketsLayerDown;
+}
+
+.archive-page--project-detail .film-section--project-scroll .film-section__sprockets--right::before {
+  animation-name: filmSprocketsLayerUp;
+}
+
+@keyframes filmSprocketsLayerDown {
+  from {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  to {
+    transform: translateX(-50%) translateY(96px);
+  }
+}
+
+@keyframes filmSprocketsLayerUp {
+  from {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  to {
+    transform: translateX(-50%) translateY(-96px);
+  }
+}
+
+/* EOF final: apply the same animated side film treatment to ABOUT. */
+.archive-page--about .film-section--about-flight .film-section__sprockets {
+  display: block;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 46;
+  width: var(--film-edge-width);
+  overflow: hidden;
+  contain: paint;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.04)),
+    #030303;
+}
+
+.archive-page--about .film-section--about-flight .film-section__sprockets--left {
+  left: 0;
+}
+
+.archive-page--about .film-section--about-flight .film-section__sprockets--right {
+  right: 0;
+}
+
+.archive-page--about .film-section--about-flight .film-section__sprockets::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -96px;
+  bottom: -96px;
+  width: clamp(28px, 2.3vw, 38px);
+  transform: translateX(-50%);
+  background-image: url("data:image/svg+xml,%3Csvg width='38' height='96' viewBox='0 0 38 96' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='4' y='18' width='30' height='30' rx='0' fill='%23f5f5ef'/%3E%3C/svg%3E");
+  background-repeat: repeat-y;
+  background-position: center 0;
+  background-size: 100% 96px;
+  animation-duration: 2.6s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.archive-page--about .film-section--about-flight .film-section__sprockets--left::before {
+  animation-name: filmSprocketsLayerDown;
+}
+
+.archive-page--about .film-section--about-flight .film-section__sprockets--right::before {
+  animation-name: filmSprocketsLayerUp;
+}
+
+/* EOF final: allow long project tool lists to wrap cleanly. */
+.archive-page--project-detail .project-frame__meta strong {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.35em;
+  max-width: min(34vw, 560px);
+}
+
+.archive-page--project-detail .project-frame__meta strong .project-frame__meta-tool {
+  white-space: normal;
+}
+
+/* EOF final: Star-Wars-inspired contact crawl. */
+.film-section--contact-crawl {
+  min-height: 100svh;
+  overflow: hidden;
+  background: #020202;
+}
+
+.film-section--contact-crawl .film-section__content {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  overflow: hidden;
+  padding: 0;
+  background:
+    radial-gradient(ellipse at 50% 78%, rgba(172, 134, 42, 0.12), transparent 42%),
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.05), transparent 48%),
+    #020202;
+}
+
+.film-section--contact-crawl .film-section__scene {
+  z-index: 4;
+  color: rgba(238, 210, 115, 0.6);
+}
+
+.contact-crawl {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  color: #f0c64c;
+  isolation: isolate;
+}
+
+.contact-crawl::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, #020202 0%, rgba(2, 2, 2, 0.96) 12%, rgba(2, 2, 2, 0.58) 30%, transparent 46%),
+    radial-gradient(ellipse at 50% 7%, rgba(2, 2, 2, 0.92), transparent 44%);
+}
+
+.contact-crawl::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 3;
+  height: 22vh;
+  pointer-events: none;
+  background: linear-gradient(0deg, #020202, transparent);
+}
+
+.contact-crawl__stars {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.72;
+  background:
+    radial-gradient(circle at 8% 22%, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 18% 72%, rgba(255, 255, 255, 0.6) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 31% 16%, rgba(255, 255, 255, 0.62) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 46% 42%, rgba(255, 255, 255, 0.5) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 58% 12%, rgba(255, 255, 255, 0.68) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 72% 62%, rgba(255, 255, 255, 0.5) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 89% 24%, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 94% 81%, rgba(255, 255, 255, 0.58) 0 1px, transparent 1.6px);
+  background-size:
+    360px 280px,
+    420px 320px,
+    520px 380px,
+    470px 340px,
+    390px 300px,
+    560px 420px,
+    440px 330px,
+    610px 430px;
+  animation: contactStarsDrift 18s linear infinite;
+}
+
+.contact-crawl__viewport {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  perspective: 420px;
+  perspective-origin: 50% 20%;
+  overflow: hidden;
+}
+
+.contact-crawl__text {
+  width: min(760px, calc(100vw - 48px));
+  transform-origin: 50% 100%;
+  transform: rotateX(64deg) translateY(74vh);
+  animation: contactCrawlRise 26s linear infinite;
+  color: #e6bd45;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 800;
+  line-height: 1.48;
+  text-align: justify;
+  text-align-last: center;
+  text-shadow:
+    0 0 18px rgba(220, 170, 42, 0.32),
+    0 0 2px rgba(255, 238, 165, 0.38);
+  will-change: transform, opacity;
+}
+
+.contact-crawl__text h2 {
+  margin: 0 0 clamp(28px, 4vh, 50px);
+  color: #e7bd43;
+  font-size: clamp(2.4rem, 6vw, 7.2rem);
+  font-weight: 900;
+  line-height: 0.88;
+  text-align: center;
+  text-align-last: center;
+  text-transform: uppercase;
+}
+
+.contact-crawl__text p {
+  margin: 0 0 clamp(28px, 4.8vh, 60px);
+  font-size: clamp(1.3rem, 2.7vw, 3.2rem);
+  letter-spacing: 0;
+}
+
+.contact-crawl__text address {
+  display: grid;
+  gap: clamp(12px, 1.8vh, 22px);
+  margin: clamp(32px, 5vh, 62px) 0 clamp(24px, 4vh, 48px);
+  font-style: normal;
+  text-align: center;
+  text-align-last: center;
+}
+
+.contact-crawl__text a {
+  color: inherit;
+  font-size: clamp(1.2rem, 2.35vw, 2.8rem);
+  text-decoration: none;
+}
+
+.contact-crawl__text strong {
+  display: block;
+  color: #f0c64c;
+  font-size: clamp(1.6rem, 3.5vw, 4.4rem);
+  font-weight: 900;
+  text-align: center;
+  text-align-last: center;
+  text-transform: uppercase;
+}
+
+@keyframes contactCrawlRise {
+  0% {
+    opacity: 1;
+    transform: rotateX(64deg) translateY(78vh);
+  }
+
+  76% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.05;
+    transform: rotateX(64deg) translateY(-190vh);
+  }
+}
+
+@keyframes contactStarsDrift {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-80px);
+  }
+}
+
+@media (max-width: 760px) {
+  .contact-crawl__viewport {
+    perspective: 340px;
+  }
+
+  .contact-crawl__text {
+    width: calc(100vw - 34px);
+    transform: rotateX(60deg) translateY(78vh);
+    animation-duration: 24s;
+  }
+
+  .contact-crawl__text p {
+    font-size: clamp(1.05rem, 5.2vw, 1.6rem);
+    text-align: center;
+    text-align-last: center;
+  }
+}
+
+/* EOF final: contact uses the same full-viewport side-film frame as the other detail pages. */
+.film-section--contact-crawl {
+  --film-edge-width: clamp(56px, 4.2vw, 76px);
+  min-height: 100svh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: #020202;
+  box-shadow: none;
+  opacity: 1;
+  transform: none;
+}
+
+.film-section--contact-crawl .film-section__sprockets {
+  display: block;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 46;
+  width: var(--film-edge-width);
+  overflow: hidden;
+  contain: paint;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.04)),
+    #030303;
+}
+
+.film-section--contact-crawl .film-section__sprockets--left {
+  left: 0;
+}
+
+.film-section--contact-crawl .film-section__sprockets--right {
+  right: 0;
+}
+
+.film-section--contact-crawl .film-section__sprockets::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -96px;
+  bottom: -96px;
+  width: clamp(28px, 2.3vw, 38px);
+  transform: translateX(-50%);
+  background-image: url("data:image/svg+xml,%3Csvg width='38' height='96' viewBox='0 0 38 96' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='4' y='18' width='30' height='30' rx='0' fill='%23f5f5ef'/%3E%3C/svg%3E");
+  background-repeat: repeat-y;
+  background-position: center 0;
+  background-size: 100% 96px;
+  animation-duration: 2.6s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.film-section--contact-crawl .film-section__sprockets--left::before {
+  animation-name: filmSprocketsLayerDown;
+}
+
+.film-section--contact-crawl .film-section__sprockets--right::before {
+  animation-name: filmSprocketsLayerUp;
+}
+
+.film-section--contact-crawl .film-section__edge-label {
+  display: none;
+}
+
+.film-section--contact-crawl .film-section__content {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-height: 100svh;
+  height: 100svh;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background:
+    radial-gradient(ellipse at 50% 78%, rgba(172, 134, 42, 0.15), transparent 44%),
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.055), transparent 50%),
+    #020202;
+}
+
+.film-section--contact-crawl .film-section__content::before,
+.film-section--contact-crawl .film-section__content::after {
+  display: none;
+}
+
+.film-section--contact-crawl .film-section__scene {
+  position: fixed;
+  top: clamp(86px, 8.4vw, 130px);
+  left: calc(var(--film-edge-width) + clamp(28px, 3vw, 62px));
+  z-index: 47;
+  margin: 0;
+  color: rgba(238, 210, 115, 0.68);
+}
+
+.film-section--contact-crawl .contact-crawl {
+  width: 100%;
+  min-height: 100svh;
+  height: 100svh;
+}
+
+.film-section--contact-crawl .contact-crawl__viewport {
+  inset: 0 var(--film-edge-width);
+  perspective: 560px;
+  perspective-origin: 50% 18%;
+}
+
+.film-section--contact-crawl .contact-crawl__text {
+  width: min(880px, calc(100vw - (var(--film-edge-width) * 2) - 72px));
+  transform: rotateX(61deg) translateY(68vh);
+  animation-duration: 28s;
+  text-align: center;
+  text-align-last: center;
+}
+
+.film-section--contact-crawl .contact-crawl__text h2 {
+  margin-bottom: clamp(22px, 3.4vh, 42px);
+  font-size: clamp(3rem, 6.2vw, 7.6rem);
+}
+
+.film-section--contact-crawl .contact-crawl__text p {
+  margin-bottom: clamp(24px, 4vh, 48px);
+  font-size: clamp(1.35rem, 2.35vw, 3rem);
+  line-height: 1.42;
+  text-align: center;
+  text-align-last: center;
+}
+
+.film-section--contact-crawl .contact-crawl__text p span {
+  display: block;
+}
+
+.film-section--contact-crawl .contact-crawl__text a {
+  font-size: clamp(1.18rem, 2.05vw, 2.4rem);
+}
+
+.film-section--contact-crawl .contact-crawl__text strong {
+  font-size: clamp(1.6rem, 3.1vw, 3.8rem);
+}
+
+@media (max-width: 760px) {
+  .film-section--contact-crawl {
+    --film-edge-width: 44px;
+  }
+
+  .film-section--contact-crawl .film-section__scene {
+    left: calc(var(--film-edge-width) + 16px);
+  }
+
+  .film-section--contact-crawl .contact-crawl__text {
+    width: calc(100vw - (var(--film-edge-width) * 2) - 24px);
+    transform: rotateX(58deg) translateY(72vh);
+  }
+
+  .film-section--contact-crawl .contact-crawl__text p {
+    font-size: clamp(1.02rem, 4.7vw, 1.45rem);
+  }
+}
+
+/* EOF final: CONTACT matches ABOUT's full-bleed film framing. */
+.archive-page--contact .archive-page__reel {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+.archive-page--contact .film-section--contact-crawl {
+  min-height: 100svh;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(116, 19, 16, 0.2), transparent 34%),
+    linear-gradient(125deg, #070707 0%, #171512 52%, #090909 100%);
+}
+
+.archive-page--contact .film-section--contact-crawl .film-section__content {
+  position: relative;
+  inset: auto;
+  width: 100vw;
+  height: 100svh;
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(116, 19, 16, 0.2), transparent 34%),
+    linear-gradient(125deg, #070707 0%, #171512 52%, #090909 100%);
+}
+
+.archive-page--contact .film-section--contact-crawl .film-section__scene {
+  display: none;
+}
+
+.archive-page--contact .film-section--contact-crawl .film-section__sprockets {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+}
+
+.archive-page--contact .film-section--contact-crawl .film-section__sprockets--left {
+  left: 0;
+}
+
+.archive-page--contact .film-section--contact-crawl .film-section__sprockets--right {
+  right: 0;
 }
