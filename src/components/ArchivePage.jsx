@@ -44,6 +44,7 @@ import ArchiveNav from './ArchiveNav.jsx';
 import ContactSection from './ContactSection.jsx';
 import FilmSection from './FilmSection.jsx';
 import ProjectSection from './ProjectSection.jsx';
+import { getReelUrl } from '../routes.js';
 
 const project01Frames = [
   project01Frame01,
@@ -732,7 +733,7 @@ export default function ArchivePage() {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
-        window.location.href = '/?view=reel';
+        window.location.href = getReelUrl();
       }
     };
 

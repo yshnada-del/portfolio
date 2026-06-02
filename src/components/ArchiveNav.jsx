@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { getArchiveUrl, getReelUrl } from '../routes.js';
 
 const archiveNavItems = [
-  { id: 'home', label: 'HOME', href: '/?view=reel' },
+  { id: 'home', label: 'HOME', href: getReelUrl() },
   { id: 'about', label: 'ABOUT' },
   { id: 'project-01', label: 'PROJECT' },
   { id: 'contact', label: 'CONTACT' },
@@ -72,12 +73,12 @@ export default function ArchiveNav({ activeId, onSelect }) {
     setIsHidden(false);
 
     if (id === 'home') {
-      window.location.href = '/?view=reel';
+      window.location.href = getReelUrl();
       return;
     }
 
     onSelect?.(id);
-    window.history.pushState(null, '', `/archive#${id}`);
+    window.history.pushState(null, '', getArchiveUrl(id));
 
     const target = document.getElementById(id);
 
@@ -97,7 +98,7 @@ export default function ArchiveNav({ activeId, onSelect }) {
         <a
           className={activeId === item.id || (item.id === 'project-01' && activeId?.startsWith('project-')) ? 'is-active' : ''}
           key={item.id}
-          href={item.href ?? `/archive#${item.id}`}
+          href={item.href ?? getArchiveUrl(item.id)}
           onClick={(event) => handleClick(event, item.id)}
         >
           {item.label}

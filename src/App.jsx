@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ArchivePage from './components/ArchivePage.jsx';
+import { getArchiveUrl, isCurrentPath } from './routes.js';
 import aboutMe from './assets/about_me.png';
 import aboutMePage from './assets/about_me_page.svg';
 import allBackground from './assets/all_background.png';
@@ -38,12 +39,12 @@ const tapes = [
 ];
 
 const filmFrames = [
-  { id: 'about', title: 'ABOUT ME', number: '01', image: aboutMePage, hideLabel: true, href: '/archive#about' },
-  { id: 'project-01', title: 'PROJECT 01', number: '02', image: jibsalife, hideLabel: true, href: '/archive#project-01' },
-  { id: 'project-02', title: 'PROJECT 02', number: '03', image: simmons, hideLabel: true, href: '/archive#project-02' },
-  { id: 'project-03', title: 'PROJECT 03', number: '04', image: matmut, hideLabel: true, href: '/archive#project-03' },
-  { id: 'project-04', title: 'PROJECT 04', number: '05', image: pizzahut, hideLabel: true, href: '/archive#project-04' },
-  { id: 'contact', title: 'CONTACT ME', number: '06', image: contactImage, hideLabel: true, href: '/archive#contact' },
+  { id: 'about', title: 'ABOUT ME', number: '01', image: aboutMePage, hideLabel: true, href: getArchiveUrl('about') },
+  { id: 'project-01', title: 'PROJECT 01', number: '02', image: jibsalife, hideLabel: true, href: getArchiveUrl('project-01') },
+  { id: 'project-02', title: 'PROJECT 02', number: '03', image: simmons, hideLabel: true, href: getArchiveUrl('project-02') },
+  { id: 'project-03', title: 'PROJECT 03', number: '04', image: matmut, hideLabel: true, href: getArchiveUrl('project-03') },
+  { id: 'project-04', title: 'PROJECT 04', number: '05', image: pizzahut, hideLabel: true, href: getArchiveUrl('project-04') },
+  { id: 'contact', title: 'CONTACT ME', number: '06', image: contactImage, hideLabel: true, href: getArchiveUrl('contact') },
 ];
 
 const filmSegments = Array.from({ length: 25 }, (_, index) => index);
@@ -324,7 +325,7 @@ function PortfolioScreen() {
     }
 
     event.preventDefault();
-    window.location.href = `/archive#${frame.id}`;
+    window.location.href = getArchiveUrl(frame.id);
   };
 
   const closeAboutMe = () => {
@@ -511,7 +512,7 @@ function PortfolioScreen() {
 }
 
 export default function App() {
-  if (window.location.pathname === '/archive') {
+  if (isCurrentPath(window.location.pathname, '/archive') || new URLSearchParams(window.location.search).get('view') === 'archive') {
     return <ArchivePage />;
   }
 
