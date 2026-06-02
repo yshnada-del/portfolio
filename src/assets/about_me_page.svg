@@ -1,0 +1,39 @@
+<svg width="1448" height="1086" viewBox="0 0 1448 1086" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="redGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(345 278) rotate(44) scale(620 520)">
+      <stop stop-color="#5A1713" stop-opacity="0.62"/>
+      <stop offset="0.58" stop-color="#1A0F0D" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#080807" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="1448" y2="1086" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#160B09"/>
+      <stop offset="0.48" stop-color="#0B0B0A"/>
+      <stop offset="1" stop-color="#080807"/>
+    </linearGradient>
+    <pattern id="scan" width="1" height="7" patternUnits="userSpaceOnUse">
+      <rect width="1" height="1" fill="#F1EADB" fill-opacity="0.035"/>
+      <rect y="3" width="1" height="1" fill="#000000" fill-opacity="0.16"/>
+    </pattern>
+    <pattern id="specks" width="38" height="31" patternUnits="userSpaceOnUse">
+      <circle cx="6" cy="9" r="1.1" fill="#F1EADB" fill-opacity="0.08"/>
+      <circle cx="24" cy="22" r="0.9" fill="#F1EADB" fill-opacity="0.05"/>
+    </pattern>
+    <style>
+      .title {
+        fill: #F1EADB;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 154px;
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+    </style>
+  </defs>
+  <rect width="1448" height="1086" fill="url(#bg)"/>
+  <rect width="1448" height="1086" fill="url(#redGlow)"/>
+  <rect width="1448" height="1086" fill="url(#scan)" opacity="0.9"/>
+  <rect width="1448" height="1086" fill="url(#specks)" opacity="0.5"/>
+  <rect x="34" y="208" width="1376" height="640" stroke="#F1EADB" stroke-opacity="0.035"/>
+  <rect x="70" y="246" width="1304" height="564" stroke="#F1EADB" stroke-opacity="0.026"/>
+  <line x1="724" y1="0" x2="724" y2="1086" stroke="#F1EADB" stroke-opacity="0.06" stroke-width="4"/>
+  <text class="title" x="724" y="568" text-anchor="middle">ABOUT ME</text>
+</svg>
