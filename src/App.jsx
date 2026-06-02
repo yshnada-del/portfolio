@@ -47,7 +47,11 @@ const filmFrames = [
   { id: 'contact', title: 'CONTACT ME', number: '06', image: contactImage, hideLabel: true, href: getArchiveUrl('contact') },
 ];
 
-const filmSegments = Array.from({ length: 25 }, (_, index) => index);
+const FILM_SEGMENT_WIDTH = 100;
+const FILM_FRAME_WIDTH = 300;
+const FILM_FRAME_GAP = 20;
+const FILM_LOOP_WIDTH = filmFrames.length * (FILM_FRAME_WIDTH + FILM_FRAME_GAP);
+const filmSegments = Array.from({ length: 34 }, (_, index) => index);
 
 const aboutSkillIcons = [
   { name: 'Figma', image: figmaIcon, className: 'about-skill-icon--figma' },
@@ -447,6 +451,8 @@ function PortfolioScreen() {
       screen.style.setProperty('--film-rotation-x', `${motion.rotationX}deg`);
 
       motion.curveAmount += step * 0.334;
+      motion.curvePos = (motion.curvePos + 5.4 * step) % FILM_LOOP_WIDTH;
+
       segmentRefs.current.forEach((segment, index) => {
         if (!segment) {
           return;
@@ -458,14 +464,8 @@ function PortfolioScreen() {
         segment.style.setProperty('--segment-rotate-y', `${r * 0.8}deg`);
         segment.style.setProperty('--segment-bright', `${r >= 0 ? shade * 0.025 : 0}`);
         segment.style.setProperty('--segment-dark', `${r <= 0 ? shade * 0.025 : 0}`);
-        segment.style.setProperty('--strip-offset', `${-(index * 100) - motion.curvePos}px`);
-
-        motion.curvePos += 0.3 * step;
+        segment.style.setProperty('--strip-offset', `${-(index * FILM_SEGMENT_WIDTH) - motion.curvePos}px`);
       });
-
-      if (motion.curvePos >= 2880) {
-        motion.curvePos = 0;
-      }
 
       frameRef.current = window.requestAnimationFrame(animate);
     };
@@ -488,10 +488,23 @@ function PortfolioScreen() {
   return (
     <section className="portfolio-screen" ref={screenRef} aria-label="Portfolio content">
       <div className="film-flow" aria-label="Portfolio sections">
+        <div className="aurora-background" aria-hidden="true">
+          <h1>Aurora</h1>
+          <span />
+          <span />
+          <span />
+        </div>
         <div className="film-flow__stage">
           <div className="film-flow__ribbon">
             {renderSegment()}
           </div>
+        </div>
+        <div className="film-archive-hint" aria-hidden="true">
+          <span className="film-archive-hint__icon">
+            <span />
+            <span />
+          </span>
+          <span>필름 프레임을 선택해 아카이브를 열어보세요.</span>
         </div>
       </div>
       {hoverCue && (
