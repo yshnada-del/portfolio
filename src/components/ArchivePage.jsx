@@ -412,27 +412,32 @@ function AboutScrollAbout() {
       const progress = Math.min(Math.max(-rect.top / travel, 0), 1);
       const introProgress = Math.min(Math.max(progress / 0.24, 0), 1);
       const easedIntro = 1 - Math.pow(1 - introProgress, 3);
-      const sceneProgress = Math.min(Math.max((progress - 0.18) / 0.8, 0), 0.9999);
+      const sceneProgress = Math.min(Math.max((progress - 0.16) / 0.86, 0), 0.9999);
       const activeIndex = Math.min(scenes.length - 1, Math.floor(sceneProgress * scenes.length));
+      const scrollHintOpacity = Math.max(0, 1 - Math.min(progress / 0.16, 1));
       const watermarkOpacity = Math.max(0.18, 1 - easedIntro * 0.82);
       const watermarkStretchY = 1;
       const startSize = Math.max(58, Math.min(window.innerWidth * 0.05, 92));
       const endSize = Math.min(window.innerWidth * 0.34, window.innerHeight * 0.64, 680);
       let watermarkSize = startSize + (endSize - startSize) * easedIntro;
+      const clamp01 = (value) => Math.min(Math.max(value, 0), 1);
+      const easeOutCubic = (value) => 1 - Math.pow(1 - clamp01(value), 3);
 
       scenes.forEach((scene, index) => {
         const rawSceneProgress = sceneProgress * scenes.length - index;
-        const localProgress = Math.min(Math.max(rawSceneProgress, 0), 0.9999);
-        const isActive = progress >= 0.16 && index === activeIndex;
-        const isTitlePhase = isActive && localProgress < 0.34;
-        const isContentPhase = isActive && localProgress >= 0.34;
-        const contentProgress = isContentPhase ? Math.min((localProgress - 0.34) / 0.34, 1) : 0;
-        const labelOpacity = isTitlePhase || isContentPhase ? 1 : 0;
-        const contentOpacity = isContentPhase ? 1 : 0;
-        const revealY = isContentPhase ? (1 - contentProgress) * 180 : 180;
+        const localProgress = clamp01(rawSceneProgress);
+        const isActive = progress >= 0.14 && index === activeIndex;
+        const isVisible = progress >= 0.14 && rawSceneProgress > -0.04 && rawSceneProgress < 1.04;
+        const labelIn = easeOutCubic(localProgress / 0.12);
+        const labelOut = 1 - easeOutCubic((localProgress - 0.9) / 0.1);
+        const contentIn = easeOutCubic((localProgress - 0.08) / 0.22);
+        const contentOut = 1 - easeOutCubic((localProgress - 0.9) / 0.1);
+        const labelOpacity = isVisible ? Math.min(labelIn, labelOut) : 0;
+        const contentOpacity = isVisible ? Math.min(contentIn, contentOut) : 0;
+        const revealY = (1 - contentIn) * 72;
 
         scene.classList.toggle('is-active', isActive);
-        scene.classList.toggle('is-past', progress >= 0.16 && index < activeIndex);
+        scene.classList.toggle('is-past', progress >= 0.14 && index < activeIndex);
         scene.style.setProperty('--label-opacity', labelOpacity.toFixed(4));
         scene.style.setProperty('--content-opacity', contentOpacity.toFixed(4));
         scene.style.setProperty('--content-reveal-y', `${revealY.toFixed(2)}px`);
@@ -441,6 +446,7 @@ function AboutScrollAbout() {
       stage.style.setProperty('--about-watermark-opacity', watermarkOpacity.toFixed(4));
       stage.style.setProperty('--about-watermark-size', `${watermarkSize.toFixed(2)}px`);
       stage.style.setProperty('--about-watermark-stretch-y', watermarkStretchY.toFixed(4));
+      stage.style.setProperty('--about-scroll-hint-opacity', scrollHintOpacity.toFixed(4));
 
       if (watermark) {
         watermark.style.opacity = watermarkOpacity.toFixed(4);
@@ -486,6 +492,10 @@ function AboutScrollAbout() {
       <div className="about-scroll-grain" aria-hidden="true" />
       <div className="about-scroll-watermark" aria-hidden="true">
         ABOUT ME
+      </div>
+      <div className="about-scroll-hint" aria-hidden="true">
+        <div className="about-scroll-hint__mouse" />
+        <p>Scroll</p>
       </div>
       <div className="about-scroll-scenes">
         {aboutScrollScenes.map((scene, sceneIndex) => (
@@ -543,10 +553,19 @@ function AboutScrollSceneContent({ scene }) {
         {scene.items.map(([name, percent, icon], index) => (
           <article
             className="about-tool-card about-reveal"
-            style={{ '--stagger': index + 1, '--tool-percent': percent }}
+            style={{
+              '--stagger': index + 1,
+              '--tool-percent': percent,
+              '--tool-dash': `${percent} 100`,
+              '--tool-delay': `${index * 90}ms`,
+            }}
             key={name}
           >
             <div className="about-tool-card__gauge" aria-hidden="true">
+              <svg className="about-tool-card__ring" viewBox="0 0 120 120">
+                <circle className="about-tool-card__ring-track" cx="60" cy="60" r="52" pathLength="100" />
+                <circle className="about-tool-card__ring-progress" cx="60" cy="60" r="52" pathLength="100" />
+              </svg>
               <img src={icon} alt="" />
             </div>
             <h3>{name}</h3>

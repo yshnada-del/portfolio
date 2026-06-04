@@ -2398,7 +2398,7 @@ h1 span {
 
 /* Interactive archive-only About Me sequence */
 .film-section--about-flight {
-  min-height: 500svh;
+  min-height: 680svh;
   margin: 0;
   padding: 0;
   overflow: visible;
@@ -2517,6 +2517,79 @@ h1 span {
   filter: blur(0.2px);
 }
 
+.about-scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(32px, 5.6vh, 64px);
+  z-index: 5;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  width: 84px;
+  color: #eee4d0;
+  opacity: var(--about-scroll-hint-opacity, 1);
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity 180ms linear;
+}
+
+.about-scroll-hint__mouse {
+  position: relative;
+  width: 32px;
+  height: 52px;
+  border-radius: 999px;
+  background:
+    rgba(238, 228, 208, 0.32)
+    linear-gradient(
+      transparent 0%,
+      transparent 50%,
+      rgba(238, 228, 208, 0.96) 50%,
+      rgba(238, 228, 208, 0.96) 100%
+    );
+  background-size: 100% 200%;
+  box-shadow: 0 0 22px rgba(238, 228, 208, 0.08);
+  animation:
+    aboutScrollHintColor 5s linear infinite,
+    aboutScrollHintNudge 5s ease-out infinite;
+}
+
+.about-scroll-hint__mouse::before,
+.about-scroll-hint__mouse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+.about-scroll-hint__mouse::before {
+  width: 26px;
+  height: 46px;
+  border-radius: 999px;
+  background: #080807;
+}
+
+.about-scroll-hint__mouse::after {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #eee4d0;
+  animation: aboutScrollHintTrackball 5s linear infinite;
+}
+
+.about-scroll-hint p {
+  margin: 0;
+  color: #eee4d0;
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  text-transform: uppercase;
+  animation:
+    aboutScrollHintTextColor 5s ease-out infinite,
+    aboutScrollHintTextNudge 5s ease-out infinite;
+}
+
 .about-scroll-scenes {
   position: relative;
   z-index: 2;
@@ -2586,7 +2659,8 @@ h1 span {
   opacity: var(--content-opacity);
   transform: translateY(var(--content-reveal-y));
   transition:
-    transform 80ms linear;
+    opacity 120ms linear,
+    transform 120ms linear;
   transition-delay: 0ms;
 }
 
@@ -2739,30 +2813,58 @@ h1 span {
   aspect-ratio: 1;
   place-items: center;
   border-radius: 50%;
-  background:
-    linear-gradient(#111, #111) padding-box,
-    conic-gradient(#b5483f calc(var(--tool-percent) * 1%), rgba(238, 228, 208, 0.18) 0) border-box;
-  border: 5px solid transparent;
-  box-shadow:
-    inset 0 0 22px rgba(238, 228, 208, 0.05),
-    0 12px 28px rgba(0, 0, 0, 0.24);
+  background: transparent;
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.28));
 }
 
-.about-tool-card__gauge::before {
-  content: "";
+.about-tool-card__ring {
   position: absolute;
   inset: 8px;
-  border-radius: 50%;
-  background: rgba(238, 228, 208, 0.92);
-  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.14);
+  display: block;
+  overflow: visible;
+  transform: rotate(-90deg);
+}
+
+.about-tool-card__ring-track,
+.about-tool-card__ring-progress {
+  fill: none;
+  stroke-width: 8;
+}
+
+.about-tool-card__ring-track {
+  stroke: rgba(238, 228, 208, 0.16);
+}
+
+.about-tool-card__ring-progress {
+  stroke: #c94b42;
+  stroke-dasharray: 0 100;
+  stroke-linecap: round;
+  animation-delay: var(--tool-delay, 0ms);
+  transition: filter 180ms ease;
 }
 
 .about-tool-card__gauge img {
   position: relative;
   z-index: 1;
-  width: 48%;
-  height: 48%;
+  width: 44%;
+  height: 44%;
   object-fit: contain;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.42));
+  transition: transform 220ms ease;
+}
+
+.about-scroll-scene.is-active .about-tool-card__ring-progress {
+  animation: aboutToolRingProgress 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.about-tool-card:hover .about-tool-card__ring-progress,
+.about-tool-card:focus-within .about-tool-card__ring-progress {
+  filter: drop-shadow(0 0 8px rgba(201, 75, 66, 0.42));
+}
+
+.about-tool-card:hover .about-tool-card__gauge img,
+.about-tool-card:focus-within .about-tool-card__gauge img {
+  transform: scale(1.08);
 }
 
 .about-tool-card h3 {
@@ -2787,6 +2889,190 @@ h1 span {
   gap: clamp(18px, 3vw, 38px);
   padding: 16px 0;
   border-top: 1px solid rgba(238, 228, 208, 0.16);
+}
+
+@keyframes aboutScrollHintColor {
+  0% {
+    background-position: 0% 100%;
+  }
+
+  20% {
+    background-position: 0% 0%;
+  }
+
+  21% {
+    background-color: rgba(238, 228, 208, 0.32);
+  }
+
+  29.99% {
+    background-color: rgba(238, 228, 208, 0.96);
+    background-position: 0% 0%;
+  }
+
+  30% {
+    background-color: rgba(238, 228, 208, 0.32);
+    background-position: 0% 100%;
+  }
+
+  50% {
+    background-position: 0% 0%;
+  }
+
+  51% {
+    background-color: rgba(238, 228, 208, 0.32);
+  }
+
+  59% {
+    background-color: rgba(238, 228, 208, 0.96);
+    background-position: 0% 0%;
+  }
+
+  60% {
+    background-color: rgba(238, 228, 208, 0.32);
+    background-position: 0% 100%;
+  }
+
+  80% {
+    background-position: 0% 0%;
+  }
+
+  81% {
+    background-color: rgba(238, 228, 208, 0.32);
+  }
+
+  90%,
+  100% {
+    background-color: rgba(238, 228, 208, 0.96);
+  }
+}
+
+@keyframes aboutScrollHintTrackball {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(-12px);
+  }
+
+  6% {
+    opacity: 1;
+    transform: scale(0.9) translateY(3px);
+  }
+
+  14% {
+    opacity: 0;
+    transform: scale(0.4) translateY(24px);
+  }
+
+  15%,
+  19% {
+    opacity: 0;
+    transform: scale(0.4) translateY(-12px);
+  }
+
+  28%,
+  29.99%,
+  30% {
+    opacity: 1;
+    transform: scale(1) translateY(-12px);
+  }
+
+  36% {
+    opacity: 1;
+    transform: scale(0.9) translateY(3px);
+  }
+
+  44% {
+    opacity: 0;
+    transform: scale(0.4) translateY(24px);
+  }
+
+  45%,
+  49% {
+    opacity: 0;
+    transform: scale(0.4) translateY(-12px);
+  }
+
+  58%,
+  59.99%,
+  60% {
+    opacity: 1;
+    transform: scale(1) translateY(-12px);
+  }
+
+  66% {
+    opacity: 1;
+    transform: scale(0.9) translateY(3px);
+  }
+
+  74% {
+    opacity: 0;
+    transform: scale(0.4) translateY(24px);
+  }
+
+  75%,
+  79% {
+    opacity: 0;
+    transform: scale(0.4) translateY(-12px);
+  }
+
+  88%,
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(-12px);
+  }
+}
+
+@keyframes aboutScrollHintNudge {
+  0%,
+  30%,
+  60%,
+  90% {
+    transform: translateY(0);
+  }
+
+  20%,
+  50%,
+  80% {
+    transform: translateY(7px);
+  }
+}
+
+@keyframes aboutScrollHintTextNudge {
+  0%,
+  30%,
+  60%,
+  90% {
+    transform: translateY(0);
+  }
+
+  20%,
+  50%,
+  80% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes aboutScrollHintTextColor {
+  21%,
+  51%,
+  81% {
+    color: rgba(238, 228, 208, 0.38);
+  }
+
+  30%,
+  60%,
+  90% {
+    color: #eee4d0;
+  }
+}
+
+@keyframes aboutToolRingProgress {
+  from {
+    stroke-dasharray: 0 100;
+  }
+
+  to {
+    stroke-dasharray: var(--tool-dash);
+  }
 }
 
 @media (max-width: 980px) {
@@ -2824,6 +3110,11 @@ h1 span {
     font-size: clamp(4.4rem, 20vw, 12rem);
     opacity: 0.08;
     transform: none;
+  }
+
+  .about-scroll-hint {
+    position: fixed;
+    bottom: clamp(22px, 4vh, 42px);
   }
 
   .about-scroll-scenes {
@@ -4050,7 +4341,7 @@ img.contact-icon {
 .project-frame__actions a {
   position: relative;
   display: inline-flex;
-  gap: 4px;
+  gap: 8px;
   min-height: 24px;
   align-items: center;
   justify-content: center;
@@ -4063,7 +4354,7 @@ img.contact-icon {
   font-weight: 800;
   text-decoration: none;
   text-transform: uppercase;
-  box-shadow: inset 0 -1px currentColor;
+  box-shadow: none;
   transition:
     background 180ms ease,
     box-shadow 180ms ease,
@@ -4071,20 +4362,57 @@ img.contact-icon {
     transform 180ms ease;
 }
 
+.project-frame__actions a > span:first-child {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  padding: 0 0.18em;
+  margin: 0 -0.18em;
+}
+
+.project-frame__actions a > span:first-child::before {
+  content: "";
+  position: absolute;
+  left: -0.28em;
+  right: -0.26em;
+  top: 22%;
+  bottom: -0.08em;
+  z-index: -1;
+  border-radius: 3px 6px 4px 5px;
+  background:
+    conic-gradient(at 0 100%, rgb(var(--action-mark-color) / 0.92) 1%, transparent 4%) no-repeat 0 0 / auto 120%,
+    conic-gradient(from 180deg at 100% 0, transparent, rgb(var(--action-mark-color) / 0.9) 1%, transparent 5%) no-repeat 100% 100% / auto 120%,
+    linear-gradient(var(--action-mark-angle), rgb(var(--action-mark-color) / 0.56), rgb(var(--action-mark-color) / 0.18) 72%, rgb(var(--action-mark-color) / 0.48));
+  opacity: 0.92;
+  transform: skew(-5deg) rotate(-1deg) scale(1.05, 1.08);
+  transform-origin: center;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.project-frame__actions a:nth-child(1) {
+  --action-mark-color: 255 216 74;
+  --action-mark-angle: 48deg;
+}
+
+.project-frame__actions a:nth-child(2) {
+  --action-mark-color: 180 235 92;
+  --action-mark-angle: 32deg;
+}
+
 .project-frame__action-icon {
-  display: inline-grid;
-  place-items: center;
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
   width: 0.9em;
   height: 0.9em;
-  font-size: 0;
+  background: currentColor;
   line-height: 1;
   transform: translateY(-0.08em);
   transition: transform 180ms ease;
-}
-
-.project-frame__action-icon::before {
-  content: "↗";
-  font-size: 0.88rem;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.52 16.15 1.85 14.48 11.04 5.29H4.2V2.9h10.9v10.9h-2.39V6.96L3.52 16.15Z' fill='black'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.52 16.15 1.85 14.48 11.04 5.29H4.2V2.9h10.9v10.9h-2.39V6.96L3.52 16.15Z' fill='black'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .project-frame__actions a::before {
@@ -4101,9 +4429,15 @@ img.contact-icon {
 .project-frame__actions a:focus-visible {
   color: #8b201b;
   background: transparent;
-  box-shadow: inset 0 0 currentColor;
+  box-shadow: none;
   transform: translateY(-1px);
   outline: none;
+}
+
+.project-frame__actions a:hover > span:first-child::before,
+.project-frame__actions a:focus-visible > span:first-child::before {
+  opacity: 1;
+  transform: skew(-5deg) rotate(-1deg) scale(1.08, 1.16);
 }
 
 .project-frame__actions a:hover .project-frame__action-icon,
@@ -5552,7 +5886,7 @@ img.contact-icon {
 }
 
 .film-section--about-flight {
-  min-height: 500svh;
+  min-height: 680svh;
   margin: 0;
   padding: 0;
   overflow: visible;
@@ -6219,7 +6553,7 @@ img.contact-icon {
 }
 
 .film-section--about-flight {
-  min-height: 500svh;
+  min-height: 680svh;
   margin: 0;
   padding: 0;
   overflow: visible;
@@ -7036,7 +7370,7 @@ img.contact-icon {
   font-size: clamp(0.76rem, 0.88vw, 0.94rem);
   font-weight: 800;
   text-transform: uppercase;
-  box-shadow: inset 0 -1px currentColor;
+  box-shadow: none;
 }
 
 .archive-page--project-detail .project-frame__actions {
@@ -7119,7 +7453,7 @@ img.contact-icon {
   line-height: 1.1;
   letter-spacing: 0;
   text-transform: uppercase;
-  box-shadow: inset 0 -1px currentColor;
+  box-shadow: none;
 }
 
 .archive-page--project-detail .project-frame__actions {
@@ -7186,7 +7520,7 @@ img.contact-icon {
 
 .archive-page--project-detail .project-frame__actions a,
 .archive-page--project-detail .project-frame__actions a:nth-child(2) {
-  box-shadow: inset 0 -1px currentColor;
+  box-shadow: none;
 }
 
 /* EOF final: top nav is HOME / ABOUT / PROJECT / CONTACT only. */
@@ -7470,6 +7804,15 @@ img.contact-icon {
 
 .archive-page--project-detail .project-frame__meta strong .project-frame__meta-tool {
   white-space: normal;
+}
+
+/* EOF final: project meta frames use 24px spacing, label-to-value uses 8px. */
+.archive-page--project-detail .project-frame__meta {
+  gap: 24px;
+}
+
+.archive-page--project-detail .project-frame__meta li {
+  gap: 8px;
 }
 
 /* EOF final: Star-Wars-inspired contact crawl. */
@@ -7869,4 +8212,17 @@ img.contact-icon {
 
 .archive-page--contact .film-section--contact-crawl .film-section__sprockets--right {
   right: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-scroll-hint__mouse,
+  .about-scroll-hint__mouse::after,
+  .about-scroll-hint p,
+  .about-scroll-scene.is-active .about-tool-card__ring-progress {
+    animation: none;
+  }
+
+  .about-tool-card__ring-progress {
+    stroke-dasharray: var(--tool-dash);
+  }
 }

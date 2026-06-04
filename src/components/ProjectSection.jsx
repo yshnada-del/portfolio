@@ -464,9 +464,7 @@ export default function ProjectSection({ project }) {
             {actionLinks.map((link) => (
               <a href={link.href ?? '#'} target={link.target} rel={link.rel} key={link.label}>
                 <span>{link.label}</span>
-                <span className="project-frame__action-icon" aria-hidden="true">
-                  ↗
-                </span>
+                <span className="project-frame__action-icon" aria-hidden="true" />
               </a>
             ))}
           </div>
