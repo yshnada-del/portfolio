@@ -21,15 +21,15 @@ import project01Frame11 from '../assets/project-01-frame-11.png';
 import project01Frame12 from '../assets/project-01-frame-12.png';
 import project01Frame13 from '../assets/project-01-frame-13.png';
 import project01Frame14 from '../assets/project-01-frame-14.png';
-import project02Frame01 from '../assets/project-02-frame-01.png';
-import project02Frame02 from '../assets/project-02-frame-02.png';
-import project02Frame03 from '../assets/project-02-frame-03.png';
-import project02Frame04 from '../assets/project-02-frame-04.png';
-import project02Frame05 from '../assets/project-02-frame-05.png';
-import project02Frame06 from '../assets/project-02-frame-06.png';
-import project02Frame07 from '../assets/project-02-frame-07.png';
-import project02Frame08 from '../assets/project-02-frame-08.png';
-import project02Frame09 from '../assets/project-02-frame-09.png';
+import project02SimmonsDeliverablesMobile from '../assets/project-02-simmons-deliverables-mobile.png';
+import project02SimmonsDeliverablesThumbnail from '../assets/project-02-simmons-deliverables-thumbnail.png';
+import project02SimmonsDeliverablesWeb from '../assets/project-02-simmons-deliverables-web.png';
+import project02SimmonsDesignProcess01 from '../assets/project-02-simmons-design-process-01.png';
+import project02SimmonsDesignProcess02 from '../assets/project-02-simmons-design-process-02.png';
+import project02SimmonsDesignProcess03 from '../assets/project-02-simmons-design-process-03.png';
+import project02SimmonsDesignProcess04 from '../assets/project-02-simmons-design-process-04.png';
+import project02SimmonsWireframeMobile from '../assets/project-02-simmons-wireframe-mobile.png';
+import project02SimmonsWireframeWeb from '../assets/project-02-simmons-wireframe-web.png';
 import project03Frame01 from '../assets/project-03-frame-01.png';
 import project03Frame02 from '../assets/project-03-frame-02.png';
 import project03Frame03 from '../assets/project-03-frame-03.png';
@@ -38,6 +38,16 @@ import project03Frame05 from '../assets/project-03-frame-05.png';
 import project03Frame06 from '../assets/project-03-frame-06.png';
 import project03Frame07 from '../assets/project-03-frame-07.png';
 import project03Frame08 from '../assets/project-03-frame-08.png';
+import project04SectionAfterDetail from '../assets/project-04-section-after-detail.png';
+import project04SectionAfterLogin from '../assets/project-04-section-after-login.png';
+import project04SectionAfterMain from '../assets/project-04-section-after-main.png';
+import project04SectionAfterMenu from '../assets/project-04-section-after-menu.png';
+import project04SectionAfterProductInfo from '../assets/project-04-section-after-product-info.png';
+import project04SectionBeforeDetail from '../assets/project-04-section-before-detail.png';
+import project04SectionBeforeLogin from '../assets/project-04-section-before-login.png';
+import project04SectionBeforeMain from '../assets/project-04-section-before-main.png';
+import project04SectionBeforeMenu from '../assets/project-04-section-before-menu.png';
+import project04SectionBeforeProductInfo from '../assets/project-04-section-before-product-info.png';
 import reactIcon from '../assets/react.png';
 import simmons from '../assets/simmons.png';
 import ArchiveNav from './ArchiveNav.jsx';
@@ -64,15 +74,15 @@ const project01Frames = [
 ];
 
 const project02Frames = [
-  project02Frame01,
-  project02Frame02,
-  project02Frame03,
-  project02Frame04,
-  project02Frame05,
-  project02Frame06,
-  project02Frame07,
-  project02Frame08,
-  project02Frame09,
+  project02SimmonsWireframeWeb,
+  project02SimmonsWireframeMobile,
+  project02SimmonsDesignProcess01,
+  project02SimmonsDesignProcess02,
+  project02SimmonsDesignProcess03,
+  project02SimmonsDesignProcess04,
+  project02SimmonsDeliverablesWeb,
+  project02SimmonsDeliverablesMobile,
+  project02SimmonsDeliverablesThumbnail,
 ];
 
 const project03Frames = [
@@ -84,6 +94,19 @@ const project03Frames = [
   project03Frame06,
   project03Frame07,
   project03Frame08,
+];
+
+const project04Frames = [
+  project04SectionBeforeMain,
+  project04SectionAfterMain,
+  project04SectionBeforeMenu,
+  project04SectionAfterMenu,
+  project04SectionBeforeDetail,
+  project04SectionAfterDetail,
+  project04SectionBeforeProductInfo,
+  project04SectionAfterProductInfo,
+  project04SectionBeforeLogin,
+  project04SectionAfterLogin,
 ];
 
 const projects = [
@@ -109,7 +132,7 @@ const projects = [
     actionLinks: [
       {
         label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30',
-        href: 'https://www.figma.com/deck/vPODZnqJbzTF6O0WegjbXd/-%ED%8C%80%ED%94%8C2-1%EC%A1%B0--%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_jibsalife-%EC%A7%91%EC%82%AC%EC%9D%B8%EC%83%9D--%EB%94%94%EB%B2%A8%EB%A1%AD--%EB%B3%B5%EC%82%AC---%EB%B3%B5%EC%82%AC-?node-id=3096-681&viewport=-227%2C-237%2C1.05&t=c9X2Yp7rsTyeXW2E-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1',
+        href: 'https://yshnada-del.github.io/jibsalifepage/',
       },
       { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://new-jibsalife.vercel.app' },
     ],
@@ -140,12 +163,12 @@ const projects = [
     actionLinks: [
       {
         label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30',
-        href: 'https://www.figma.com/deck/8N2z3T5LdaTjsSxzl5yGqw/-%ED%8C%80%ED%94%8C1-4%EC%A1%B0--%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_SIMMONS-%EC%84%B8%EA%B8%B0%EC%B0%A8%EC%9D%B4---%EB%B3%B5%EC%82%AC---%EB%B3%B5%EC%82%AC---%EB%B3%B5%EC%82%AC-?node-id=4001-539&viewport=-227%2C-237%2C1.05&t=gjnt6gZefkgiHKZm-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1',
+        href: 'https://yshnada-del.github.io/simmonspage/',
       },
       { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://hyunjireal.github.io/resimmons/' },
     ],
     visualType: 'figma-frame',
-    image: project02Frame01,
+    image: project02SimmonsWireframeWeb,
     images: project02Frames,
     tone: 'ivory',
   },
@@ -182,14 +205,14 @@ const projects = [
     scene: '05',
     edgeLabel: 'PROJECT 04',
     number: 'PROJECT 04',
-    title: '집사인생',
+    title: '피자헛',
     tagline: '반려동물 예방 건강 관리 서비스',
     description:
       '사진 기반 AI 분석과 오늘의 요약, 커뮤니티 기능을 통해 반려동물의 건강 관리를 더 쉽고 꾸준하게 도와주는 서비스입니다.',
-    role: '\uae30\ud68d\ud300\uc7a5 / \ub514\uc790\uc778 \uc11c\ube0c',
-    period: '2025.04~2025.05',
-    tools: 'Figma / ChatGPT / Claud / Photoshop / Gemini',
-    contribution: '77%',
+    role: '\uae30\ud68d \uac1c\ubc1c \ub514\uc790\uc778',
+    period: '2026.02.09 ~ 2026.02.25',
+    tools: '\ud53c\uadf8\ub9c8 / \ucc57\uc9c0\ud53c\ud2f0 / \ud3ec\ud1a0\uc0f5 / \uc81c\ubbf8\ub098\uc774 / \ubbf8\ub4dc\uc800\ub2c8 / \ucf54\ub371\uc2a4 / vs code / \uae43\ud5c8\ube0c / html / css / js',
+    contribution: '100%',
     metaLabels: {
       role: '\uc5ed\ud560',
       period: '\uae30\uac04',
@@ -199,13 +222,13 @@ const projects = [
     actionLinks: [
       {
         label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30',
-        href: 'https://www.figma.com/deck/vPODZnqJbzTF6O0WegjbXd/-%ED%8C%80%ED%94%8C2-1%EC%A1%B0--%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_jibsalife-%EC%A7%91%EC%82%AC%EC%9D%B8%EC%83%9D--%EB%94%94%EB%B2%A8%EB%A1%AD--%EB%B3%B5%EC%82%AC---%EB%B3%B5%EC%82%AC-?node-id=3096-681&viewport=-227%2C-237%2C1.05&t=c9X2Yp7rsTyeXW2E-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1',
+        href: 'https://yshnada-del.github.io/pizzahutpage/',
       },
-      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://new-jibsalife.vercel.app' },
+      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://yshnada-del.github.io/pizzahut/' },
     ],
     visualType: 'figma-frame',
-    image: project01Frame01,
-    images: project01Frames,
+    image: project04SectionAfterMain,
+    images: project04Frames,
     tone: 'ivory',
   },
 ];
