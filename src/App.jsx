@@ -595,14 +595,14 @@ export default function App() {
       return false;
     }
 
-    const insetX = tvRect.width * 0.16;
-    const insetY = tvRect.height * 0.2;
+    const toleranceX = tvRect.width * 0.04;
+    const toleranceY = tvRect.height * 0.04;
 
     return (
-      x >= tvRect.left + insetX &&
-      x <= tvRect.right - insetX &&
-      y >= tvRect.top + insetY &&
-      y <= tvRect.bottom - insetY
+      x >= tvRect.left - toleranceX &&
+      x <= tvRect.right + toleranceX &&
+      y >= tvRect.top - toleranceY &&
+      y <= tvRect.bottom + toleranceY
     );
   };
 

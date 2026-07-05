@@ -183,7 +183,7 @@ const projects = [
       '사용자의 착장과 무드, 상황을 기반으로 오늘의 스타일에 어울리는 식당과 장소를 추천하는 모바일 서비스입니다.',
     role: '\uae30\ud68d \uac1c\ubc1c \ub514\uc790\uc778',
     period: '2026.04 ~ 2026.05',
-    tools: '\ud53c\uadf8\ub9c8 / \ucc57\uc9c0\ud53c\ud2f0 / \ud074\ub85c\ub4dc / \ud3ec\ud1a0\uc0f5 / \uc81c\ubbf8\ub098\uc774 / \uc77c\ub7ec\uc2a4\ud2b8 / \ubbf8\ub4dc\uc800\ub2c8 / \ucf54\ub371\uc2a4 / vs code / \uae43\ud5c8\ube0c / html / css / js',
+    tools: '\ud53c\uadf8\ub9c8 / \ucc57\uc9c0\ud53c\ud2f0 / \ud074\ub85c\ub4dc / \ud3ec\ud1a0\uc0f5 / \uc81c\ubbf8\ub098\uc774 / \uc77c\ub7ec\uc2a4\ud2b8 / \ubbf8\ub4dc\uc800\ub2c8 / \ucf54\ub371\uc2a4 / vs code / \uae43\ud5c8\ube0c / react / html / css / js',
     contribution: '100%',
     metaLabels: {
       role: '\uc5ed\ud560',
@@ -427,9 +427,37 @@ function AboutScrollAbout() {
     let frameId = 0;
     const scenes = Array.from(stage.querySelectorAll('.about-scroll-scene'));
     const watermark = stage.querySelector('.about-scroll-watermark');
+    const compactQuery = window.matchMedia('(max-width: 1120px)');
+
+    const resetCompactAbout = () => {
+      scenes.forEach((scene) => {
+        scene.classList.add('is-active');
+        scene.classList.remove('is-past');
+        scene.style.setProperty('--label-opacity', '1');
+        scene.style.setProperty('--content-opacity', '1');
+        scene.style.setProperty('--content-reveal-y', '0px');
+      });
+
+      stage.style.setProperty('--about-watermark-opacity', '0');
+      stage.style.setProperty('--about-watermark-size', '0px');
+      stage.style.setProperty('--about-watermark-stretch-y', '1');
+      stage.style.setProperty('--about-scroll-hint-opacity', '0');
+
+      if (watermark) {
+        watermark.style.opacity = '0';
+        watermark.style.removeProperty('font-size');
+        watermark.style.removeProperty('transform');
+      }
+    };
 
     const update = () => {
       frameId = 0;
+
+      if (compactQuery.matches) {
+        resetCompactAbout();
+        return;
+      }
+
       const rect = section.getBoundingClientRect();
       const travel = Math.max(rect.height - window.innerHeight, 1);
       const progress = Math.min(Math.max(-rect.top / travel, 0), 1);
@@ -488,20 +516,38 @@ function AboutScrollAbout() {
     };
 
     const requestUpdate = () => {
+      if (compactQuery.matches) {
+        resetCompactAbout();
+        return;
+      }
+
       if (!frameId) {
         frameId = window.requestAnimationFrame(update);
       }
     };
 
-    update();
     const scrollParent = section.closest('.archive-page');
-    window.addEventListener('scroll', requestUpdate, { passive: true });
+    const bindDesktopScroll = () => {
+      if (compactQuery.matches) {
+        resetCompactAbout();
+        window.removeEventListener('scroll', requestUpdate);
+        scrollParent?.removeEventListener('scroll', requestUpdate);
+        return;
+      }
+
+      window.addEventListener('scroll', requestUpdate, { passive: true });
+      scrollParent?.addEventListener('scroll', requestUpdate, { passive: true });
+      requestUpdate();
+    };
+
+    bindDesktopScroll();
     window.addEventListener('resize', requestUpdate);
-    scrollParent?.addEventListener('scroll', requestUpdate, { passive: true });
+    compactQuery.addEventListener('change', bindDesktopScroll);
 
     return () => {
       window.removeEventListener('scroll', requestUpdate);
       window.removeEventListener('resize', requestUpdate);
+      compactQuery.removeEventListener('change', bindDesktopScroll);
       scrollParent?.removeEventListener('scroll', requestUpdate);
 
       if (frameId) {
@@ -770,6 +816,13 @@ function ArchiveAbout() {
 
 export default function ArchivePage() {
   const [activeId, setActiveId] = useState(getPageIdFromHash);
+  const [projectViewportMode, setProjectViewportMode] = useState(() => {
+    if (typeof window === 'undefined') {
+      return 'wide';
+    }
+
+    return window.matchMedia('(max-width: 760px)').matches ? 'compact' : 'wide';
+  });
   const activeProject = projects.find((project) => project.id === activeId);
 
   useEffect(() => {
@@ -823,10 +876,20 @@ export default function ArchivePage() {
 
   useEffect(() => {
     const className = 'archive-project-detail-lock';
-    document.documentElement.classList.toggle(className, Boolean(activeProject));
-    document.body.classList.toggle(className, Boolean(activeProject));
+    const compactQuery = window.matchMedia('(max-width: 760px)');
+
+    const syncProjectLock = () => {
+      const shouldLock = Boolean(activeProject) && !compactQuery.matches;
+      document.documentElement.classList.toggle(className, shouldLock);
+      document.body.classList.toggle(className, shouldLock);
+      setProjectViewportMode(compactQuery.matches ? 'compact' : 'wide');
+    };
+
+    syncProjectLock();
+    compactQuery.addEventListener('change', syncProjectLock);
 
     return () => {
+      compactQuery.removeEventListener('change', syncProjectLock);
       document.documentElement.classList.remove(className);
       document.body.classList.remove(className);
     };
@@ -841,7 +904,9 @@ export default function ArchivePage() {
       <ArchiveNav activeId={activeId} onSelect={setActiveId} />
       <div className="archive-page__reel">
         {activeId === 'about' && <ArchiveAbout />}
-        {activeProject && <ProjectSection key={activeProject.id} project={activeProject} />}
+        {activeProject && (
+          <ProjectSection key={`${activeProject.id}-${projectViewportMode}`} project={activeProject} />
+        )}
         {activeId === 'contact' && <ContactSection />}
       </div>
     </main>

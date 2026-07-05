@@ -170,7 +170,13 @@ export default function ProjectSection({ project }) {
   const canvasRef = useRef(null);
   const works = project.works ?? getProjectWorks(project);
   const imageSources = project.images?.length ? project.images : [project.image].filter(Boolean);
-  const galleryWorks = works;
+  const galleryWorks = project.images?.length
+    ? project.images.map((image, index) => ({
+        ...(works[index % works.length] ?? {}),
+        image,
+        key: `${project.id}-image-${index + 1}`,
+      }))
+    : works;
   const metaLabels = project.metaLabels ?? {
     role: 'ROLE',
     period: 'PERIOD',
@@ -204,7 +210,8 @@ export default function ProjectSection({ project }) {
     const images = [];
 
     const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-    const isCompactViewport = () => window.matchMedia('(max-width: 760px)').matches;
+    const compactQuery = window.matchMedia('(max-width: 760px)');
+    const isCompactViewport = () => compactQuery.matches;
 
     const drawImageFull = (context, img, x, y, width, height) => {
       context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, x, y, width, height);
@@ -332,6 +339,11 @@ export default function ProjectSection({ project }) {
       frameId = window.requestAnimationFrame(updateGalleryPosition);
     };
 
+    const onViewportChange = () => {
+      scrollReady = false;
+      scheduleUpdate();
+    };
+
     const scrollParent = section.closest('.archive-page');
 
     const moveToTarget = () => {
@@ -421,6 +433,7 @@ export default function ProjectSection({ project }) {
     window.addEventListener('scroll', onNativeScroll, { passive: true });
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('resize', scheduleUpdate);
+    compactQuery.addEventListener('change', onViewportChange);
 
     return () => {
       destroyed = true;
@@ -437,6 +450,7 @@ export default function ProjectSection({ project }) {
       window.removeEventListener('scroll', onNativeScroll);
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('resize', scheduleUpdate);
+      compactQuery.removeEventListener('change', onViewportChange);
     };
   }, [imageSources.join('|'), works.length]);
 
