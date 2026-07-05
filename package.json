@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist --add"
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "@babel/core": "^7.29.7",
