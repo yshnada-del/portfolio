@@ -9234,6 +9234,38 @@ img.contact-icon {
   }
 }
 
+@media (min-width: 901px) and (max-width: 1120px) and (orientation: landscape) {
+  .tv-stage {
+    left: clamp(54px, 7vw, 86px);
+    bottom: clamp(56px, 8vh, 86px);
+    width: min(38vw, 430px);
+  }
+
+  .vhs-stack {
+    left: clamp(470px, 49vw, 560px);
+    right: auto;
+    bottom: clamp(128px, 16vh, 168px);
+    height: clamp(190px, 22vw, 270px);
+    transform: translateZ(-110px) rotateY(-8deg) rotateX(1.5deg) rotateZ(0.2deg) scale(0.86);
+    transform-origin: left bottom;
+  }
+
+  .all-tape-slot {
+    left: clamp(530px, 56vw, 640px);
+    right: auto;
+    bottom: clamp(66px, 8.6vh, 92px);
+    width: min(25vw, 270px);
+    transform: translateZ(-70px) rotateY(-4deg) rotateX(1deg) rotateZ(-0.45deg) scale(0.9);
+    transform-origin: left bottom;
+  }
+
+  .drag-hint {
+    right: clamp(38px, 6vw, 76px);
+    bottom: clamp(118px, 14vh, 156px);
+    font-size: clamp(0.76rem, 1vw, 0.98rem);
+  }
+}
+
 @media (max-width: 760px) {
   .archive-page--project-detail {
     --film-edge-width: clamp(42px, 9vw, 58px);
@@ -10097,6 +10129,181 @@ img.contact-icon {
   .archive-page--project-detail .film-section--project-scroll .film-section__sprockets::before {
     top: -96px !important;
     bottom: -96px !important;
+  }
+}
+
+/* Final shared archive header: ABOUT, PROJECT, and CONTACT use one visual system. */
+.archive-page .archive-nav,
+.archive-page--about .archive-nav,
+.archive-page--contact .archive-nav,
+.archive-page--project-detail .archive-nav {
+  position: fixed;
+  top: clamp(10px, 1.4vw, 24px);
+  left: 50%;
+  right: auto;
+  z-index: 90;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(86px, 1fr));
+  align-items: center;
+  justify-items: stretch;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  width: min(calc(100% - (var(--film-edge-width, 0px) * 2) - 40px), 680px);
+  max-width: none;
+  min-height: clamp(50px, 4.4vw, 66px);
+  padding: clamp(6px, 0.65vw, 10px);
+  overflow: visible;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.035) 48%, rgba(0, 0, 0, 0.18)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.055) 0 1px, transparent 1px 5px),
+    rgba(18, 18, 17, 0.86);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -16px 28px rgba(0, 0, 0, 0.12),
+    0 18px 48px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(24px) saturate(1.18);
+  -webkit-backdrop-filter: blur(24px) saturate(1.18);
+  transform: translate(-50%, 0);
+}
+
+.archive-page .archive-nav::before,
+.archive-page--about .archive-nav::before,
+.archive-page--contact .archive-nav::before,
+.archive-page--project-detail .archive-nav::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.16), transparent 58%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05), transparent 22% 78%, rgba(255, 255, 255, 0.05));
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.archive-page .archive-nav.archive-nav--hidden,
+.archive-page--about .archive-nav.archive-nav--hidden,
+.archive-page--contact .archive-nav.archive-nav--hidden,
+.archive-page--project-detail .archive-nav.archive-nav--hidden {
+  opacity: 0;
+  filter: blur(2px);
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% - 24px));
+}
+
+.archive-page .archive-nav a,
+.archive-page--about .archive-nav a,
+.archive-page--contact .archive-nav a,
+.archive-page--project-detail .archive-nav a {
+  position: relative;
+  display: grid;
+  flex: initial;
+  place-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: clamp(38px, 3.2vw, 48px);
+  padding: 0 clamp(12px, 1.4vw, 24px);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.84);
+  font-family: inherit;
+  font-size: clamp(0.82rem, 1vw, 1.04rem);
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.22);
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+.archive-page .archive-nav a:hover,
+.archive-page .archive-nav a:focus-visible,
+.archive-page--about .archive-nav a:hover,
+.archive-page--about .archive-nav a:focus-visible,
+.archive-page--contact .archive-nav a:hover,
+.archive-page--contact .archive-nav a:focus-visible,
+.archive-page--project-detail .archive-nav a:hover,
+.archive-page--project-detail .archive-nav a:focus-visible {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.09);
+  outline: none;
+}
+
+.archive-page .archive-nav a.is-active,
+.archive-page--about .archive-nav a.is-active,
+.archive-page--contact .archive-nav a.is-active,
+.archive-page--project-detail .archive-nav a.is-active {
+  color: rgba(12, 12, 12, 0.9);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.62));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    inset 0 -10px 18px rgba(255, 255, 255, 0.18),
+    0 9px 24px rgba(0, 0, 0, 0.16);
+  text-shadow: none;
+}
+
+.archive-page .archive-nav a.is-active::after,
+.archive-page--about .archive-nav a.is-active::after,
+.archive-page--contact .archive-nav a.is-active::after,
+.archive-page--project-detail .archive-nav a.is-active::after {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .archive-page .archive-nav,
+  .archive-page--about .archive-nav,
+  .archive-page--contact .archive-nav,
+  .archive-page--project-detail .archive-nav {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    width: calc(100% - 20px);
+    max-width: 560px;
+    min-height: 48px;
+    justify-content: center;
+    padding: 6px;
+    overflow: hidden;
+  }
+
+  .archive-page .archive-nav a,
+  .archive-page--about .archive-nav a,
+  .archive-page--contact .archive-nav a,
+  .archive-page--project-detail .archive-nav a {
+    min-width: 0;
+    min-height: 36px;
+    padding: 0 8px;
+    font-size: clamp(0.66rem, 2.7vw, 0.76rem);
+  }
+}
+
+@media (max-width: 760px) {
+  .film-archive-hint {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: auto;
+    max-width: calc(100vw - 28px);
+    padding: 9px 10px;
+    font-size: clamp(0.76rem, 3.45vw, 0.92rem);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .film-archive-hint__icon {
+    width: 22px;
+    margin-top: 0;
+    transform: translateY(0);
+  }
+
+  .film-archive-hint > span:last-child {
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
   }
 }
 
