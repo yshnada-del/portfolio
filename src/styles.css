@@ -9237,8 +9237,8 @@ img.contact-icon {
 @media (min-width: 901px) and (max-width: 1120px) and (orientation: landscape) {
   .tv-stage {
     left: clamp(54px, 7vw, 86px);
-    bottom: clamp(56px, 8vh, 86px);
-    width: min(38vw, 430px);
+    bottom: clamp(66px, 9vh, 96px);
+    width: min(36.5vw, 414px);
   }
 
   .vhs-stack {
@@ -9251,7 +9251,7 @@ img.contact-icon {
   }
 
   .all-tape-slot {
-    left: clamp(530px, 56vw, 640px);
+    left: clamp(470px, 50vw, 570px);
     right: auto;
     bottom: clamp(66px, 8.6vh, 92px);
     width: min(25vw, 270px);
@@ -9260,9 +9260,10 @@ img.contact-icon {
   }
 
   .drag-hint {
-    right: clamp(38px, 6vw, 76px);
-    bottom: clamp(118px, 14vh, 156px);
-    font-size: clamp(0.76rem, 1vw, 0.98rem);
+    left: clamp(715px, 74vw, 815px);
+    right: auto;
+    bottom: clamp(82px, 10.4vh, 112px);
+    font-size: clamp(0.9rem, 1.18vw, 1.12rem);
   }
 }
 
