@@ -120,7 +120,7 @@ const projects = [
     description:
       '사진 기반 AI 분석과 오늘의 요약, 커뮤니티 기능을 통해 반려동물의 건강 관리를 더 쉽고 꾸준하게 도와주는 서비스입니다.',
     role: '\uae30\ud68d\ud300\uc7a5 / \ub514\uc790\uc778 \uc11c\ube0c',
-    period: '2025.04~2025.05',
+    period: '2026.04~2026.05',
     tools: 'Figma / ChatGPT / Claud / Photoshop / Gemini',
     contribution: '77%',
     metaLabels: {
@@ -135,6 +135,11 @@ const projects = [
         href: 'https://yshnada-del.github.io/jibsalifepage/',
       },
       { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://new-jibsalife.vercel.app' },
+      {
+        label: '\ub2e4\uc74c \ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30',
+        href: '#project-02',
+        type: 'next',
+      },
     ],
     visualType: 'figma-frame',
     image: project01Frame01,
@@ -166,6 +171,11 @@ const projects = [
         href: 'https://yshnada-del.github.io/simmonspage/',
       },
       { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://hyunjireal.github.io/resimmons/' },
+      {
+        label: '\ub2e4\uc74c \ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30',
+        href: '#project-03',
+        type: 'next',
+      },
     ],
     visualType: 'figma-frame',
     image: project02SimmonsWireframeWeb,
@@ -194,6 +204,11 @@ const projects = [
     actionLinks: [
       { label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30', href: 'https://yshnada-del.github.io/landingpage/' },
       { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://yshnada-del.github.io/matmut/' },
+      {
+        label: '\ub2e4\uc74c \ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30',
+        href: '#project-04',
+        type: 'next',
+      },
     ],
     visualType: 'figma-frame',
     image: project03Frame01,

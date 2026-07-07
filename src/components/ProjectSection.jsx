@@ -188,6 +188,8 @@ export default function ProjectSection({ project }) {
     { label: 'GitHub', href: project.githubUrl ?? '#' },
     { label: 'Live Site', href: project.liveUrl ?? '#' },
   ];
+  const nextProjectLink = actionLinks.find((link) => link.type === 'next');
+  const bottomActionLinks = actionLinks.filter((link) => link.type !== 'next');
 
   useEffect(() => {
     const frame = frameRef.current;
@@ -464,7 +466,20 @@ export default function ProjectSection({ project }) {
     >
       <div className="project-frame" ref={frameRef} style={{ '--work-count': works.length }}>
         <aside className="project-frame__copy">
-          <p className="project-frame__number">{project.number}</p>
+          <div className="project-frame__number">
+            <span>{project.number}</span>
+            {nextProjectLink && (
+              <a
+                className="project-frame__number-next"
+                href={nextProjectLink.href ?? '#'}
+                target={nextProjectLink.target}
+                rel={nextProjectLink.rel}
+              >
+                <span>{nextProjectLink.label}</span>
+                <span className="project-frame__action-icon project-frame__action-icon--right" aria-hidden="true" />
+              </a>
+            )}
+          </div>
           <h2>{project.title}</h2>
           <p className="project-frame__tagline">{project.tagline}</p>
           <p className="project-frame__description">{project.description}</p>
@@ -475,10 +490,21 @@ export default function ProjectSection({ project }) {
             <ProjectMeta label={metaLabels.contribution} value={project.contribution ?? project.role} />
           </ul>
           <div className="project-frame__actions">
-            {actionLinks.map((link) => (
-              <a href={link.href ?? '#'} target={link.target} rel={link.rel} key={link.label}>
+            {bottomActionLinks.map((link) => (
+              <a
+                href={link.href ?? '#'}
+                target={link.target}
+                rel={link.rel}
+                className={link.type ? `project-frame__action--${link.type}` : undefined}
+                key={link.label}
+              >
                 <span>{link.label}</span>
-                <span className="project-frame__action-icon" aria-hidden="true" />
+                <span
+                  className={`project-frame__action-icon project-frame__action-icon--${
+                    link.type === 'next' ? 'right' : 'external'
+                  }`}
+                  aria-hidden="true"
+                />
               </a>
             ))}
           </div>
