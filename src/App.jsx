@@ -129,13 +129,13 @@ function AboutMeOverlay({ transition, onClose }) {
   const isOpen = transition.phase === 'open';
   const portalClass = 'about-portal' + (transition.isExpanded ? ' about-portal--expanded' : '') + (isOpen ? ' about-portal--open' : '');
   const skillItems = [
-    { name: 'Figma', image: figmaIcon, percent: '90%', value: 90 },
-    { name: 'Photoshop', image: photoshopIcon, percent: '85%', value: 85 },
-    { name: 'Illustrator', image: illustIcon, percent: '80%', value: 80 },
-    { name: 'HTML', image: htmlIcon, percent: '82%', value: 82 },
-    { name: 'CSS', image: cssIcon, percent: '78%', value: 78 },
-    { name: 'JavaScript', image: javascriptIcon, percent: '76%', value: 76 },
-    { name: 'React', image: reactIcon, percent: '72%', value: 72 },
+    { name: 'Figma', image: figmaIcon, percent: '80%', value: 80 },
+    { name: 'Photoshop', image: photoshopIcon, percent: '70%', value: 70 },
+    { name: 'Illustrator', image: illustIcon, percent: '65%', value: 65 },
+    { name: 'HTML', image: htmlIcon, percent: '78%', value: 78 },
+    { name: 'CSS', image: cssIcon, percent: '75%', value: 75 },
+    { name: 'JavaScript', image: javascriptIcon, percent: '55%', value: 55 },
+    { name: 'React', image: reactIcon, percent: '50%', value: 50 },
   ];
 
   return (
