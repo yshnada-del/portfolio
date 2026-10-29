@@ -51,7 +51,7 @@ const FILM_SEGMENT_WIDTH = 100;
 const FILM_FRAME_WIDTH = 300;
 const FILM_FRAME_GAP = 20;
 const FILM_LOOP_WIDTH = filmFrames.length * (FILM_FRAME_WIDTH + FILM_FRAME_GAP);
-const filmSegments = Array.from({ length: 34 }, (_, index) => index);
+const FILM_FRAME_STEP = FILM_FRAME_WIDTH + FILM_FRAME_GAP;
 
 const aboutSkillIcons = [
   { name: 'Figma', image: figmaIcon, className: 'about-skill-icon--figma' },
@@ -321,7 +321,23 @@ function PortfolioScreen() {
     lastTime: 0,
   });
   const frameRef = useRef(null);
-  const repeatedFrames = [...filmFrames, ...filmFrames, ...filmFrames];
+  const [reelLayout, setReelLayout] = useState({ scale: 1, width: 1920, segments: 34 });
+
+  useEffect(() => {
+    const screen = screenRef.current;
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      if (!width || !height) return;
+      const scale = Math.min(Math.max(width / 1920, 0.55), height / 600);
+      setReelLayout({
+        scale,
+        width: width / scale,
+        segments: Math.max(34, Math.ceil(width / scale / FILM_SEGMENT_WIDTH) + 16),
+      });
+    });
+    observer.observe(screen);
+    return () => observer.disconnect();
+  }, []);
 
   const openAboutMe = (event, frame) => {
     if (!frame.id) {
@@ -351,11 +367,12 @@ function PortfolioScreen() {
     }
   }, [aboutTransition]);
 
+  // Each slice only needs two adjacent frames, rather than three entire loops.
   const renderFilmStrip = () => (
     <ul
       className="film-strip"
     >
-      {repeatedFrames.map((frame, frameIndex) => (
+      {filmFrames.slice(0, 2).map((frame, frameIndex) => (
         <li
           className={`film-strip__frame${frame.hideLabel ? ' film-strip__frame--image-only' : ''}${
             frame.fit === 'contain' ? ' film-strip__frame--contain' : ''
@@ -364,11 +381,12 @@ function PortfolioScreen() {
         >
           <a
             className="film-strip__link"
+            data-frame-index={frameIndex}
             href={frame.href}
             target="_blank"
             rel="noreferrer"
             aria-label={`${frame.title} 이미지 열기`}
-            onClick={(event) => openAboutMe(event, frame)}
+            onClick={(event) => openAboutMe(event, filmFrames[Number(event.currentTarget.dataset.frameIndex)])}
             onPointerEnter={(event) => {
               motionRef.current.isPaused = true;
               setHoverCue({ x: event.clientX, y: event.clientY });
@@ -409,11 +427,16 @@ function PortfolioScreen() {
       data-offset={index}
       key={index}
       ref={(node) => {
-        segmentRefs.current[index] = node;
+        segmentRefs.current[index] = node ? {
+          node,
+          strip: node.querySelector('.film-strip'),
+          links: [...node.querySelectorAll('.film-strip__link')],
+          images: [...node.querySelectorAll('.film-strip__frame img')],
+          frameIndex: -1,
+        } : null;
       }}
     >
       <div className="film-flow__window">{renderFilmStrip()}</div>
-      {index < filmSegments.length - 1 && renderSegment(index + 1)}
     </div>
   );
 
@@ -431,12 +454,11 @@ function PortfolioScreen() {
 
       motion.lastTime = time;
 
-      if (motion.isPaused) {
-        frameRef.current = window.requestAnimationFrame(animate);
-        return;
+      if (!motion.isPaused) {
+        motion.rotationX += motion.rotationDirection * 0.022 * step;
+        motion.curveAmount += step * 0.334;
+        motion.curvePos = (motion.curvePos + 5.4 * step) % FILM_LOOP_WIDTH;
       }
-
-      motion.rotationX += motion.rotationDirection * 0.022 * step;
 
       if (motion.rotationX <= -20) {
         motion.rotationX = -20;
@@ -450,9 +472,9 @@ function PortfolioScreen() {
 
       screen.style.setProperty('--film-rotation-x', `${motion.rotationX}deg`);
 
-      motion.curveAmount += step * 0.334;
-      motion.curvePos = (motion.curvePos + 5.4 * step) % FILM_LOOP_WIDTH;
-
+      let x = FILM_SEGMENT_WIDTH;
+      let z = 0;
+      let angle = 0;
       segmentRefs.current.forEach((segment, index) => {
         if (!segment) {
           return;
@@ -460,11 +482,30 @@ function PortfolioScreen() {
 
         const r = Math.cos(motion.curveAmount / 20 + index / 5);
         const shade = Math.abs(Math.floor(r * 10)) / 10;
+        angle += r * 0.8;
+        // Accumulate the original hinged curve without nested 3D clipping layers.
+        segment.node.style.transform = `translate3d(${x}px, 0, ${z}px) rotateY(${angle}deg)`;
+        segment.node.style.setProperty('--segment-bright', `${r >= 0 ? shade * 0.025 : 0}`);
+        segment.node.style.setProperty('--segment-dark', `${r <= 0 ? shade * 0.025 : 0}`);
+        const radians = angle * Math.PI / 180;
+        x += Math.cos(radians) * FILM_SEGMENT_WIDTH;
+        z -= Math.sin(radians) * FILM_SEGMENT_WIDTH;
 
-        segment.style.setProperty('--segment-rotate-y', `${r * 0.8}deg`);
-        segment.style.setProperty('--segment-bright', `${r >= 0 ? shade * 0.025 : 0}`);
-        segment.style.setProperty('--segment-dark', `${r <= 0 ? shade * 0.025 : 0}`);
-        segment.style.setProperty('--strip-offset', `${-(index * FILM_SEGMENT_WIDTH) - motion.curvePos}px`);
+        const position = index * FILM_SEGMENT_WIDTH + motion.curvePos;
+        const frameIndex = Math.floor(position / FILM_FRAME_STEP);
+        segment.strip.style.transform = `translateX(${-position % FILM_FRAME_STEP}px)`;
+        segment.node.style.setProperty('--sprocket-offset', `${-position % 40}px`);
+        if (segment.frameIndex !== frameIndex) {
+          segment.frameIndex = frameIndex;
+          segment.links.forEach((link, slot) => {
+            const nextIndex = (frameIndex + slot) % filmFrames.length;
+            const frame = filmFrames[nextIndex];
+            link.dataset.frameIndex = nextIndex;
+            link.href = frame.href;
+            link.setAttribute('aria-label', `${frame.title} 페이지 열기`);
+            segment.images[slot].src = frame.image;
+          });
+        }
       });
 
       frameRef.current = window.requestAnimationFrame(animate);
@@ -486,7 +527,16 @@ function PortfolioScreen() {
   }, []);
 
   return (
-    <section className="portfolio-screen" ref={screenRef} aria-label="Portfolio content">
+    <section
+      className="portfolio-screen"
+      ref={screenRef}
+      style={{
+        '--reel-frame-width': `${FILM_FRAME_WIDTH}px`,
+        '--reel-frame-gap': `${FILM_FRAME_GAP}px`,
+        '--reel-segment-width': `${FILM_SEGMENT_WIDTH}px`,
+      }}
+      aria-label="Portfolio content"
+    >
       <div className="film-flow" aria-label="Portfolio sections">
         <div className="aurora-background" aria-hidden="true">
           <h1>Aurora</h1>
@@ -494,9 +544,9 @@ function PortfolioScreen() {
           <span />
           <span />
         </div>
-        <div className="film-flow__stage">
+        <div className="film-flow__stage" style={{ '--reel-scale': reelLayout.scale, '--reel-width': `${reelLayout.width}px` }}>
           <div className="film-flow__ribbon">
-            {renderSegment()}
+            {Array.from({ length: reelLayout.segments }, (_, index) => renderSegment(index))}
           </div>
         </div>
         <div className="film-archive-hint" aria-hidden="true">
