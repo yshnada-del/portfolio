@@ -1,0 +1,100 @@
+/* Glass treatment for the detail pages; the film archive has its own transparent nav. */
+.archive-page .archive-nav.archive-nav--glass {
+  --glass-inset: 8px;
+  --glass-gap: 4px;
+  gap: var(--glass-gap);
+  min-height: 64px;
+  padding: var(--glass-inset);
+  isolation: isolate;
+  border: 1px solid #ffffff45;
+  background: linear-gradient(130deg, #ffffff20, #ffffff06 55%, #ffffff14), #20232b38;
+  box-shadow:
+    0 16px 40px -14px #0005,
+    0 4px 12px -6px #0004,
+    inset 0 2px 3px -1px #ffffffb3,
+    inset 0 -2px 4px -1px #ffffff47;
+  backdrop-filter: blur(36px) saturate(180%);
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  transition: opacity .26s ease, transform .32s ease, filter .26s ease;
+}
+
+.archive-page .archive-nav.archive-nav--glass::before {
+  inset: 1px 1px auto;
+  height: 46%;
+  z-index: 3;
+  border-radius: 999px 999px 24px 24px / 999px 999px 12px 12px;
+  background: linear-gradient(180deg, #ffffff52, #ffffff00);
+  opacity: .8;
+}
+
+.archive-page .archive-nav.archive-nav--glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(120px circle at var(--glare-x, 50%) var(--glare-y, 50%), #ffffff52, transparent);
+  transition: opacity .3s ease;
+}
+
+.archive-page .archive-nav.archive-nav--glass:hover::after { opacity: 1; }
+
+.archive-page .archive-nav.archive-nav--glass .archive-nav__glass-pill {
+  position: absolute;
+  top: var(--glass-inset);
+  bottom: var(--glass-inset);
+  left: var(--glass-inset);
+  width: calc((100% - var(--glass-inset) * 2 - var(--glass-gap) * 3) / 4);
+  z-index: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  background: linear-gradient(180deg, #ffffffe0, #ffffff91);
+  box-shadow: 0 4px 12px #00000014, 0 1px 2px #0000000d, inset 0 1px 1px #ffffffcc;
+  transform: translateX(calc(var(--active-index) * (100% + var(--glass-gap))));
+  transition: transform .5s cubic-bezier(.34, 1.2, .64, 1), width .3s ease;
+}
+
+.archive-page .archive-nav.archive-nav--glass a {
+  z-index: 2;
+  min-height: 46px;
+  color: #ffffffe0;
+  background: transparent;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+  text-shadow: 0 1px 6px #0005;
+  box-shadow: none;
+  transition: color .3s ease, background .3s ease;
+}
+
+.archive-page .archive-nav.archive-nav--glass a:hover {
+  color: #fff;
+  background: #ffffff14;
+}
+
+.archive-page .archive-nav.archive-nav--glass a.is-active {
+  color: #191b22;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.archive-page .archive-nav.archive-nav--glass a:focus-visible {
+  outline: 2px solid #ffffffbf;
+  outline-offset: -2px;
+}
+
+@media (max-width: 760px) {
+  .archive-page .archive-nav.archive-nav--glass {
+    --glass-inset: 6px;
+    min-height: 50px;
+  }
+  .archive-page .archive-nav.archive-nav--glass a { min-height: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archive-page .archive-nav.archive-nav--glass,
+  .archive-page .archive-nav.archive-nav--glass .archive-nav__glass-pill,
+  .archive-page .archive-nav.archive-nav--glass a { transition: none; }
+}

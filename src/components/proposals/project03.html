@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>맛과멋 | Style Based Place Curation</title>
+    <script type="module" crossorigin src="/landingpage/assets/index-dMb_WznQ.js"></script>
+    <link rel="stylesheet" crossorigin href="/landingpage/assets/index-D6fimJnJ.css">
+    <style>
+      @font-face {
+        font-family: 'Portfolio Pretendard';
+        src: url('__PRETENDARD_REGULAR__') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      .matmut-app-link {
+        position: relative;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 24px;
+        padding: 14px 28px;
+        border-radius: 6px;
+        background: #3f6b5e;
+        color: #fff;
+        font: 400 16px/1.2 'Portfolio Pretendard', sans-serif;
+        text-decoration: none;
+      }
+      .matmut-app-link:hover { background: #507e70; }
+      .matmut-app-link:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+      .closing-section__inner .matmut-project-meta {
+        display: grid;
+        justify-items: center;
+        gap: 24px;
+        width: min(100%, 560px);
+        color: #fff;
+        text-align: center;
+      }
+      .closing-section__inner .matmut-project-meta p {
+        margin: 0;
+        color: #fff;
+        font-family: 'Portfolio Pretendard', sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.2;
+        letter-spacing: 0;
+        text-align: center;
+        text-shadow: none;
+        word-break: keep-all;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const matmutObserver = new MutationObserver(() => {
+        const heroCopy = document.querySelector('.hero__copy');
+        const closing = document.querySelector('.closing-section__inner');
+        if (heroCopy && !heroCopy.querySelector('.matmut-app-link')) {
+          const link = document.createElement('a');
+          link.className = 'matmut-app-link';
+          link.href = 'https://yshnada-del.github.io/matmut/';
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.textContent = '앱 바로가기 ↗';
+          heroCopy.append(link);
+        }
+        if (closing && !closing.querySelector('.matmut-project-meta')) {
+          const meta = document.createElement('div');
+          meta.className = 'matmut-project-meta';
+          meta.setAttribute('aria-label', '맛과멋 프로젝트 정보');
+          meta.innerHTML = `
+            <p>역할 : 기획 / 개발 / 디자인</p>
+            <p>기간 : 2026.04 ~ 2026.05</p>
+            <p>툴 : Figma / ChatGPT / Claude / Photoshop / Gemini / Illustrator / Midjourney / Codex / VS Code / GitHub / React / HTML / CSS / JavaScript</p>
+            <p>기여도 : 100%</p>`;
+          closing.append(meta);
+        }
+        if (heroCopy && closing) matmutObserver.disconnect();
+      });
+      matmutObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
+    </script>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ArchivePage from './components/ArchivePage.jsx';
-import { getArchiveUrl, isCurrentPath } from './routes.js';
+import { getArchiveUrl, getHomeUrl, getReelUrl, isCurrentPath } from './routes.js';
 import aboutMe from './assets/about_me.png';
 import aboutMePage from './assets/about_me_page.svg';
 import allBackground from './assets/all_background.png';
@@ -27,6 +27,7 @@ import tapeProject02 from './assets/tape-project-02.png';
 import tapeProject03 from './assets/tape-project-03.png';
 import tapeProject04 from './assets/tape-project-04.png';
 import tapeContact from './assets/tape-contact.png';
+import skipIntroLabel from './assets/label.png';
 import simmons from './assets/simmons.png';
 
 const tapes = [
@@ -537,6 +538,12 @@ function PortfolioScreen() {
       }}
       aria-label="Portfolio content"
     >
+      <nav className="film-archive-nav" aria-label="필름 아카이브 메뉴">
+        <a href={getHomeUrl()}>HOME</a>
+        <a href={getArchiveUrl('about')}>ABOUT</a>
+        <a href={getArchiveUrl('project-01')}>PROJECT</a>
+        <a href={getArchiveUrl('contact')}>CONTACT</a>
+      </nav>
       <div className="film-flow" aria-label="Portfolio sections">
         <div className="aurora-background" aria-hidden="true">
           <h1>Aurora</h1>
@@ -906,6 +913,11 @@ export default function App() {
 
         <div className={`tv-stage${isOverTv ? ' tv-stage--drop-target' : ''}`} ref={tvRef}>
           <CrtTv isAllTapeInserted={isAllTapeInserted} screenRef={tvScreenRef} />
+          {!isAllTapeInserted && (
+            <a className="tv-skip-intro" href={getReelUrl()} aria-label="인트로 건너뛰고 필름 아카이브 보기">
+              <img src={skipIntroLabel} alt="Skip intro" draggable="false" />
+            </a>
+          )}
         </div>
 
         {dragState && (

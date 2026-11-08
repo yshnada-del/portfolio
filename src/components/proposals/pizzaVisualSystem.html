@@ -1,0 +1,76 @@
+<style>
+.pizza-system { background:#f7f4ef; color:#111; padding:100px 0 112px; }
+.pizza-system__heading { margin-bottom:56px; }
+.pizza-system__heading>span { color:#c83335; font-size:12px; font-weight:700; text-transform:uppercase; }
+.pizza-system__heading h2 { margin-top:14px; font-size:clamp(36px,4vw,56px); line-height:1.2; }
+.pizza-system__heading p { margin-top:18px; color:#555; font-size:16px; line-height:1.7; word-break:keep-all; }
+.pizza-system__colors { display:grid; grid-template-columns:1fr 1.4fr; gap:72px; }
+.pizza-system h3 { margin:0 0 16px; color:#555; font-size:14px; font-weight:500; }
+.pizza-system__strip { display:flex; }
+.pizza-system__swatch { flex:1; min-width:0; min-height:112px; padding:16px 12px; background:var(--swatch); display:flex; flex-direction:column; justify-content:space-between; gap:24px; }
+.pizza-system__swatch b { font-size:13px; font-weight:500; }
+.pizza-system__swatch small { font-size:11px; }
+.pizza-system__gray { margin-top:52px; }
+.pizza-system__gray .pizza-system__swatch { min-height:84px; gap:12px; }
+.pizza-system__gray .pizza-system__swatch b { font-size:12px; }
+.pizza-system__details { display:grid; grid-template-columns:1fr 1fr 1.3fr; gap:56px; margin-top:60px; }
+.pizza-system__font-name { display:block; margin-bottom:20px; font-size:24px; font-weight:700; }
+.pizza-system__font-row { display:flex; justify-content:space-between; gap:20px; margin-top:10px; color:#111; font-size:14px; line-height:1.5; }
+.pizza-system__font-row small { min-width:60px; font-size:11px; color:#666; }
+.pizza-system__icons { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px 12px; }
+.pizza-system__icons--illust { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.pizza-system figure { min-width:0; margin:0; }
+.pizza-system__icon { display:flex; align-items:center; justify-content:center; aspect-ratio:1; border-radius:4px; background:#353535; overflow:hidden; }
+.pizza-system__icon--system { background:#f8f8f8; }
+.pizza-system__icon--system img { flex:none; width:auto; height:auto; }
+.pizza-system__icon--illust { background:#fff; }
+.pizza-system__icon--illust img { display:block; width:100%; height:100%; object-fit:contain; }
+.pizza-system figcaption { margin-top:7px; font-size:10px; line-height:1.4; color:#666; text-align:center; }
+@media(max-width:1000px) {
+.pizza-system__colors { gap:32px; }
+.pizza-system__details { grid-template-columns:1fr 1fr; gap:36px; }
+.pizza-system__illustrations { grid-column:1/-1; }
+.pizza-system__icons--illust { grid-template-columns:repeat(7,minmax(0,1fr)); }
+.pizza-system__gray .pizza-system__strip { flex-wrap:wrap; }
+.pizza-system__gray .pizza-system__swatch { flex:1 0 18%; }
+}
+@media(max-width:600px) {
+.pizza-system { padding:72px 0; }
+.pizza-system__colors,.pizza-system__details { grid-template-columns:1fr; gap:32px; }
+.pizza-system__details { margin-top:40px; }
+.pizza-system__icons { grid-template-columns:repeat(5,minmax(0,1fr)); }
+.pizza-system__icons--illust { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.pizza-system__illustrations { grid-column:auto; }
+.pizza-system__swatch { min-height:96px; padding:12px 8px; }
+.pizza-system__swatch b { font-size:11px; }
+.pizza-system__font-row { max-width:340px; }
+}
+</style>
+<template id="pizza-system-template">
+<section class="pizza-system" id="visual-system" aria-labelledby="pizza-system-title">
+<div class="container">
+<header class="pizza-system__heading"><span>Visual System</span><h2 id="pizza-system-title">주문 경험을 연결하는 일관된 디자인</h2><p>피자헛의 레드 컬러와 명료한 타이포그래피, 직관적인 아이콘으로 메뉴 탐색부터 주문까지 일관된 경험을 만듭니다.</p></header>
+<div class="pizza-system__colors">
+<div><h3>Primary color</h3><div class="pizza-system__strip"><div class="pizza-system__swatch" style="--swatch:#C83335;color:#fff"><b>#C83335</b><small>200 51 53</small></div><div class="pizza-system__swatch" style="--swatch:#D97072;color:#fff"><b>#D97072</b><small>70%</small></div><div class="pizza-system__swatch" style="--swatch:#EFC2C2;color:#222"><b>#EFC2C2</b><small>30%</small></div></div></div>
+<div><h3>Secondary color</h3><div class="pizza-system__strip"><div class="pizza-system__swatch" style="--swatch:#FFBFBF;color:#222"><b>#FFBFBF</b><small>255 191 191</small></div><div class="pizza-system__swatch" style="--swatch:#FFD9D9;color:#222"><b>#FFD9D9</b><small></small></div><div class="pizza-system__swatch" style="--swatch:#FFF2F2;color:#222"><b>#FFF2F2</b><small></small></div><div class="pizza-system__swatch" style="--swatch:#FFFFFF;color:#222"><b>#FFFFFF</b><small></small></div></div></div>
+</div>
+<div class="pizza-system__gray"><h3>Gray scale</h3><div class="pizza-system__strip"><div class="pizza-system__swatch" style="--swatch:#111111;color:#fff"><b>Black</b><small>#111111</small></div><div class="pizza-system__swatch" style="--swatch:#2D2D2D;color:#fff"><b>Gray 7</b><small>#2D2D2D</small></div><div class="pizza-system__swatch" style="--swatch:#4D4D4D;color:#fff"><b>Gray 6</b><small>#4D4D4D</small></div><div class="pizza-system__swatch" style="--swatch:#697077;color:#fff"><b>Gray 5</b><small>#697077</small></div><div class="pizza-system__swatch" style="--swatch:#A1A1A1;color:#222"><b>Gray 4</b><small>#A1A1A1</small></div><div class="pizza-system__swatch" style="--swatch:#B8B8B8;color:#222"><b>Gray 3</b><small>#B8B8B8</small></div><div class="pizza-system__swatch" style="--swatch:#D9D9D9;color:#222"><b>Gray 2</b><small>#D9D9D9</small></div><div class="pizza-system__swatch" style="--swatch:#F8F8F8;color:#222"><b>Gray 1</b><small>#F8F8F8</small></div><div class="pizza-system__swatch" style="--swatch:#FFFFFF;color:#222"><b>White</b><small>#FFFFFF</small></div></div></div>
+<div class="pizza-system__details">
+<div><h3>Font</h3><strong class="pizza-system__font-name">Pretendard Variable</strong><div class="pizza-system__font-row" style="font-weight:400"><span>함께 즐겨요 피자헛</span><small>Regular</small></div><div class="pizza-system__font-row" style="font-weight:500"><span>함께 즐겨요 피자헛</span><small>Medium</small></div><div class="pizza-system__font-row" style="font-weight:600"><span>함께 즐겨요 피자헛</span><small>SemiBold</small></div><div class="pizza-system__font-row" style="font-weight:700"><span>함께 즐겨요 피자헛</span><small>Bold</small></div></div>
+<div><h3>System icon</h3><div class="pizza-system__icons"><figure><div class="pizza-system__icon pizza-system__icon--system"><img src="__PIZZA_SYSTEM_search__" alt="검색" loading="lazy"></div><figcaption>검색</figcaption></figure><figure><div class="pizza-system__icon pizza-system__icon--system"><img src="__PIZZA_SYSTEM_login__" alt="로그인" loading="lazy"></div><figcaption>로그인</figcaption></figure><figure><div class="pizza-system__icon pizza-system__icon--system"><img src="__PIZZA_SYSTEM_join__" alt="회원가입" loading="lazy"></div><figcaption>회원가입</figcaption></figure><figure><div class="pizza-system__icon pizza-system__icon--system"><img src="__PIZZA_SYSTEM_cart__" alt="장바구니" loading="lazy"></div><figcaption>장바구니</figcaption></figure><figure><div class="pizza-system__icon pizza-system__icon--system"><img src="__PIZZA_SYSTEM_chevron__" alt="펼치기" loading="lazy"></div><figcaption>펼치기</figcaption></figure></div></div>
+<div class="pizza-system__illustrations"><h3>Illustration icon</h3><div class="pizza-system__icons pizza-system__icons--illust"><figure><div class="pizza-system__icon pizza-system__icon--illust"><img src="__PIZZA_SYSTEM_delivery__" alt="배달 주문" loading="lazy"></div><figcaption>배달 주문</figcaption></figure><figure><div class="pizza-system__icon pizza-system__icon--illust"><img src="__PIZZA_SYSTEM_takeout__" alt="포장 주문" loading="lazy"></div><figcaption>포장 주문</figcaption></figure><figure><div class="pizza-system__icon pizza-system__icon--illust"><img src="__PIZZA_SYSTEM_address__" alt="주소 입력" loading="lazy"></div><figcaption>주소 입력</figcaption></figure><figure><div class="pizza-system__icon pizza-system__icon--illust"><img src="__PIZZA_SYSTEM_coupon__" alt="쿠폰함" loading="lazy"></div><figcaption>쿠폰함</figcaption></figure><figure><div class="pizza-system__icon pizza-system__icon--illust"><img src="__PIZZA_SYSTEM_stamp__" alt="스탬프" loading="lazy"></div><figcaption>스탬프</figcaption></figure><figure><div class="pizza-system__icon pizza-system__icon--illust"><img src="__PIZZA_SYSTEM_discount__" alt="제휴할인" loading="lazy"></div><figcaption>제휴할인</figcaption></figure><figure><div class="pizza-system__icon pizza-system__icon--illust"><img src="__PIZZA_SYSTEM_history__" alt="주문내역" loading="lazy"></div><figcaption>주문내역</figcaption></figure></div></div>
+</div>
+</div>
+</section>
+</template>
+<script>
+const pizzaSystemObserver = new MutationObserver(() => {
+  const wireframe = document.getElementById('wireframe');
+  if (!wireframe) return;
+  if (!document.getElementById('visual-system')) {
+    wireframe.after(document.getElementById('pizza-system-template').content.cloneNode(true));
+  }
+  pizzaSystemObserver.disconnect();
+});
+pizzaSystemObserver.observe(document.getElementById('root'), {childList:true, subtree:true});
+</script>

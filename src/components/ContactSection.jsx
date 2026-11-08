@@ -7,30 +7,25 @@ export default function ContactSection() {
         <div className="contact-crawl__stars" aria-hidden="true" />
         <div className="contact-crawl__viewport">
           <div className="contact-crawl__text">
-            <h2>CONTACT ME</h2>
-            <p>
-              <span>리서치부터 디자인,</span>
-              <span>인터랙션 구현까지.</span>
-            </p>
-            <p>
-              <span>사용자의 흐름을 읽고</span>
-              <span>문제를 더 나은 경험으로 바꾸는</span>
-              <span>디자이너가 되고 싶습니다.</span>
-            </p>
-            <p>
-              <span>아직 완벽하진 않지만,</span>
-              <span>끝까지 고민하고</span>
-              <span>더 나은 방향을 찾아가는 사람입니다.</span>
-            </p>
-            <p>
-              <span>새로운 프로젝트를 함께 만들어갈</span>
-              <span>준비가 되어 있습니다.</span>
-            </p>
-            <address>
-              <a href="mailto:yshnada@gmail.com">yshnada@gmail.com</a>
-              <a href="tel:+821041142912">+82 10-4114-2912</a>
-            </address>
-            <strong>YOO SEUNG HYUN</strong>
+      <div className="contact-card" aria-labelledby="contact-title">
+        <h2 id="contact-title">Contact me</h2>
+        <div className="contact-card__grid">
+          <div className="contact-card__intro">
+            <p>YOO SEUNG HYUN</p>
+            <p className="contact-card__muted">UI/UX Designer</p>
+            <p className="contact-card__greeting">Let's connect.</p>
+            <p className="contact-card__muted">더 나은 사용자 경험을 함께 만들어갈 기회를 기다립니다.</p>
+          </div>
+          <div className="contact-card__details">
+            <dl>
+              <div><dt>Email</dt><dd><a href="mailto:yshnada@gmail.com">yshnada@gmail.com</a></dd></div>
+              <div><dt>Phone</dt><dd><a href="tel:+821041142912">+82 10-4114-2912</a></dd></div>
+              <div><dt>Availability</dt><dd>새로운 기회와 채용 관련 연락을 기다립니다.</dd></div>
+            </dl>
+            <a className="contact-card__email" href="mailto:yshnada@gmail.com">Send Email <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import aboutMe from '../assets/about_me.png';
+import project01Proposal from './project01Proposal.html?raw';
+import project01Ending from '../assets/project-01-frame-15.png';
+import { getProposalDocument } from './proposals/documents.js';
+import AboutTimeline from './AboutTimeline.jsx';
 import cssIcon from '../assets/css.png';
 import figmaIcon from '../assets/figma.png';
 import htmlIcon from '../assets/html.png';
@@ -7,6 +10,7 @@ import illustratorIcon from '../assets/illust.png';
 import javascriptIcon from '../assets/javascript.png';
 import photoshopIcon from '../assets/photoshop.png';
 import pizzahut from '../assets/pizzahut.png';
+import exitIcon from '../assets/exit.png';
 import project01Frame01 from '../assets/project-01-frame-01.png';
 import project01Frame02 from '../assets/project-01-frame-02.png';
 import project01Frame03 from '../assets/project-01-frame-03.png';
@@ -52,7 +56,6 @@ import reactIcon from '../assets/react.png';
 import simmons from '../assets/simmons.png';
 import ArchiveNav from './ArchiveNav.jsx';
 import ContactSection from './ContactSection.jsx';
-import FilmSection from './FilmSection.jsx';
 import ProjectSection from './ProjectSection.jsx';
 import { getReelUrl } from '../routes.js';
 
@@ -112,6 +115,8 @@ const project04Frames = [
 const projects = [
   {
     id: 'project-01',
+    proposalUrl: 'https://yshnada-del.github.io/jibsalifepage/',
+    floatingColor: '#7055ed',
     scene: '02',
     edgeLabel: 'PROJECT 01',
     number: 'PROJECT 01',
@@ -148,6 +153,8 @@ const projects = [
   },
   {
     id: 'project-02',
+    proposalUrl: 'https://yshnada-del.github.io/simmonspage/',
+    floatingColor: '#92535b',
     scene: '03',
     edgeLabel: 'PROJECT 02',
     number: 'PROJECT 02',
@@ -184,6 +191,8 @@ const projects = [
   },
   {
     id: 'project-03',
+    proposalUrl: 'https://yshnada-del.github.io/landingpage/',
+    floatingColor: '#3f6b5e',
     scene: '04',
     edgeLabel: 'PROJECT 03',
     number: 'PROJECT 03',
@@ -217,6 +226,8 @@ const projects = [
   },
   {
     id: 'project-04',
+    proposalUrl: 'https://yshnada-del.github.io/pizzahutpage/',
+    floatingColor: '#c8102e',
     scene: '05',
     edgeLabel: 'PROJECT 04',
     number: 'PROJECT 04',
@@ -298,6 +309,7 @@ const aboutScrollScenes = [
       ['2018.11', '패션디자인전문학교 우수작품상'],
       ['2018.11', '패션디자인전문학교 협력사상'],
       ['2026.04', '이젠아카데미 DX교육센터 프로젝트 우수상'],
+      ['2026.06', '이젠아카데미 DX교육센터 개근상'],
     ],
   },
   {
@@ -318,518 +330,8 @@ function getPageIdFromHash() {
   return pageIds.includes(hashId) ? hashId : 'about';
 }
 
-function AboutZoomIntro() {
-  const sceneRef = useRef(null);
-
-  useEffect(() => {
-    const scene = sceneRef.current;
-    const section = scene?.closest('.film-section--about-flight, .film-section--about-zoom');
-
-    if (!scene || !section) {
-      return undefined;
-    }
-
-    let frameId = 0;
-    const scaleStops = [1, 1.7, 2.7, 4.1, 6.2, 9.2];
-
-    const update = () => {
-      frameId = 0;
-      const rect = section.getBoundingClientRect();
-      const travel = Math.max(rect.height - window.innerHeight, 1);
-      const progress = Math.min(Math.max(-rect.top / travel, 0), 1);
-      const stepFloat = progress * 5;
-      const step = Math.min(Math.floor(stepFloat), 4);
-      const local = stepFloat - step;
-      const easedLocal = 1 - Math.pow(1 - local, 3);
-      const scale = scaleStops[step] + (scaleStops[step + 1] - scaleStops[step]) * easedLocal;
-      const finalProgress = Math.min(Math.max((progress - 0.78) / 0.16, 0), 1);
-      const introOpacity = 1 - Math.min(Math.max((progress - 0.72) / 0.18, 0), 1);
-      const backgroundOpacity = 0.18 - finalProgress * 0.08;
-
-      scene.style.setProperty('--about-progress', progress.toFixed(4));
-      scene.style.setProperty('--about-scale', scale.toFixed(4));
-      scene.style.setProperty('--about-final', finalProgress.toFixed(4));
-      scene.style.setProperty('--about-intro-opacity', introOpacity.toFixed(4));
-      scene.style.setProperty('--about-bg-opacity', backgroundOpacity.toFixed(4));
-    };
-
-    const requestUpdate = () => {
-      if (!frameId) {
-        frameId = window.requestAnimationFrame(update);
-      }
-    };
-
-    update();
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
-
-    return () => {
-      window.removeEventListener('scroll', requestUpdate);
-      window.removeEventListener('resize', requestUpdate);
-
-      if (frameId) {
-        window.cancelAnimationFrame(frameId);
-      }
-    };
-  }, []);
-
-  return (
-    <div className="about-zoom-scene" ref={sceneRef}>
-      <div className="about-zoom-word" aria-hidden="true">
-        ABOUT ME
-      </div>
-      <div className="about-zoom-counter" aria-hidden="true">
-        <span>01</span>
-        <span>02</span>
-        <span>03</span>
-        <span>04</span>
-        <span>05</span>
-      </div>
-      <section className="about-final" aria-label="About me information">
-        <div className="about-final__title">
-          <p>UX/UI DESIGNER</p>
-          <h1>
-            사용자의 흐름을 이해하고
-            <span>경험을 설계하는 디자이너입니다.</span>
-          </h1>
-        </div>
-        <div className="about-final__content">
-          <p className="about-final__lead">
-            Figma, Photoshop, Illustrator, HTML, CSS, JavaScript, React를 활용해 기획부터 UI 설계와 프론트엔드 구현까지 연결합니다.
-          </p>
-          <aside className="about-final__info">
-            <p>INFORMATION</p>
-            <dl>
-              <div>
-                <dt>NAME</dt>
-                <dd>YOO SEUNG HYUN</dd>
-              </div>
-              <div>
-                <dt>EMAIL</dt>
-                <dd>
-                  <a href="mailto:yshnada@gmail.com">yshnada@gmail.com</a>
-                </dd>
-              </div>
-              <div>
-                <dt>PHONE</dt>
-                <dd>
-                  <a href="tel:+821041142912">+82 10-4114-2912</a>
-                </dd>
-              </div>
-              <div>
-                <dt>LOCATION</dt>
-                <dd>Seoul, Korea</dd>
-              </div>
-            </dl>
-          </aside>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function AboutScrollAbout() {
-  const stageRef = useRef(null);
-
-  useEffect(() => {
-    const stage = stageRef.current;
-    const section = stage?.closest('.film-section--about-flight');
-
-    if (!stage || !section) {
-      return undefined;
-    }
-
-    let frameId = 0;
-    const scenes = Array.from(stage.querySelectorAll('.about-scroll-scene'));
-    const watermark = stage.querySelector('.about-scroll-watermark');
-    const compactQuery = window.matchMedia('(max-width: 1120px)');
-
-    const resetCompactAbout = () => {
-      scenes.forEach((scene) => {
-        scene.classList.add('is-active');
-        scene.classList.remove('is-past');
-        scene.style.setProperty('--label-opacity', '1');
-        scene.style.setProperty('--content-opacity', '1');
-        scene.style.setProperty('--content-reveal-y', '0px');
-      });
-
-      stage.style.setProperty('--about-watermark-opacity', '0');
-      stage.style.setProperty('--about-watermark-size', '0px');
-      stage.style.setProperty('--about-watermark-stretch-y', '1');
-      stage.style.setProperty('--about-scroll-hint-opacity', '0');
-
-      if (watermark) {
-        watermark.style.opacity = '0';
-        watermark.style.removeProperty('font-size');
-        watermark.style.removeProperty('transform');
-      }
-    };
-
-    const update = () => {
-      frameId = 0;
-
-      if (compactQuery.matches) {
-        resetCompactAbout();
-        return;
-      }
-
-      const rect = section.getBoundingClientRect();
-      const travel = Math.max(rect.height - window.innerHeight, 1);
-      const progress = Math.min(Math.max(-rect.top / travel, 0), 1);
-      const introProgress = Math.min(Math.max(progress / 0.24, 0), 1);
-      const easedIntro = 1 - Math.pow(1 - introProgress, 3);
-      const sceneProgress = Math.min(Math.max((progress - 0.16) / 0.86, 0), 0.9999);
-      const activeIndex = Math.min(scenes.length - 1, Math.floor(sceneProgress * scenes.length));
-      const scrollHintOpacity = Math.max(0, 1 - Math.min(progress / 0.16, 1));
-      const watermarkOpacity = Math.max(0.18, 1 - easedIntro * 0.82);
-      const watermarkStretchY = 1;
-      const startSize = Math.max(58, Math.min(window.innerWidth * 0.05, 92));
-      const endSize = Math.min(window.innerWidth * 0.34, window.innerHeight * 0.64, 680);
-      let watermarkSize = startSize + (endSize - startSize) * easedIntro;
-      const clamp01 = (value) => Math.min(Math.max(value, 0), 1);
-      const easeOutCubic = (value) => 1 - Math.pow(1 - clamp01(value), 3);
-
-      scenes.forEach((scene, index) => {
-        const rawSceneProgress = sceneProgress * scenes.length - index;
-        const localProgress = clamp01(rawSceneProgress);
-        const isActive = progress >= 0.14 && index === activeIndex;
-        const isVisible = progress >= 0.14 && rawSceneProgress > -0.04 && rawSceneProgress < 1.04;
-        const labelIn = easeOutCubic(localProgress / 0.12);
-        const labelOut = 1 - easeOutCubic((localProgress - 0.9) / 0.1);
-        const contentIn = easeOutCubic((localProgress - 0.08) / 0.22);
-        const contentOut = 1 - easeOutCubic((localProgress - 0.9) / 0.1);
-        const labelOpacity = isVisible ? Math.min(labelIn, labelOut) : 0;
-        const contentOpacity = isVisible ? Math.min(contentIn, contentOut) : 0;
-        const revealY = (1 - contentIn) * 72;
-
-        scene.classList.toggle('is-active', isActive);
-        scene.classList.toggle('is-past', progress >= 0.14 && index < activeIndex);
-        scene.style.setProperty('--label-opacity', labelOpacity.toFixed(4));
-        scene.style.setProperty('--content-opacity', contentOpacity.toFixed(4));
-        scene.style.setProperty('--content-reveal-y', `${revealY.toFixed(2)}px`);
-      });
-
-      stage.style.setProperty('--about-watermark-opacity', watermarkOpacity.toFixed(4));
-      stage.style.setProperty('--about-watermark-size', `${watermarkSize.toFixed(2)}px`);
-      stage.style.setProperty('--about-watermark-stretch-y', watermarkStretchY.toFixed(4));
-      stage.style.setProperty('--about-scroll-hint-opacity', scrollHintOpacity.toFixed(4));
-
-      if (watermark) {
-        watermark.style.opacity = watermarkOpacity.toFixed(4);
-        watermark.style.fontSize = `${watermarkSize.toFixed(2)}px`;
-        watermark.style.transform = `translate(-50%, -50%) scaleY(${watermarkStretchY.toFixed(4)})`;
-
-        const maxWatermarkWidth = window.innerWidth * 1.16;
-        const measuredWidth = watermark.getBoundingClientRect().width;
-
-        if (measuredWidth > maxWatermarkWidth) {
-          watermarkSize *= maxWatermarkWidth / measuredWidth;
-          watermark.style.fontSize = `${watermarkSize.toFixed(2)}px`;
-          stage.style.setProperty('--about-watermark-size', `${watermarkSize.toFixed(2)}px`);
-        }
-      }
-    };
-
-    const requestUpdate = () => {
-      if (compactQuery.matches) {
-        resetCompactAbout();
-        return;
-      }
-
-      if (!frameId) {
-        frameId = window.requestAnimationFrame(update);
-      }
-    };
-
-    const scrollParent = section.closest('.archive-page');
-    const bindDesktopScroll = () => {
-      if (compactQuery.matches) {
-        resetCompactAbout();
-        window.removeEventListener('scroll', requestUpdate);
-        scrollParent?.removeEventListener('scroll', requestUpdate);
-        return;
-      }
-
-      window.addEventListener('scroll', requestUpdate, { passive: true });
-      scrollParent?.addEventListener('scroll', requestUpdate, { passive: true });
-      requestUpdate();
-    };
-
-    bindDesktopScroll();
-    window.addEventListener('resize', requestUpdate);
-    compactQuery.addEventListener('change', bindDesktopScroll);
-
-    return () => {
-      window.removeEventListener('scroll', requestUpdate);
-      window.removeEventListener('resize', requestUpdate);
-      compactQuery.removeEventListener('change', bindDesktopScroll);
-      scrollParent?.removeEventListener('scroll', requestUpdate);
-
-      if (frameId) {
-        window.cancelAnimationFrame(frameId);
-      }
-    };
-  }, []);
-
-  return (
-    <div className="about-scroll-stage" ref={stageRef}>
-      <div className="about-scroll-grain" aria-hidden="true" />
-      <div className="about-scroll-watermark" aria-hidden="true">
-        ABOUT ME
-      </div>
-      <div className="about-scroll-hint" aria-hidden="true">
-        <div className="about-scroll-hint__mouse" />
-        <p>Scroll</p>
-      </div>
-      <div className="about-scroll-scenes">
-        {aboutScrollScenes.map((scene, sceneIndex) => (
-          <section className="about-scroll-scene" aria-label={scene.title} key={scene.id}>
-            <div className="about-scroll-scene__label">
-              <span>{String(sceneIndex + 1).padStart(2, '0')}</span>
-              <h2>{scene.title}</h2>
-            </div>
-            <AboutScrollSceneContent scene={scene} />
-          </section>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function AboutScrollSceneContent({ scene }) {
-  if (scene.type === 'information') {
-    return (
-      <div className="about-scroll-scene__content about-info">
-        <div className="about-info__identity about-reveal" style={{ '--stagger': 1 }}>
-          <strong>YOO SEUNG HYUN</strong>
-          <span>UX/UI Designer</span>
-        </div>
-        <p className="about-info__statement about-reveal" style={{ '--stagger': 2 }}>
-          사용자의 흐름을 이해하고,
-          <br />
-          가치 있는 경험을 설계합니다.
-        </p>
-        <dl className="about-info__contact about-reveal" style={{ '--stagger': 3 }}>
-          <div>
-            <dt>Email</dt>
-            <dd>
-              <a href="mailto:yshnada@gmail.com">yshnada@gmail.com</a>
-            </dd>
-          </div>
-          <div>
-            <dt>Phone</dt>
-            <dd>
-              <a href="tel:+821041142912">+82 10-4114-2912</a>
-            </dd>
-          </div>
-          <div>
-            <dt>Location</dt>
-            <dd>Bucheon, Korea</dd>
-          </div>
-        </dl>
-      </div>
-    );
-  }
-
-  if (scene.type === 'tools') {
-    return (
-      <div className="about-scroll-scene__content about-tool-grid">
-        {scene.items.map(([name, percent, icon], index) => (
-          <article
-            className="about-tool-card about-reveal"
-            style={{
-              '--stagger': index + 1,
-              '--tool-percent': percent,
-              '--tool-dash': `${percent} 100`,
-              '--tool-delay': `${index * 90}ms`,
-            }}
-            key={name}
-          >
-            <div className="about-tool-card__gauge" aria-hidden="true">
-              <svg className="about-tool-card__ring" viewBox="0 0 120 120">
-                <circle className="about-tool-card__ring-track" cx="60" cy="60" r="52" pathLength="100" />
-                <circle className="about-tool-card__ring-progress" cx="60" cy="60" r="52" pathLength="100" />
-              </svg>
-              <img src={icon} alt="" />
-            </div>
-            <h3>{name}</h3>
-            <p>{percent}%</p>
-          </article>
-        ))}
-      </div>
-    );
-  }
-
-  if (scene.type === 'awards') {
-    return (
-      <ol className="about-scroll-scene__content about-awards">
-        {scene.items.map(([date, description], index) => (
-          <li className="about-reveal" style={{ '--stagger': index + 1 }} key={`${date}-${description}`}>
-            <time>{date}</time>
-            <span>{description}</span>
-          </li>
-        ))}
-      </ol>
-    );
-  }
-
-  return (
-    <ol className="about-scroll-scene__content about-timeline">
-      {scene.items.map(([date, title, description], index) => (
-        <li className="about-reveal" style={{ '--stagger': index + 1 }} key={`${date}-${title}`}>
-          <time>{date}</time>
-          <div>
-            <h3>{title}</h3>
-            <p>{description}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-function AboutInfoScene() {
-  const sceneRef = useRef(null);
-
-  useEffect(() => {
-    const scene = sceneRef.current;
-
-    if (!scene) {
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          scene.classList.add('is-visible');
-        }
-      },
-      { threshold: 0.28 },
-    );
-
-    observer.observe(scene);
-
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <section className="about-info-scene" ref={sceneRef} aria-label="About me information">
-      <div className="about-info-scene__grain" aria-hidden="true" />
-      <div className="about-info-scene__film about-info-scene__film--left" aria-hidden="true" />
-      <div className="about-info-scene__film about-info-scene__film--right" aria-hidden="true" />
-      <div className="about-info-scene__watermark" aria-hidden="true">
-        ABOUT ME
-      </div>
-
-      <div className="about-info-scene__grid">
-        <div className="about-info-scene__title">
-          <span>01</span>
-          <h1>INFORMATION</h1>
-        </div>
-
-        <div className="about-info-scene__panel">
-          <div className="about-info-scene__identity">
-            <h2>YOO SEUNG HYUN</h2>
-            <p>UX/UI DESIGNER</p>
-          </div>
-
-          <p className="about-info-scene__statement">
-            사용자의 흐름을 이해하고,
-            <br />
-            가치 있는 경험을 설계합니다.
-          </p>
-
-          <dl className="about-info-scene__contact">
-            <div>
-              <dt>EMAIL</dt>
-              <dd>
-                <a href="mailto:yshnada@gmail.com">yshnada@gmail.com</a>
-              </dd>
-            </div>
-            <div>
-              <dt>PHONE</dt>
-              <dd>
-                <a href="tel:+821041142912">+82 10-4114-2912</a>
-              </dd>
-            </div>
-            <div>
-              <dt>LOCATION</dt>
-              <dd>Seoul, Korea</dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ArchiveAbout() {
-  return (
-    <FilmSection id="about" scene="01" label="ABOUT ME" tone="ivory" className="film-section--about-flight">
-      <div className="about-flight-wrap">
-        <div className="about-flight-wrap__sticky">
-          <AboutScrollAbout />
-          <div className="about-archive">
-            <div className="about-archive__intro">
-              <h1>ABOUT ME</h1>
-              <p className="about-archive__lead">사용자의 흐름을 이해하고, 가치 있는 경험을 설계합니다.</p>
-              <div>
-                <h2>YOO SEUNG HYUN</h2>
-                <p>UX/UI Designer</p>
-              </div>
-              <ul className="about-archive__contact">
-                <li>
-                  <span>MAIL</span>
-                  <a href="mailto:yshnada@gmail.com">yshnada@gmail.com</a>
-                </li>
-                <li>
-                  <span>TEL</span>
-                  <a href="tel:+821041142912">+82 10-4114-2912</a>
-                </li>
-                <li>
-                  <span>LOC</span>
-                  <strong>Seoul, Korea</strong>
-                </li>
-              </ul>
-            </div>
-            <div className="about-archive__photo">
-              <img src={aboutMe} alt="Yoo Seung Hyun profile" />
-            </div>
-            <div className="about-archive__cards">
-              <article>
-                <h3>Education</h3>
-                <p>이젠아카데미DX교육센터 UX/UI 디자인 & 프론트엔드 과정</p>
-                <p>국제패션디자인전문학교 패션디자인</p>
-              </article>
-              <article>
-                <h3>Experience</h3>
-                <p>Fashion design, brand operation, product communication</p>
-              </article>
-              <article>
-                <h3>Tools</h3>
-                <p>
-                  <strong>Design</strong> Figma, Photoshop, Illustrator
-                </p>
-                <p>
-                  <strong>Development</strong> HTML, CSS, JavaScript, React
-                </p>
-                <p>
-                  <strong>Workflow</strong> GitHub, Vercel, VS Code, AI Tools
-                </p>
-              </article>
-              <article>
-                <h3>Awards &amp; Exhibition</h3>
-                <p>Project award, fashion exhibition and contest archive</p>
-              </article>
-            </div>
-          </div>
-        </div>
-      </div>
-    </FilmSection>
-  );
-}
-
 export default function ArchivePage() {
+  const proposalFrameRef = useRef(null);
   const [activeId, setActiveId] = useState(getPageIdFromHash);
   const [projectViewportMode, setProjectViewportMode] = useState(() => {
     if (typeof window === 'undefined') {
@@ -839,6 +341,12 @@ export default function ArchivePage() {
     return window.matchMedia('(max-width: 760px)').matches ? 'compact' : 'wide';
   });
   const activeProject = projects.find((project) => project.id === activeId);
+  const nextProject = activeProject
+    ? projects[(projects.indexOf(activeProject) + 1) % projects.length]
+    : null;
+  const previousProject = activeProject
+    ? projects[(projects.indexOf(activeProject) - 1 + projects.length) % projects.length]
+    : null;
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -910,16 +418,54 @@ export default function ArchivePage() {
     };
   }, [activeProject]);
 
-  const pageClass = `archive-page${activeId === 'about' ? ' archive-page--about' : ''}${
+  const pageClass = `archive-page${activeId === 'about' ? ' archive-page--about archive-page--timeline' : ''}${
     activeId === 'contact' ? ' archive-page--contact' : ''
-  }${activeProject ? ' archive-page--project-detail' : ''}`;
+  }${activeProject ? ' archive-page--project-detail' : ''}${activeProject?.proposalUrl ? ' archive-page--proposal' : ''}`;
 
   return (
     <main className={pageClass}>
-      <ArchiveNav activeId={activeId} onSelect={setActiveId} />
+      <ArchiveNav activeId={activeId} onSelect={setActiveId} proposalFrameRef={proposalFrameRef} />
       <div className="archive-page__reel">
-        {activeId === 'about' && <ArchiveAbout />}
-        {activeProject && (
+        {activeId === 'about' && <AboutTimeline scenes={aboutScrollScenes} />}
+        {activeProject?.proposalUrl ? (
+          <section className="project-proposal" id={activeProject.id} aria-label={`${activeProject.title} 기획서`} style={{ '--proposal-accent': activeProject.floatingColor }}>
+            <div className="project-proposal__film project-proposal__film--left" aria-hidden="true" />
+            <div className="project-proposal__film project-proposal__film--right" aria-hidden="true" />
+            <iframe
+              key={activeProject.id}
+              ref={proposalFrameRef}
+              className="project-proposal__frame"
+              srcDoc={activeProject.id === 'project-01'
+                ? project01Proposal.replace('__PROJECT_01_ENDING__', new URL(project01Ending, window.location.href).href)
+                : getProposalDocument(activeProject)}
+              title={`${activeProject.title} 프로젝트 기획서`}
+              allowFullScreen
+            />
+            <nav className="project-proposal__floating" aria-label="프로젝트 이동">
+              {activeProject.id === 'project-04' ? (
+                <a href={getReelUrl()} target="_top" aria-label="필름 아카이브로 나가기" title="필름 아카이브로 나가기">
+                  <span className="project-proposal__arrow project-proposal__exit" style={{ '--exit-icon': `url("${exitIcon}")` }} aria-hidden="true" />
+                  <span className="project-proposal__label">나가기</span>
+                </a>
+              ) : (
+              <a href={`#${nextProject.id}`} aria-label={`다음 프로젝트: ${nextProject.title}`} title={`다음 프로젝트: ${nextProject.title}`}>
+                <svg className="project-proposal__arrow" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 3 21 12 6 21Z" />
+                </svg>
+                <span className="project-proposal__label">다음</span>
+              </a>
+              )}
+              {activeProject.id !== 'project-01' && (
+              <a href={`#${previousProject.id}`} aria-label={`이전 프로젝트: ${previousProject.title}`} title={`이전 프로젝트: ${previousProject.title}`}>
+                <svg className="project-proposal__arrow" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M18 3 3 12 18 21Z" />
+                </svg>
+                <span className="project-proposal__label">이전</span>
+              </a>
+              )}
+            </nav>
+          </section>
+        ) : activeProject && (
           <ProjectSection key={`${activeProject.id}-${projectViewportMode}`} project={activeProject} />
         )}
         {activeId === 'contact' && <ContactSection />}

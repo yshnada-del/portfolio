@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pizza Hut Renewal Website</title>
+    <script type="module" crossorigin src="/pizzahutpage/assets/index-BX1TqbcH.js"></script>
+    <link rel="stylesheet" crossorigin href="/pizzahutpage/assets/index-bfm1cfVL.css">
+    <style>
+      @font-face {
+        font-family: 'Portfolio Pretendard';
+        src: url('__PRETENDARD_REGULAR__') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      .pizza-website-slot {
+        position: absolute;
+        z-index: 2;
+        left: 80.5%;
+        top: 69.2%;
+        width: 16.2%;
+        height: 8%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Sample the blank cover texture below the original baked-in lettering. */
+        background-size: 617.284% 1250%;
+        background-position: 96.06% 85.87%;
+        background-repeat: no-repeat;
+      }
+      .pizza-cover-line-mask {
+        position: absolute;
+        z-index: 2;
+        left: 75%;
+        top: 63.8%;
+        width: 21%;
+        height: 1.3%;
+        background-size: 476.19% 7692.308%;
+        background-position: 94.937% 66.667%;
+        background-repeat: no-repeat;
+        pointer-events: none;
+      }
+      .pizza-website-link {
+        position: absolute;
+        z-index: 3;
+        left: 50%;
+        bottom: 8%;
+        transform: translateX(-50%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: .85em 1.4em;
+        border-radius: 999px;
+        color: #fff;
+        background: #c8102e;
+        font: 400 clamp(7px, 1vw, 18px)/1.2 'Portfolio Pretendard', sans-serif;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .pizza-website-link:hover { background: #a80d27; }
+      .pizza-website-link:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+      .pizza-mockup-screen {
+        position: absolute;
+        z-index: 2;
+        left: 28.55%;
+        top: 23.2%;
+        width: 42.85%;
+        height: 49.4%;
+        object-fit: cover;
+        object-position: top;
+        filter: brightness(.55);
+        pointer-events: none;
+      }
+      .pizza-mockup-title {
+        position: absolute;
+        z-index: 2;
+        inset: 0;
+        pointer-events: none;
+      }
+      .pizza-mockup-title span {
+        position: absolute;
+        top: 37.3%;
+        left: 0;
+        width: 100%;
+        color: #ffffffcc;
+        font: 800 13.2vw/1 Arial, sans-serif;
+        letter-spacing: 1.8vw;
+        text-indent: 1.8vw;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .pizza-mockup-notch {
+        position: absolute;
+        z-index: 2;
+        left: 47.4%;
+        top: 23.2%;
+        width: 5.2%;
+        height: 1.8%;
+        border-radius: 0 0 3px 3px;
+        background: #080808;
+        pointer-events: none;
+      }
+      .overview-head p { max-width: 920px; }
+      .overview-head p span { display: block; color: inherit; font: inherit; text-transform: none; }
+      .overview-note { white-space: normal; }
+      .overview-note--01 { background: #d63034; }
+      .overview-note--01 strong { font-size: clamp(15px, 1.2vw, 22px); }
+      .overview-note--02,
+      .overview-note--03,
+      .overview-note--04,
+      .overview-note--05 { width: min(720px, 42vw); }
+      .overview-note--05 { top: 14%; left: 7%; transform: rotate(6deg); }
+      /* Keep the staggered comparison inside one desktop viewport. */
+      .before-after-comparison { gap: 72px; }
+      .comparison-pair { gap: 20px; padding-bottom: 56px; }
+      .comparison-pair__title span { font-size: clamp(24px, 2.1vw, 32px); }
+      .comparison-pair__row {
+        grid-template-columns: max-content minmax(0, 1fr);
+        gap: clamp(24px, 2vw, 32px);
+      }
+      .comparison-pair__row--reverse {
+        grid-template-columns: minmax(0, 1fr) max-content;
+        margin-top: -96px;
+      }
+      .comparison-pair__shot img,
+      .comparison-pair__shot .placeholder {
+        width: auto;
+        max-width: 100%;
+        height: clamp(280px, 44vh, 460px);
+        max-height: none;
+        object-fit: contain;
+        object-position: center;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .comparison-pair__shot { max-width: 42vw; justify-items: start; background: transparent; border: 0; box-shadow: none; }
+      .comparison-pair__copy { width: 100%; max-width: 560px; justify-self: start; }
+      .comparison-pair__row--reverse .comparison-pair__copy { justify-self: end; text-align: right; }
+      .comparison-pair__copy > span { font-size: clamp(20px, 1.6vw, 26px); font-weight: 800; line-height: 1.3; }
+      .comparison-pair__copy h3 { display: none; }
+      .comparison-pair__copy p { margin-top: 12px; font-size: clamp(13px, .85vw, 14px); font-weight: 500; line-height: 1.75; }
+      @media (max-width: 720px) {
+        .comparison-pair__row,
+        .comparison-pair__row--reverse { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+        .comparison-pair__row--reverse { margin-top: 24px; }
+        .comparison-pair__row--reverse .comparison-pair__shot { order: -1; }
+        .comparison-pair__shot { max-width: 100%; }
+        .comparison-pair__row--reverse .comparison-pair__copy { justify-self: start; }
+        .comparison-pair__shot img,
+        .comparison-pair__shot .placeholder { height: auto; max-height: 420px; }
+      }
+      @media (max-width: 720px) {
+        .overview-floating-list { width: 100%; }
+        .overview-note { width: 100%; max-width: none; height: auto; }
+        .overview-note--05 { position: relative; inset: auto; transform: none; }
+        .overview-note--05 { order: 0; }
+        .overview-note--02 { order: 1; }
+        .overview-note--01 { order: 2; }
+        .overview-note--03 { order: 3; }
+        .overview-note--04 { order: 4; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const pizzaMainImageObserver = new MutationObserver(() => {
+        const image = document.querySelector('.comparison-pair .comparison-pair__row--reverse .comparison-pair__shot img');
+        const description = document.querySelector('.comparison-pair .comparison-pair__row--reverse .comparison-pair__copy p');
+        if (!image || !description) return;
+        description.textContent = '주요 주문 기능을 한곳에 모아 주문 동선을 명확하게 개선하고, 추천 메뉴와 이벤트 콘텐츠를 구분해 사용자가 원하는 정보를 직관적으로 탐색할 수 있도록 했습니다. 또한 시각적 위계를 정리해 핵심 정보의 가독성과 접근성을 높였습니다.';
+        image.src = '__PIZZA_MAIN_WEB__';
+        image.removeAttribute('srcset');
+        image.alt = 'Main Page 리뉴얼 디자인 — Figma web 프레임';
+        pizzaMainImageObserver.disconnect();
+      });
+      pizzaMainImageObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
+
+      const pizzaOverviewObserver = new MutationObserver(() => {
+        const overview = document.querySelector('.overview-showcase');
+        const description = overview?.querySelector('.overview-head p');
+        const list = overview?.querySelector('.overview-floating-list');
+        if (!description || !list || list.children.length < 4) return;
+
+        const paragraphs = [
+          '피자헛 리뉴얼 프로젝트는 기존 웹사이트의 복잡한 메뉴 구조와 분산된 할인 정보, 불명확한 주문 동선에서 출발했습니다.',
+          '사용자가 원하는 메뉴와 혜택을 쉽게 찾고, 메뉴 선택부터 주문까지 자연스럽게 이어질 수 있도록 정보 구조와 주문 경험을 개선한 UX/UI 리디자인 프로젝트입니다.',
+        ];
+        description.replaceChildren(...paragraphs.map((text) => {
+          const line = document.createElement('span');
+          line.textContent = text;
+          return line;
+        }));
+
+        const questions = {
+          '01': '사용자는 필요한 정보를 찾기 위해 여러 화면을 오가고 있지는 않을까?',
+          '02': '할인 혜택과 메뉴 정보를 한눈에 파악할 수 있을까?',
+          '03': '메뉴 선택부터 주문까지 막힘없이 이어질 수 있을까?',
+          '04': '복잡한 피자 주문을 더 짧고 명확하게 만들 수 있을까?',
+        };
+        Object.entries(questions).forEach(([index, text]) => {
+          list.querySelector(`.overview-note--${index} strong`).textContent = text;
+        });
+        const note = document.createElement('article');
+        note.className = 'overview-note overview-note--05';
+        const title = document.createElement('strong');
+        title.textContent = '사용자는 원하는 피자를 쉽게 찾을 수 있을까?';
+        note.append(title);
+        list.prepend(note);
+        pizzaOverviewObserver.disconnect();
+      });
+      pizzaOverviewObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
+
+      const pizzaLinkObserver = new MutationObserver(() => {
+        const cover = document.querySelector('.hero');
+        const image = cover?.querySelector('.hero__cover');
+        if (!image) return;
+        image.src = '__PIZZA_CLEAN_COVER__';
+        const screen = document.createElement('img');
+        screen.className = 'pizza-mockup-screen';
+        screen.src = '__PIZZA_MAIN_WEB__';
+        screen.alt = '최신 web 프레임을 적용한 피자헛 노트북 목업';
+        const mockupTitle = document.createElement('div');
+        mockupTitle.className = 'pizza-mockup-title';
+        mockupTitle.setAttribute('aria-hidden', 'true');
+        const mockupTitleText = document.createElement('span');
+        mockupTitleText.textContent = 'PIZZA HUT';
+        mockupTitle.append(mockupTitleText);
+        const notch = document.createElement('div');
+        notch.className = 'pizza-mockup-notch';
+        notch.setAttribute('aria-hidden', 'true');
+        cover.append(screen, mockupTitle, notch);
+        const slot = document.createElement('div');
+        slot.className = 'pizza-website-slot';
+        slot.style.backgroundImage = `url("${image.src}")`;
+        const link = document.createElement('a');
+        link.className = 'pizza-website-link';
+        link.href = 'https://yshnada-del.github.io/pizzahut/';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = '웹사이트 바로가기 ↗';
+        cover.append(slot);
+        cover.append(link);
+        const lineMask = document.createElement('div');
+        lineMask.className = 'pizza-cover-line-mask';
+        lineMask.setAttribute('aria-hidden', 'true');
+        lineMask.style.backgroundImage = `url("${image.src}")`;
+        cover.append(lineMask);
+        pizzaLinkObserver.disconnect();
+      });
+      pizzaLinkObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
+    </script>
+  </body>
+</html>

@@ -14,6 +14,10 @@ export function getReelUrl() {
   return withBasePath('/?view=reel');
 }
 
+export function getHomeUrl() {
+  return withBasePath('/');
+}
+
 export function isCurrentPath(pathname, targetPath) {
   const normalize = (value) => value.replace(/\/$/, '') || '/';
 
