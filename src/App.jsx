@@ -16,7 +16,7 @@ import mailIcon from './assets/mail.png';
 import matmut from './assets/matmut.png';
 import noSignalVideo from './assets/NO SIGNAL.mp4';
 import phoneIcon from './assets/phone.png';
-import pizzahut from './assets/pizzahut.png';
+import pizzahut from './assets/project-04-film-cover.svg';
 import photoshopIcon from './assets/photoshop.png';
 import reactIcon from './assets/react.png';
 import earthIcon from './assets/earth.png';

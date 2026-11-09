@@ -237,7 +237,7 @@ const projects = [
       '사진 기반 AI 분석과 오늘의 요약, 커뮤니티 기능을 통해 반려동물의 건강 관리를 더 쉽고 꾸준하게 도와주는 서비스입니다.',
     role: '\uae30\ud68d \uac1c\ubc1c \ub514\uc790\uc778',
     period: '2026.02.09 ~ 2026.02.25',
-    tools: '\ud53c\uadf8\ub9c8 / \ucc57\uc9c0\ud53c\ud2f0 / \ud3ec\ud1a0\uc0f5 / \uc81c\ubbf8\ub098\uc774 / \ubbf8\ub4dc\uc800\ub2c8 / \ucf54\ub371\uc2a4 / vs code / \uae43\ud5c8\ube0c / html / css / js',
+    tools: 'Figma / ChatGPT / Photoshop / Midjourney / Codex / VS Code / GitHub / HTML / CSS / JavaScript',
     contribution: '100%',
     metaLabels: {
       role: '\uc5ed\ud560',

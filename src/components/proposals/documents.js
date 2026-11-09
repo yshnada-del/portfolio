@@ -31,7 +31,7 @@ export function getProposalDocument(project) {
   }
   // Preserve the original document and resolve its scripts, styles and media to its own site.
   return document
-    .replace('__PIZZA_CLEAN_COVER__', new URL(pizzaCleanCover, window.location.href).href)
+    .replaceAll('__PIZZA_CLEAN_COVER__', new URL(pizzaCleanCover, window.location.href).href)
     .replaceAll('__PIZZA_MAIN_WEB__', new URL(pizzaMainWeb, window.location.href).href)
     .replace('__PROJECT_02_ENDING__', new URL(project02Ending, window.location.href).href)
     .replace('__PRETENDARD_REGULAR__', new URL(pretendardRegular, window.location.href).href)

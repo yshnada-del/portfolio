@@ -101,6 +101,75 @@
         background: #080808;
         pointer-events: none;
       }
+      .pizza-ending {
+        box-sizing: border-box;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        padding: clamp(64px, 7vw, 120px) 24px clamp(56px, 6vw, 96px);
+        background: #c5c3c3;
+        background-image: url('__PIZZA_CLEAN_COVER__');
+        background-size: 600% auto;
+        background-position: left top;
+        color: #fff;
+      }
+      .pizza-ending__mockup {
+        position: relative;
+        width: min(100%, 1100px);
+        aspect-ratio: 896 / 545;
+        margin: 0 auto;
+        overflow: hidden;
+        container-type: inline-size;
+      }
+      .pizza-ending__device {
+        position: absolute;
+        width: 186.384%;
+        max-width: none;
+        height: auto;
+        left: -43.415%;
+        top: -37.248%;
+      }
+      .pizza-ending__screen {
+        position: absolute;
+        left: 9.9%;
+        top: 2.9%;
+        width: 79.85%;
+        height: 85.3%;
+        display: flex;
+        flex-direction: column;
+        gap: 4cqw;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-radius: 10px 10px 0 0;
+        background: #000;
+      }
+      .pizza-ending__screen h2 {
+        margin: 0;
+        padding-left: .1em;
+        color: #fff;
+        font: 800 8cqw/1 Arial, sans-serif;
+        letter-spacing: .1em;
+        white-space: nowrap;
+      }
+      .pizza-ending__meta {
+        width: 90%;
+        transform: translateY(1.5cqw);
+        display: grid;
+        justify-items: center;
+        gap: 1.8cqw;
+        text-align: center;
+      }
+      .pizza-ending__meta p {
+        max-width: 760px;
+        margin: 0;
+        color: #fff;
+        font: 400 1.45cqw/1.5 'Portfolio Pretendard', sans-serif;
+        letter-spacing: 0;
+        word-break: keep-all;
+        text-wrap: pretty;
+      }
       .overview-head p { max-width: 920px; }
       .overview-head p span { display: block; color: inherit; font: inherit; text-transform: none; }
       .overview-note { white-space: normal; }
@@ -165,7 +234,31 @@
   </head>
   <body>
     <div id="root"></div>
+    <template id="pizza-ending-template">
+      <section class="pizza-ending" aria-label="피자헛 프로젝트 마무리">
+        <div class="pizza-ending__mockup">
+          <img class="pizza-ending__device" src="__PIZZA_CLEAN_COVER__" alt="" loading="lazy">
+          <div class="pizza-ending__screen">
+            <h2>THANK YOU</h2>
+            <div class="pizza-ending__meta" aria-label="피자헛 프로젝트 정보">
+              <p>역할 : 기획 / 개발 / 디자인</p>
+              <p>기간 : 2026.02.09 ~ 2026.02.25</p>
+              <p>툴 : Figma / ChatGPT / Photoshop / Midjourney / Codex / VS Code / GitHub / HTML / CSS / JavaScript</p>
+              <p>기여도 : 100%</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </template>
     <script>
+      const pizzaEndingObserver = new MutationObserver(() => {
+        const comparison = document.querySelector('.before-after-comparison');
+        if (!comparison || comparison.querySelectorAll('.comparison-pair').length < 5) return;
+        comparison.closest('section').after(document.getElementById('pizza-ending-template').content.cloneNode(true));
+        pizzaEndingObserver.disconnect();
+      });
+      pizzaEndingObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
+
       const pizzaMainImageObserver = new MutationObserver(() => {
         const image = document.querySelector('.comparison-pair .comparison-pair__row--reverse .comparison-pair__shot img');
         const description = document.querySelector('.comparison-pair .comparison-pair__row--reverse .comparison-pair__copy p');
