@@ -7,6 +7,15 @@ import pretendardRegular from '../../assets/fonts/Pretendard-Regular.woff2';
 import pizzaVisualSystem from './pizzaVisualSystem.html?raw';
 import pizzaMainWeb from '../../assets/project-04-main-web.png';
 import pizzaCleanCover from '../../assets/project-04-cover-clean.png';
+import responsiveStyles from './responsive.css?raw';
+import responsiveScript from './responsive.js?raw';
+
+export function withResponsiveProposal(document, projectId = 'project-01', imageAssets = {}) {
+  return document
+    .replace(/<html\b/i, `<html data-project="${projectId}"`)
+    .replace(/<\/head>/i, `<style>${responsiveStyles}</style></head>`)
+    .replace(/<\/body>/i, `<script>window.proposalImageAssets = ${JSON.stringify(imageAssets)};</script><script>${responsiveScript}</script></body>`);
+}
 
 const pizzaSystemAssets = import.meta.glob('../../assets/pizza-system/*', {
   eager: true,
@@ -30,7 +39,7 @@ export function getProposalDocument(project) {
     document = document.replace(/<\/body>/i, `${visualSystem}</body>`);
   }
   // Preserve the original document and resolve its scripts, styles and media to its own site.
-  return document
+  return withResponsiveProposal(document
     .replaceAll('__PIZZA_CLEAN_COVER__', new URL(pizzaCleanCover, window.location.href).href)
     .replaceAll('__PIZZA_MAIN_WEB__', new URL(pizzaMainWeb, window.location.href).href)
     .replace('__PROJECT_02_ENDING__', new URL(project02Ending, window.location.href).href)
@@ -42,5 +51,5 @@ export function getProposalDocument(project) {
       ::-webkit-scrollbar { display: none !important; width: 0; height: 0; }
       @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
     </style></head>`)
-    .replace(/<\/body>/i, `<script>${navigation}</script></body>`);
+    .replace(/<\/body>/i, `<script>${navigation}</script></body>`), project.id);
 }

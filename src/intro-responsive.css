@@ -1,0 +1,206 @@
+/* Intro composition: positions share the TV scale so the tapes stay nearby. */
+.desk-scene {
+  --intro-tv: min(38vw, 66svh, 760px);
+  --intro-floor: 8svh;
+  --intro-tv-left: calc(50% - var(--intro-tv) * .9);
+  --intro-tapes-left: calc(50% + var(--intro-tv) * .25);
+  min-height: 100svh;
+  background-position: center;
+}
+
+.desk-scene .scene-copy {
+  top: 14svh;
+  left: 5vw;
+  width: 80vw;
+}
+
+.desk-scene .scene-copy h1 {
+  max-width: none;
+  font-size: clamp(52px, 4.8vw, 92px);
+  line-height: 1.02;
+}
+
+.desk-scene .tv-stage {
+  left: var(--intro-tv-left);
+  right: auto;
+  bottom: var(--intro-floor);
+  width: var(--intro-tv);
+  transform: rotateY(2deg) rotateZ(.25deg);
+}
+
+.desk-scene .vhs-stack {
+  display: flex;
+  left: calc(var(--intro-tapes-left) + var(--intro-tv) * .045);
+  right: auto;
+  bottom: calc(var(--intro-floor) + var(--intro-tv) * .14);
+  height: calc(var(--intro-tv) * .57);
+  gap: 1px;
+  opacity: 1;
+  transform: rotateY(-5deg) rotateZ(.28deg);
+  transform-origin: center bottom;
+}
+
+.desk-scene .all-tape-slot {
+  left: var(--intro-tapes-left);
+  right: auto;
+  bottom: var(--intro-floor);
+  width: calc(var(--intro-tv) * .6);
+  transform: rotateY(-4deg) rotateZ(-.45deg);
+  transform-origin: center bottom;
+}
+
+.desk-scene .drag-hint {
+  display: flex;
+  left: calc(var(--intro-tapes-left) + var(--intro-tv) * .6 + 20px);
+  right: auto;
+  bottom: calc(var(--intro-floor) + var(--intro-tv) * .06);
+  width: auto;
+  max-width: calc(100% - var(--intro-tapes-left) - var(--intro-tv) * .6 - 40px);
+  flex-direction: row-reverse;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(12px, 1vw, 20px);
+  line-height: 1.4;
+  text-align: center;
+  white-space: normal;
+  transform: rotate(-.35deg);
+}
+
+.desk-scene .drag-hint__text {
+  display: block;
+  order: 0;
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+.desk-scene .drag-hint__hands {
+  display: inline-flex;
+  order: 0;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.desk-scene .drag-hint__hands span { animation-name: hintHandThree; }
+.desk-scene .drag-hint__hands span:nth-child(2) { animation-name: hintHandTwo; }
+.desk-scene .drag-hint__hands span:nth-child(3) { animation-name: hintHandOne; }
+
+/* Large monitors, including 2560 × 1440. */
+@media (min-width: 1920px) {
+  .desk-scene { --intro-tv: min(34vw, 66svh, 960px); }
+  .desk-scene .scene-copy h1 { font-size: clamp(92px, 4.5vw, 144px); }
+}
+
+/* Laptops and standard desktops. */
+@media (min-width: 1280px) and (max-width: 1919px) {
+  .desk-scene { --intro-tv: min(38vw, 66svh, 760px); }
+}
+
+/* Tablets: retain the desk composition while there is horizontal room. */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .desk-scene { --intro-tv: min(44vw, 62svh, 560px); --intro-floor: 9svh; }
+  .desk-scene .scene-copy { top: 10svh; }
+  .desk-scene .scene-copy h1 { font-size: clamp(40px, 5.5vw, 68px); }
+  .desk-scene .drag-hint { font-size: clamp(11px, 1.25vw, 16px); white-space: normal; }
+}
+
+/* Narrow screens and portrait tablets use a centered, vertical composition. */
+@media (max-width: 767px), (min-width: 768px) and (max-width: 1279px) and (orientation: portrait) {
+  .desk-scene {
+    --intro-tv: min(82vw, 46svh, 430px);
+    --intro-floor: max(8svh, env(safe-area-inset-bottom));
+    /* The TV artwork has 5.8% transparent space above its cabinet. */
+    --intro-tape-rest: calc(var(--intro-floor) + var(--intro-tv) * .942 - 3px);
+  }
+  .desk-scene .scene-copy {
+    top: max(6svh, env(safe-area-inset-top));
+    left: 6vw;
+    width: 88vw;
+  }
+  .desk-scene .scene-copy h1 { font-size: clamp(26px, 7.4vw, 54px); }
+  .desk-scene .tv-stage { left: 50%; transform: translateX(-50%) rotateZ(-.4deg); }
+  .desk-scene .vhs-stack { display: none; }
+  .desk-scene .all-tape-slot {
+    left: 50%;
+    bottom: var(--intro-tape-rest);
+    width: calc(var(--intro-tv) * .7);
+    transform: translateX(-50%) rotateZ(-1deg);
+  }
+  .desk-scene .all-tape-slot::before {
+    left: 5%;
+    right: 5%;
+    bottom: -5%;
+    height: 12%;
+    background: #0009;
+    filter: blur(3px);
+    opacity: .8;
+  }
+  .desk-scene .drag-hint {
+    left: 50%;
+    max-width: none;
+    bottom: calc(var(--intro-tape-rest) + var(--intro-tv) * .18 + 18px);
+    width: min(88vw, 360px);
+    flex-direction: column;
+    gap: 10px;
+    font-size: clamp(12px, 2.6vw, 17px);
+    white-space: normal;
+    transform: translateX(-50%);
+  }
+  .desk-scene .drag-hint__hands {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: clamp(14px, 2svh, 22px);
+    line-height: 1;
+  }
+  .desk-scene .drag-hint__hands span {
+    opacity: 0;
+    transform: rotate(-90deg) translateX(6px);
+    animation: introHintDown 2.4s linear infinite;
+    animation-delay: 0s;
+  }
+  .desk-scene .drag-hint__hands span:nth-child(2) { animation-name: introHintDown; animation-delay: .35s; }
+  .desk-scene .drag-hint__hands span:nth-child(3) { animation-name: introHintDown; animation-delay: .7s; }
+}
+
+@keyframes introHintDown {
+  0%, 100% { opacity: 0; transform: rotate(-90deg) translateX(6px); }
+  12%, 32% { opacity: 1; transform: rotate(-90deg) translateX(0); }
+  44%, 48% { opacity: 0; transform: rotate(-90deg) translateX(-6px); }
+}
+
+@media (max-width: 767px) and (max-height: 650px) and (orientation: portrait) {
+  .desk-scene .scene-copy { top: max(4svh, env(safe-area-inset-top)); }
+  .desk-scene .scene-copy h1 { font-size: clamp(24px, 7vw, 38px); }
+  .desk-scene .drag-hint { gap: 6px; }
+  .desk-scene .drag-hint__hands { gap: 0; font-size: 14px; }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) and (orientation: portrait) {
+  .desk-scene { --intro-tv: min(62vw, 46svh, 620px); }
+  .desk-scene .scene-copy h1 { font-size: clamp(44px, 6vw, 68px); }
+}
+
+/* Short phone landscapes keep the tape on the TV, beside the heading. */
+@media (max-width: 767px) and (orientation: landscape) {
+  .desk-scene { --intro-tv: min(43vw, 50svh); --intro-floor: 10svh; }
+  .desk-scene .scene-copy { top: 6svh; left: 4vw; }
+  .desk-scene .scene-copy h1 { font-size: clamp(22px, 4vw, 30px); }
+  .desk-scene .tv-stage { left: 37%; transform: none; }
+  .desk-scene .all-tape-slot {
+    left: calc(37% + var(--intro-tv) * .5);
+    bottom: var(--intro-tape-rest);
+    width: calc(var(--intro-tv) * .7);
+    transform: translateX(-50%) rotateZ(-1deg);
+  }
+  .desk-scene .drag-hint {
+    left: calc(37% + var(--intro-tv) * .5);
+    max-width: none;
+    bottom: calc(var(--intro-tape-rest) + var(--intro-tv) * .18 + 18px);
+    width: 23vw;
+    font-size: 11px;
+    transform: translateX(-50%);
+  }
+  .desk-scene .drag-hint__hands { gap: 0; font-size: 12px; }
+}

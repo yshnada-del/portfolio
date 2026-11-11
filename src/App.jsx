@@ -2,21 +2,22 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import ArchivePage from './components/ArchivePage.jsx';
 import { getArchiveUrl, getHomeUrl, getReelUrl, isCurrentPath } from './routes.js';
 import aboutMe from './assets/about_me.png';
-import aboutMePage from './assets/about_me_page.svg';
+import aboutMePage from './assets/about-cinema-poster.svg';
 import allBackground from './assets/all_background.png';
-import contactImage from './assets/contact.png';
+import contactImage from './assets/contact-cinema-poster.png';
 import cssIcon from './assets/css.png';
 import crtTv from './assets/crt-tv.png';
 import figmaIcon from './assets/figma.png';
 import htmlIcon from './assets/html.png';
 import illustIcon from './assets/illust.png';
 import javascriptIcon from './assets/javascript.png';
-import jibsalife from './assets/jibsalife.png';
+import jibsalife from './assets/project-01-cinema-poster.png';
 import mailIcon from './assets/mail.png';
-import matmut from './assets/matmut.png';
+import mouseTicket from './assets/mouse-ticket.png';
+import matmut from './assets/project-03-cinema-poster-wordmark.png';
 import noSignalVideo from './assets/NO SIGNAL.mp4';
 import phoneIcon from './assets/phone.png';
-import pizzahut from './assets/project-04-film-cover.svg';
+import pizzahut from './assets/project-04-cinema-poster.png';
 import photoshopIcon from './assets/photoshop.png';
 import reactIcon from './assets/react.png';
 import earthIcon from './assets/earth.png';
@@ -28,7 +29,7 @@ import tapeProject03 from './assets/tape-project-03.png';
 import tapeProject04 from './assets/tape-project-04.png';
 import tapeContact from './assets/tape-contact.png';
 import skipIntroLabel from './assets/label.png';
-import simmons from './assets/simmons.png';
+import simmons from './assets/project-02-cinema-poster.png';
 
 const tapes = [
   { id: 'about', title: 'ABOUT ME', image: tapeAbout },
@@ -48,11 +49,6 @@ const filmFrames = [
   { id: 'contact', title: 'CONTACT ME', number: '06', image: contactImage, hideLabel: true, href: getArchiveUrl('contact') },
 ];
 
-const FILM_SEGMENT_WIDTH = 100;
-const FILM_FRAME_WIDTH = 300;
-const FILM_FRAME_GAP = 20;
-const FILM_LOOP_WIDTH = filmFrames.length * (FILM_FRAME_WIDTH + FILM_FRAME_GAP);
-const FILM_FRAME_STEP = FILM_FRAME_WIDTH + FILM_FRAME_GAP;
 
 const aboutSkillIcons = [
   { name: 'Figma', image: figmaIcon, className: 'about-skill-icon--figma' },
@@ -307,276 +303,91 @@ function AboutMeOverlay({ transition, onClose }) {
 }
 
 function PortfolioScreen() {
-  const screenRef = useRef(null);
-  const segmentRefs = useRef([]);
-  const aboutTimerRef = useRef(null);
-  const aboutFrameRef = useRef(null);
-  const [aboutTransition, setAboutTransition] = useState(null);
-  const [hoverCue, setHoverCue] = useState(null);
-  const motionRef = useRef({
-    curveAmount: 0,
-    curvePos: 0,
-    rotationX: 20,
-    rotationDirection: -1,
-    isPaused: false,
-    lastTime: 0,
-  });
-  const frameRef = useRef(null);
-  const [reelLayout, setReelLayout] = useState({ scale: 1, width: 1920, segments: 34 });
+  const cinemaRef = useRef(null);
+  const ticketCursorRef = useRef(null);
 
-  useEffect(() => {
-    const screen = screenRef.current;
-    const observer = new ResizeObserver(([entry]) => {
-      const { width, height } = entry.contentRect;
-      if (!width || !height) return;
-      const scale = Math.min(Math.max(width / 1920, 0.55), height / 600);
-      setReelLayout({
-        scale,
-        width: width / scale,
-        segments: Math.max(34, Math.ceil(width / scale / FILM_SEGMENT_WIDTH) + 16),
-      });
-    });
-    observer.observe(screen);
-    return () => observer.disconnect();
+  const hideTicketCursor = useCallback(() => {
+    cinemaRef.current?.classList.remove('has-ticket-cursor');
+    if (ticketCursorRef.current) ticketCursorRef.current.dataset.visible = 'false';
   }, []);
 
-  const openAboutMe = (event, frame) => {
-    if (!frame.id) {
+  useEffect(() => {
+    window.addEventListener('blur', hideTicketCursor);
+    return () => window.removeEventListener('blur', hideTicketCursor);
+  }, [hideTicketCursor]);
+
+  const moveTicketCursor = (event) => {
+    const cursor = ticketCursorRef.current;
+    if (event.pointerType !== 'mouse' || !cursor?.complete || !cursor.naturalWidth) {
+      hideTicketCursor();
       return;
     }
-
-    event.preventDefault();
-    window.location.href = getArchiveUrl(frame.id);
+    const x = Math.max(0, Math.min(event.clientX - 12, window.innerWidth - 112));
+    const y = Math.max(0, Math.min(event.clientY - 12, window.innerHeight - 57));
+    cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    cursor.dataset.visible = 'true';
+    cinemaRef.current?.classList.add('has-ticket-cursor');
   };
 
-  const closeAboutMe = () => {
-    if (aboutTimerRef.current) {
-      window.clearTimeout(aboutTimerRef.current);
-    }
-
-    setAboutTransition((current) => (current ? { ...current, phase: 'closing', isExpanded: false } : current));
-
-    aboutTimerRef.current = window.setTimeout(() => {
-      setAboutTransition(null);
-      motionRef.current.isPaused = false;
-    }, 680);
+  const bulbs = [
+    ...Array.from({ length: 6 }, (_, index) => [
+      { x: index * 20, y: 0 },
+      { x: index * 20, y: 100 },
+    ]).flat(),
+    ...Array.from({ length: 7 }, (_, index) => [
+      { x: 0, y: (index + 1) * 12.5 },
+      { x: 100, y: (index + 1) * 12.5 },
+    ]).flat(),
+  ];
+  const posterDetails = {
+    about: { title: 'ABOUT ME', subtitle: 'DESIGNER PROFILE', name: 'YOO SEUNG HYUN' },
+    'project-01': { title: 'PROJECT 1', subtitle: 'UX/UI DESIGN', name: '집사인생' },
+    'project-02': { title: 'PROJECT 2', subtitle: 'WEBSITE REDESIGN', name: 'SIMMONS' },
+    'project-03': { title: 'PROJECT 3', subtitle: 'UX/UI DESIGN', name: '맛과멋' },
+    'project-04': { title: 'PROJECT 4', subtitle: 'WEBSITE REDESIGN', name: 'PIZZA HUT' },
+    contact: { title: 'CONTACT ME', subtitle: "LET'S WORK TOGETHER", name: 'CONTACT' },
   };
-
-  useEffect(() => {
-    if (aboutTransition) {
-      motionRef.current.isPaused = true;
-    }
-  }, [aboutTransition]);
-
-  // Each slice only needs two adjacent frames, rather than three entire loops.
-  const renderFilmStrip = () => (
-    <ul
-      className="film-strip"
-    >
-      {filmFrames.slice(0, 2).map((frame, frameIndex) => (
-        <li
-          className={`film-strip__frame${frame.hideLabel ? ' film-strip__frame--image-only' : ''}${
-            frame.fit === 'contain' ? ' film-strip__frame--contain' : ''
-          }`}
-          key={`${frame.title}-${frameIndex}`}
-        >
-          <a
-            className="film-strip__link"
-            data-frame-index={frameIndex}
-            href={frame.href}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`${frame.title} 이미지 열기`}
-            onClick={(event) => openAboutMe(event, filmFrames[Number(event.currentTarget.dataset.frameIndex)])}
-            onPointerEnter={(event) => {
-              motionRef.current.isPaused = true;
-              setHoverCue({ x: event.clientX, y: event.clientY });
-            }}
-            onPointerMove={(event) => {
-              setHoverCue({ x: event.clientX, y: event.clientY });
-            }}
-            onPointerLeave={() => {
-              motionRef.current.isPaused = false;
-              setHoverCue(null);
-            }}
-            onFocus={(event) => {
-              motionRef.current.isPaused = true;
-              const rect = event.currentTarget.getBoundingClientRect();
-              setHoverCue({ x: rect.left + rect.width * 0.5, y: rect.top + rect.height * 0.62 });
-            }}
-            onBlur={() => {
-              motionRef.current.isPaused = false;
-              setHoverCue(null);
-            }}
-          >
-            <img src={frame.image} alt="" />
-            {!frame.hideLabel && (
-              <>
-                <span>{frame.number}</span>
-                <h2>{frame.title}</h2>
-              </>
-            )}
-          </a>
-        </li>
-      ))}
-    </ul>
-  );
-
-  const renderSegment = (index = 0) => (
-    <div
-      className="film-flow__segment"
-      data-offset={index}
-      key={index}
-      ref={(node) => {
-        segmentRefs.current[index] = node ? {
-          node,
-          strip: node.querySelector('.film-strip'),
-          links: [...node.querySelectorAll('.film-strip__link')],
-          images: [...node.querySelectorAll('.film-strip__frame img')],
-          frameIndex: -1,
-        } : null;
-      }}
-    >
-      <div className="film-flow__window">{renderFilmStrip()}</div>
-    </div>
-  );
-
-  useEffect(() => {
-    const screen = screenRef.current;
-
-    if (!screen) {
-      return undefined;
-    }
-
-    const animate = (time = 0) => {
-      const motion = motionRef.current;
-      const delta = motion.lastTime ? Math.min(time - motion.lastTime, 34) : 16.7;
-      const step = delta / 16.7;
-
-      motion.lastTime = time;
-
-      if (!motion.isPaused) {
-        motion.rotationX += motion.rotationDirection * 0.022 * step;
-        motion.curveAmount += step * 0.334;
-        motion.curvePos = (motion.curvePos + 5.4 * step) % FILM_LOOP_WIDTH;
-      }
-
-      if (motion.rotationX <= -20) {
-        motion.rotationX = -20;
-        motion.rotationDirection = 1;
-      }
-
-      if (motion.rotationX >= 20) {
-        motion.rotationX = 20;
-        motion.rotationDirection = -1;
-      }
-
-      screen.style.setProperty('--film-rotation-x', `${motion.rotationX}deg`);
-
-      let x = FILM_SEGMENT_WIDTH;
-      let z = 0;
-      let angle = 0;
-      segmentRefs.current.forEach((segment, index) => {
-        if (!segment) {
-          return;
-        }
-
-        const r = Math.cos(motion.curveAmount / 20 + index / 5);
-        const shade = Math.abs(Math.floor(r * 10)) / 10;
-        angle += r * 0.8;
-        // Accumulate the original hinged curve without nested 3D clipping layers.
-        segment.node.style.transform = `translate3d(${x}px, 0, ${z}px) rotateY(${angle}deg)`;
-        segment.node.style.setProperty('--segment-bright', `${r >= 0 ? shade * 0.025 : 0}`);
-        segment.node.style.setProperty('--segment-dark', `${r <= 0 ? shade * 0.025 : 0}`);
-        const radians = angle * Math.PI / 180;
-        x += Math.cos(radians) * FILM_SEGMENT_WIDTH;
-        z -= Math.sin(radians) * FILM_SEGMENT_WIDTH;
-
-        const position = index * FILM_SEGMENT_WIDTH + motion.curvePos;
-        const frameIndex = Math.floor(position / FILM_FRAME_STEP);
-        segment.strip.style.transform = `translateX(${-position % FILM_FRAME_STEP}px)`;
-        segment.node.style.setProperty('--sprocket-offset', `${-position % 40}px`);
-        if (segment.frameIndex !== frameIndex) {
-          segment.frameIndex = frameIndex;
-          segment.links.forEach((link, slot) => {
-            const nextIndex = (frameIndex + slot) % filmFrames.length;
-            const frame = filmFrames[nextIndex];
-            link.dataset.frameIndex = nextIndex;
-            link.href = frame.href;
-            link.setAttribute('aria-label', `${frame.title} 페이지 열기`);
-            segment.images[slot].src = frame.image;
-          });
-        }
-      });
-
-      frameRef.current = window.requestAnimationFrame(animate);
-    };
-
-    frameRef.current = window.requestAnimationFrame(animate);
-
-    return () => {
-      if (frameRef.current) {
-        window.cancelAnimationFrame(frameRef.current);
-      }
-      if (aboutFrameRef.current) {
-        window.cancelAnimationFrame(aboutFrameRef.current);
-      }
-      if (aboutTimerRef.current) {
-        window.clearTimeout(aboutTimerRef.current);
-      }
-    };
-  }, []);
 
   return (
-    <section
-      className="portfolio-screen"
-      ref={screenRef}
-      style={{
-        '--reel-frame-width': `${FILM_FRAME_WIDTH}px`,
-        '--reel-frame-gap': `${FILM_FRAME_GAP}px`,
-        '--reel-segment-width': `${FILM_SEGMENT_WIDTH}px`,
-      }}
-      aria-label="Portfolio content"
-    >
+    <section className="portfolio-screen portfolio-screen--cinema" ref={cinemaRef} onPointerMove={moveTicketCursor} onPointerLeave={hideTicketCursor} aria-label="포트폴리오 상영관">
+      <img ref={ticketCursorRef} className="cinema-ticket-cursor" src={mouseTicket} alt="" aria-hidden="true" draggable="false" data-visible="false" />
       <nav className="film-archive-nav" aria-label="필름 아카이브 메뉴">
         <a href={getHomeUrl()}>HOME</a>
         <a href={getArchiveUrl('about')}>ABOUT</a>
         <a href={getArchiveUrl('project-01')}>PROJECT</a>
         <a href={getArchiveUrl('contact')}>CONTACT</a>
       </nav>
-      <div className="film-flow" aria-label="Portfolio sections">
-        <div className="aurora-background" aria-hidden="true">
-          <h1>Aurora</h1>
+      <div className="film-flow" aria-hidden="true">
+        <div className="aurora-background">
           <span />
           <span />
           <span />
-        </div>
-        <div className="film-flow__stage" style={{ '--reel-scale': reelLayout.scale, '--reel-width': `${reelLayout.width}px` }}>
-          <div className="film-flow__ribbon">
-            {Array.from({ length: reelLayout.segments }, (_, index) => renderSegment(index))}
-          </div>
-        </div>
-        <div className="film-archive-hint" aria-hidden="true">
-          <span className="film-archive-hint__icon">
-            <span />
-            <span />
-          </span>
-          <span>필름 프레임을 선택해 아카이브를 열어보세요.</span>
         </div>
       </div>
-      {hoverCue && (
-        <div
-          className="film-hover-cue"
-          style={{
-            left: `${hoverCue.x}px`,
-            top: `${hoverCue.y}px`,
-          }}
-          aria-hidden="true"
-        >
-          click me!
-        </div>
-      )}
-      <AboutMeOverlay transition={aboutTransition} onClose={closeAboutMe} />
+      <div className="cinema-display">
+        <ul className="cinema-posters" aria-label="아카이브 선택">
+          {filmFrames.map((frame) => {
+            const detail = posterDetails[frame.id];
+            return (
+              <li className={`cinema-poster cinema-poster--${frame.id}`} key={frame.id}>
+                <a className="cinema-poster__link" href={frame.href} aria-label={`${detail.title} 아카이브 열기`}>
+                  <div className="cinema-poster__marquee"><h2>{detail.title}</h2></div>
+                  <div className="cinema-poster__case">
+                    <div className="cinema-poster__bulbs" aria-hidden="true">
+                      {bulbs.map((bulb, index) => (
+                        <span className="cinema-poster__bulb" key={index} style={{ left: `${bulb.x}%`, top: `${bulb.y}%` }} />
+                      ))}
+                    </div>
+                    <div className="cinema-poster__print">
+                      <div className="cinema-poster__art"><img src={frame.image} alt={`${detail.name} 포스터`} /></div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </section>
   );
 }
@@ -595,6 +406,7 @@ export default function App() {
   }
 
   const tvRef = useRef(null);
+  const allTapeRef = useRef(null);
   const tvScreenRef = useRef(null);
   const dragTimerRef = useRef(null);
   const portalTimerRef = useRef(null);
@@ -698,8 +510,68 @@ export default function App() {
     }, 920);
   }, [hasBootStarted, isPortalEntering]);
 
+  const insertAllTape = useCallback(() => {
+    const tvRect = tvRef.current?.getBoundingClientRect();
+    setIsOverTv(false);
+    if (!tvRect) {
+      setDragState(null);
+      return;
+    }
+    setDragState((current) => current ? {
+      ...current,
+      phase: 'inserting',
+      target: {
+        x: tvRect.left + tvRect.width * 0.5,
+        y: tvRect.top + tvRect.height * 0.69,
+      },
+    } : current);
+    dragTimerRef.current = window.setTimeout(() => {
+      setIsAllTapeInserted(true);
+      setDragState(null);
+    }, 440);
+  }, []);
+
+  const autoInsertAllTape = () => {
+    if (dragState || isAllTapeInserted || isPortalEntering || hasBootStarted) return;
+    const rect = allTapeRef.current?.getBoundingClientRect();
+    if (!rect || !tvRef.current) return;
+    setDragState({
+      phase: 'auto-ready',
+      pointer: { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 },
+      offset: { x: rect.width / 2, y: rect.height / 2 },
+      size: { width: rect.width, height: rect.height },
+      target: null,
+    });
+  };
+
+  useEffect(() => {
+    if (dragState?.phase !== 'auto-ready') return undefined;
+    let nextFrame;
+    const frame = window.requestAnimationFrame(() => {
+      nextFrame = window.requestAnimationFrame(() => {
+        const rect = tvRef.current?.getBoundingClientRect();
+        if (!rect) { setDragState(null); return; }
+        setDragState((current) => ({
+          ...current,
+          phase: 'auto-moving',
+          target: { x: rect.left + rect.width * 0.5, y: rect.top + rect.height * 0.69 },
+        }));
+      });
+    });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.cancelAnimationFrame(nextFrame);
+    };
+  }, [dragState?.phase]);
+
+  useEffect(() => {
+    if (dragState?.phase !== 'auto-moving') return undefined;
+    const timer = window.setTimeout(insertAllTape, 700);
+    return () => window.clearTimeout(timer);
+  }, [dragState?.phase, insertAllTape]);
+
   const startAllTapeDrag = (event) => {
-    if (event.button !== 0) {
+    if (event.button !== 0 || dragState || isAllTapeInserted) {
       return;
     }
 
@@ -753,25 +625,7 @@ export default function App() {
         return;
       }
 
-      setDragState((current) => {
-        if (!current) {
-          return current;
-        }
-
-        return {
-          ...current,
-          phase: 'inserting',
-          target: {
-            x: tvRect.left + tvRect.width * 0.5,
-            y: tvRect.top + tvRect.height * 0.69,
-          },
-        };
-      });
-
-      dragTimerRef.current = window.setTimeout(() => {
-        setIsAllTapeInserted(true);
-        setDragState(null);
-      }, 440);
+      insertAllTape();
     };
 
     window.addEventListener('pointermove', handlePointerMove);
@@ -781,7 +635,7 @@ export default function App() {
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
     };
-  }, [dragState?.phase]);
+  }, [dragState?.phase, insertAllTape]);
 
   useEffect(() => {
     return () => {
@@ -900,7 +754,8 @@ export default function App() {
 
             <div className="all-tape-slot">
               <button
-                className={`all-tape${dragState ? ' all-tape--dragging' : ''}`}
+                ref={allTapeRef}
+                className={`all-tape${dragState ? ' all-tape--dragging' : ''}${dragState && dragState.phase !== 'dragging' ? ' all-tape--automating' : ''}`}
                 type="button"
                 aria-label="Drag ALL IN ONE tape to TV"
                 onPointerDown={startAllTapeDrag}
@@ -914,9 +769,9 @@ export default function App() {
         <div className={`tv-stage${isOverTv ? ' tv-stage--drop-target' : ''}`} ref={tvRef}>
           <CrtTv isAllTapeInserted={isAllTapeInserted} screenRef={tvScreenRef} />
           {!isAllTapeInserted && (
-            <a className="tv-skip-intro" href={getReelUrl()} aria-label="인트로 건너뛰고 필름 아카이브 보기">
+            <button className="tv-skip-intro" type="button" onClick={autoInsertAllTape} disabled={Boolean(dragState)} aria-label="테이프를 자동으로 넣고 필름 아카이브 보기">
               <img src={skipIntroLabel} alt="Skip intro" draggable="false" />
-            </a>
+            </button>
           )}
         </div>
 
@@ -924,7 +779,7 @@ export default function App() {
           <div
             className={`all-tape-ghost${
               dragState.phase === 'inserting' ? ' all-tape-ghost--inserting' : ''
-            }`}
+            }${dragState.phase === 'auto-moving' ? ' all-tape-ghost--auto-moving' : ''}`}
             style={{
               left: `${dragX}px`,
               top: `${dragY}px`,

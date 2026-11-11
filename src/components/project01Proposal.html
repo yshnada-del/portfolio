@@ -15,27 +15,6 @@
       .proposal-ending img { display: block; width: 100%; height: auto; }
       .cover.cover-figma { position: relative; min-height: 0; }
       .cover.cover-figma .figma-cover-image { width: 100%; height: auto; }
-      .cover.cover-figma > .proposal-app-link {
-        display: flex !important;
-        position: absolute;
-        left: 87.9%;
-        top: 58.8%;
-        transform: translate(-50%, -100%);
-        align-items: center;
-        justify-content: center;
-        width: 12.9%;
-        padding: .65em .3em;
-        border-radius: .6em;
-        background: #7055ed;
-        color: #fff;
-        font: 600 clamp(7px, 1vw, 18px)/1.2 sans-serif;
-        text-decoration: none;
-        white-space: nowrap;
-        box-shadow: 0 4px 12px #7055ed30;
-        z-index: 3;
-      }
-      .proposal-app-link:hover { background: #5940cf; }
-      .proposal-app-link:focus-visible { outline: 3px solid #242424; outline-offset: 3px; }
       @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
     </style>
     <script type="module" crossorigin src="assets/index-CjfLeQms.js"></script>
@@ -68,19 +47,6 @@
       }, { capture: true, passive: true });
       window.addEventListener('load', () => reportNavVisibility(window.scrollY > 8));
 
-      const observer = new MutationObserver(() => {
-        const cover = document.querySelector('.cover-figma');
-        if (!cover) return;
-        const link = document.createElement('a');
-        link.className = 'proposal-app-link';
-        link.href = 'https://new-jibsalife.vercel.app';
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.textContent = '앱 바로가기 ↗';
-        cover.append(link);
-        observer.disconnect();
-      });
-      observer.observe(document.getElementById('root'), { childList: true, subtree: true });
     </script>
   </body>
 </html>

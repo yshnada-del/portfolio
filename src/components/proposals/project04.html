@@ -41,25 +41,6 @@
         background-repeat: no-repeat;
         pointer-events: none;
       }
-      .pizza-website-link {
-        position: absolute;
-        z-index: 3;
-        left: 50%;
-        bottom: 8%;
-        transform: translateX(-50%);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: .85em 1.4em;
-        border-radius: 999px;
-        color: #fff;
-        background: #c8102e;
-        font: 400 clamp(7px, 1vw, 18px)/1.2 'Portfolio Pretendard', sans-serif;
-        text-decoration: none;
-        white-space: nowrap;
-      }
-      .pizza-website-link:hover { background: #a80d27; }
-      .pizza-website-link:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
       .pizza-mockup-screen {
         position: absolute;
         z-index: 2;
@@ -328,14 +309,7 @@
         const slot = document.createElement('div');
         slot.className = 'pizza-website-slot';
         slot.style.backgroundImage = `url("${image.src}")`;
-        const link = document.createElement('a');
-        link.className = 'pizza-website-link';
-        link.href = 'https://yshnada-del.github.io/pizzahut/';
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.textContent = '웹사이트 바로가기 ↗';
         cover.append(slot);
-        cover.append(link);
         const lineMask = document.createElement('div');
         lineMask.className = 'pizza-cover-line-mask';
         lineMask.setAttribute('aria-hidden', 'true');

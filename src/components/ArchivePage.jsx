@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import project01Proposal from './project01Proposal.html?raw';
 import project01Ending from '../assets/project-01-frame-15.png';
-import { getProposalDocument } from './proposals/documents.js';
+import { getProposalDocument, withResponsiveProposal } from './proposals/documents.js';
+import { getProject01Sections, project01SectionImages as project01Frames } from './proposals/project01Sections.js';
 import AboutTimeline from './AboutTimeline.jsx';
 import cssIcon from '../assets/css.png';
 import figmaIcon from '../assets/figma.png';
@@ -11,20 +12,6 @@ import javascriptIcon from '../assets/javascript.png';
 import photoshopIcon from '../assets/photoshop.png';
 import pizzahut from '../assets/pizzahut.png';
 import exitIcon from '../assets/exit.png';
-import project01Frame01 from '../assets/project-01-frame-01.png';
-import project01Frame02 from '../assets/project-01-frame-02.png';
-import project01Frame03 from '../assets/project-01-frame-03.png';
-import project01Frame04 from '../assets/project-01-frame-04.png';
-import project01Frame05 from '../assets/project-01-frame-05.png';
-import project01Frame06 from '../assets/project-01-frame-06.png';
-import project01Frame07 from '../assets/project-01-frame-07.png';
-import project01Frame08 from '../assets/project-01-frame-08.png';
-import project01Frame09 from '../assets/project-01-frame-09.png';
-import project01Frame10 from '../assets/project-01-frame-10.png';
-import project01Frame11 from '../assets/project-01-frame-11.png';
-import project01Frame12 from '../assets/project-01-frame-12.png';
-import project01Frame13 from '../assets/project-01-frame-13.png';
-import project01Frame14 from '../assets/project-01-frame-14.png';
 import project02SimmonsDeliverablesMobile from '../assets/project-02-simmons-deliverables-mobile.png';
 import project02SimmonsDeliverablesThumbnail from '../assets/project-02-simmons-deliverables-thumbnail.png';
 import project02SimmonsDeliverablesWeb from '../assets/project-02-simmons-deliverables-web.png';
@@ -57,24 +44,8 @@ import simmons from '../assets/simmons.png';
 import ArchiveNav from './ArchiveNav.jsx';
 import ContactSection from './ContactSection.jsx';
 import ProjectSection from './ProjectSection.jsx';
-import { getReelUrl } from '../routes.js';
-
-const project01Frames = [
-  project01Frame01,
-  project01Frame02,
-  project01Frame03,
-  project01Frame04,
-  project01Frame05,
-  project01Frame06,
-  project01Frame07,
-  project01Frame08,
-  project01Frame09,
-  project01Frame10,
-  project01Frame11,
-  project01Frame12,
-  project01Frame13,
-  project01Frame14,
-];
+import FilmReelProject from './FilmReelProject.jsx';
+import { getArchiveUrl, getReelUrl } from '../routes.js';
 
 const project02Frames = [
   project02SimmonsWireframeWeb,
@@ -147,7 +118,7 @@ const projects = [
       },
     ],
     visualType: 'figma-frame',
-    image: project01Frame01,
+    image: project01Frames[0],
     images: project01Frames,
     tone: 'ivory',
   },
@@ -351,7 +322,7 @@ export default function ArchivePage() {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
-        window.location.href = getReelUrl();
+        window.top.location.href = getReelUrl();
       }
     };
 
@@ -422,54 +393,42 @@ export default function ArchivePage() {
     activeId === 'contact' ? ' archive-page--contact' : ''
   }${activeProject ? ' archive-page--project-detail' : ''}${activeProject?.proposalUrl ? ' archive-page--proposal' : ''}`;
 
+  const embedded = new URLSearchParams(window.location.search).get('embedded') === '1';
+  const nativePage = activeId === 'about' || activeId === 'contact';
+
+  if (embedded && nativePage) {
+    return (
+      <main className={`${pageClass} archive-page--embedded`}>
+        <div className="archive-page__reel">
+          {activeId === 'about' ? <AboutTimeline scenes={aboutScrollScenes} /> : <ContactSection />}
+        </div>
+      </main>
+    );
+  }
+
+  const proposalDocument = activeProject
+    ? activeId === 'project-01'
+      ? withResponsiveProposal(project01Proposal.replace('__PROJECT_01_ENDING__', new URL(project01Ending, window.location.href).href), 'project-01', getProject01Sections())
+      : getProposalDocument(activeProject)
+    : undefined;
+  const action = activeProject ? {
+    href: activeProject.actionLinks[1].href,
+    label: activeId === 'project-01' || activeId === 'project-03'
+      ? '\uc571 \ubc14\ub85c\uac00\uae30'
+      : '\uc0ac\uc774\ud2b8 \ubc14\ub85c\uac00\uae30',
+  } : null;
+
   return (
     <main className={pageClass}>
-      <ArchiveNav activeId={activeId} onSelect={setActiveId} proposalFrameRef={proposalFrameRef} />
-      <div className="archive-page__reel">
-        {activeId === 'about' && <AboutTimeline scenes={aboutScrollScenes} />}
-        {activeProject?.proposalUrl ? (
-          <section className="project-proposal" id={activeProject.id} aria-label={`${activeProject.title} 기획서`} style={{ '--proposal-accent': activeProject.floatingColor }}>
-            <div className="project-proposal__film project-proposal__film--left" aria-hidden="true" />
-            <div className="project-proposal__film project-proposal__film--right" aria-hidden="true" />
-            <iframe
-              key={activeProject.id}
-              ref={proposalFrameRef}
-              className="project-proposal__frame"
-              srcDoc={activeProject.id === 'project-01'
-                ? project01Proposal.replace('__PROJECT_01_ENDING__', new URL(project01Ending, window.location.href).href)
-                : getProposalDocument(activeProject)}
-              title={`${activeProject.title} 프로젝트 기획서`}
-              allowFullScreen
-            />
-            <nav className="project-proposal__floating" aria-label="프로젝트 이동">
-              {activeProject.id === 'project-04' ? (
-                <a href={getReelUrl()} target="_top" aria-label="필름 아카이브로 나가기" title="필름 아카이브로 나가기">
-                  <span className="project-proposal__arrow project-proposal__exit" style={{ '--exit-icon': `url("${exitIcon}")` }} aria-hidden="true" />
-                  <span className="project-proposal__label">나가기</span>
-                </a>
-              ) : (
-              <a href={`#${nextProject.id}`} aria-label={`다음 프로젝트: ${nextProject.title}`} title={`다음 프로젝트: ${nextProject.title}`}>
-                <svg className="project-proposal__arrow" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6 3 21 12 6 21Z" />
-                </svg>
-                <span className="project-proposal__label">다음</span>
-              </a>
-              )}
-              {activeProject.id !== 'project-01' && (
-              <a href={`#${previousProject.id}`} aria-label={`이전 프로젝트: ${previousProject.title}`} title={`이전 프로젝트: ${previousProject.title}`}>
-                <svg className="project-proposal__arrow" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M18 3 3 12 18 21Z" />
-                </svg>
-                <span className="project-proposal__label">이전</span>
-              </a>
-              )}
-            </nav>
-          </section>
-        ) : activeProject && (
-          <ProjectSection key={`${activeProject.id}-${projectViewportMode}`} project={activeProject} />
-        )}
-        {activeId === 'contact' && <ContactSection />}
-      </div>
+      <FilmReelProject
+        key={activeId}
+        activeId={activeId}
+        frameRef={proposalFrameRef}
+        document={proposalDocument}
+        source={nativePage ? getArchiveUrl(activeId).replace('?view=archive', '?view=archive&embedded=1') : undefined}
+        title={activeProject ? activeProject.title : activeId === 'about' ? 'ABOUT ME' : 'CONTACT ME'}
+        action={action}
+      />
     </main>
   );
 }

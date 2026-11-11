@@ -9,7 +9,6 @@ function TimelineContent({ scene }) {
         <p className="profile-timeline__statement">사용자의 흐름을 이해하고,<br />가치 있는 경험을 설계합니다.</p>
         <dl>
           <div><dt>EMAIL</dt><dd><a href="mailto:yshnada@gmail.com">yshnada@gmail.com</a></dd></div>
-          <div><dt>PHONE</dt><dd><a href="tel:+821041142912">+82 10-4114-2912</a></dd></div>
           <div><dt>LOCATION</dt><dd>Bucheon, Korea</dd></div>
         </dl>
       </div>

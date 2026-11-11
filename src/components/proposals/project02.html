@@ -9,34 +9,6 @@
     <style>
       .simmons-ending { margin: 0; padding: 0; background: #5d3136; }
       .simmons-ending img { display: block; width: 100%; height: auto; }
-      .simmons-app-link {
-        position: absolute;
-        right: 7%;
-        bottom: 7%;
-        z-index: 2;
-        display: block;
-        width: clamp(200px, 20vw, 350px);
-        background: transparent;
-        font-family: inherit;
-        text-decoration: none;
-      }
-      .simmons-app-link > svg { display: block; width: 100%; height: auto; overflow: visible; }
-      .simmons-app-link .story-button-shape { fill: #fcf7e9; stroke: #5d3136; stroke-width: 1.5; }
-      .simmons-app-link .story-button-ring { fill: #5d3136; stroke: #5d3136; stroke-width: 1.5; }
-      .simmons-app-link .story-button-text { fill: #5d3136; font-size: 24px; font-weight: 400; }
-      .simmons-app-link .story-button-arrow { fill: none; stroke: #fcf7e9; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-      .simmons-app-link .story-button-shape,
-      .simmons-app-link .story-button-ring,
-      .simmons-app-link .story-button-text,
-      .simmons-app-link .story-button-arrow { transition: fill .35s ease, stroke .35s ease; }
-      .simmons-app-link:hover .story-button-shape { fill: #5d3136; stroke: #fcf7e9; }
-      .simmons-app-link:hover .story-button-ring { fill: #fcf7e9; stroke: #fcf7e9; }
-      .simmons-app-link:hover .story-button-text { fill: #fcf7e9; }
-      .simmons-app-link:hover .story-button-arrow { stroke: #5d3136; }
-      .simmons-app-link:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
-      @media (max-width: 760px) {
-        .simmons-app-link { right: 6%; width: clamp(160px, 32vw, 230px); }
-      }
     </style>
   </head>
   <body>
@@ -44,28 +16,5 @@
     <section class="simmons-ending" aria-label="시몬스 프로젝트 마무리">
       <img src="__PROJECT_02_ENDING__" width="1920" height="1080" alt="시몬스 프로젝트 마무리. 역할: 개발팀장, 디자인 서브. 기간: 2026.02~2026.03. 기여도: 88%." />
     </section>
-    <script>
-      const appLinkObserver = new MutationObserver(() => {
-        const cover = document.querySelector('.hero-section');
-        if (!cover) return;
-        const link = document.createElement('a');
-        link.className = 'simmons-app-link';
-        link.href = 'https://hyunjireal.github.io/resimmons/';
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.setAttribute('aria-label', '시몬스 앱 바로가기 (새 창)');
-        link.innerHTML = `<svg viewBox="18 18 329 75" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
-          <path class="story-button-shape" d="M229.58,82.25c-2.74,2.08-6.49,4.88-12.09,6.65-4.25,1.34-7.98,1.6-10.51,1.59H54.86c-19.52,0-35.35-15.83-35.35-35.35h0c0-19.52,15.83-35.35,35.35-35.35h152.12c3.14-.18,7.38.04,11.98,1.7,4.29,1.54,7.19,3.72,8.83,4.98,2.66,2.03,2.91,2.78,7.1,6.88,4.58,4.48,6.88,6.72,9.73,8.44,2.26,1.37,6.16,3.66,11.7,4.09,5.72.44,10.06-1.36,12.11-2.24.93-.4,5.66-2.49,10.01-7.05,2.38-2.49,3.13-4.14,6.63-7.41,1.17-1.09,2.48-2.32,4.4-3.66,6.67-4.66,13.5-5.74,17.03-6,.71-.05,1.27-.08,1.64-.09,2.15-.08,8.57-.11,15.85,3.18,3.36,1.51,11.96,6.01,17.18,16.11,1.08,2.09,3.95,8.14,3.93,16.44,0,4.33-.81,12.73-6.61,20.79-1.1,1.53-8.24,11.12-21.47,13.92-.93.2-1.67.33-2.12.4-1.95.3-12.22,1.73-21.89-3.62-5.79-3.2-10.46-8.33-13.53-11.69-.79-.86-3.02-3.36-6.58-5.83-1.39-.97-3.12-2.15-5.68-3.13-1.23-.47-4.25-1.5-8.27-1.54-1.62-.02-4.53.11-7.9,1.22-3.02,1-5.36,2.43-8.39,4.74-7.28,5.52-7.18,7.37-13.08,11.85Z" />
-          <circle class="story-button-ring" cx="309.45" cy="55.02" r="27.81" />
-          <text class="story-button-text" x="130" y="55.5" text-anchor="middle" dominant-baseline="central">앱 바로가기</text>
-          <svg x="285.45" y="31.02" width="48" height="48" viewBox="0 0 24 24">
-            <path class="story-button-arrow" d="M17 7 7 17 M8 7H17V16" />
-          </svg>
-        </svg>`;
-        cover.append(link);
-        appLinkObserver.disconnect();
-      });
-      appLinkObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
-    </script>
   </body>
 </html>

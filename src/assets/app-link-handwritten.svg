@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="290" height="70" viewBox="0 0 290 70">
+  <g fill="none" stroke="#201e1a" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" transform="translate(5 4) skewX(-4)">
+    <g transform="translate(0 0) rotate(-2 24 28)"><path d="M20 5C5 0 2 23 15 24C29 26 32 7 20 5ZM33 3L32 27M33 15L42 14M43 2L42 28M9 35L8 56L37 57L38 35M9 45L37 46"/></g>
+    <g transform="translate(66 2) rotate(2 24 28)"><path d="M3 5L4 48L24 47L24 5M4 26L24 25M37 2L36 54M37 26L50 25"/></g>
+    <g transform="translate(122 0) rotate(-2 24 28)"><path d="M3 6L39 5L38 20L5 21L5 35L41 34M24 41L24 55M3 56L46 55"/></g>
+    <g transform="translate(179 1) rotate(1 24 28)"><path d="M2 7L26 6L25 43M39 2L38 55M39 26L51 25"/></g>
+    <g transform="translate(236 0) rotate(-2 24 28)"><path d="M2 7L25 6L24 44M41 2L40 55"/></g>
+  </g>
+</svg>

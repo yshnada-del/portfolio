@@ -14,22 +14,23 @@
         font-style: normal;
         font-display: swap;
       }
-      .matmut-app-link {
-        position: relative;
-        z-index: 2;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 24px;
-        padding: 14px 28px;
-        border-radius: 6px;
-        background: #3f6b5e;
-        color: #fff;
-        font: 400 16px/1.2 'Portfolio Pretendard', sans-serif;
-        text-decoration: none;
+      /* Keep the phone pair together when the scaled iframe becomes taller. */
+      @media (min-width: 1181px) {
+        .hero__inner {
+          top: 0;
+          min-height: 0;
+          height: auto;
+          grid-template-rows: auto auto;
+          align-content: center;
+        }
+        .hero__visual {
+          align-self: start;
+          height: 620px;
+          min-height: 620px;
+        }
+        .hero__phone-image--left { top: 6%; bottom: auto; }
+        .hero__phone-image--right { top: -6%; }
       }
-      .matmut-app-link:hover { background: #507e70; }
-      .matmut-app-link:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
       .closing-section__inner .matmut-project-meta {
         display: grid;
         justify-items: center;
@@ -56,17 +57,7 @@
     <div id="root"></div>
     <script>
       const matmutObserver = new MutationObserver(() => {
-        const heroCopy = document.querySelector('.hero__copy');
         const closing = document.querySelector('.closing-section__inner');
-        if (heroCopy && !heroCopy.querySelector('.matmut-app-link')) {
-          const link = document.createElement('a');
-          link.className = 'matmut-app-link';
-          link.href = 'https://yshnada-del.github.io/matmut/';
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-          link.textContent = '앱 바로가기 ↗';
-          heroCopy.append(link);
-        }
         if (closing && !closing.querySelector('.matmut-project-meta')) {
           const meta = document.createElement('div');
           meta.className = 'matmut-project-meta';
@@ -78,7 +69,7 @@
             <p>기여도 : 100%</p>`;
           closing.append(meta);
         }
-        if (heroCopy && closing) matmutObserver.disconnect();
+        if (closing) matmutObserver.disconnect();
       });
       matmutObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
     </script>
