@@ -152,11 +152,16 @@ html[data-project="project-02"] .problem-solution-section { height: auto; min-he
 html[data-project="project-02"] .problem-solution-section .problem-solution-grid { width: 100%; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 40px 16px; }
 html[data-project="project-02"] .problem-solution-section :is(.problem-solution-label, .problem-node, .solution-node) { width: 100%; height: auto; min-height: 200px; margin: 0; padding: 24px 16px; border-radius: 20px; }
 html[data-project="project-02"] .problem-solution-section .problem-node::after { display: none; }
-html[data-project="project-02"] #insight.insight-section { height: auto !important; min-height: 0 !important; padding: var(--proposal-space) var(--proposal-gutter) !important; }
-html[data-project="project-02"] #insight .insight-inner { position: static !important; width: min(100%, var(--proposal-max)) !important; height: auto !important; padding: 0 !important; transform: none !important; }
-html[data-project="project-02"] #insight .insight-inner :is(.insight-mark, p, h2) { position: relative !important; inset: auto !important; width: auto !important; height: auto !important; margin: 0 auto !important; white-space: normal !important; text-align: center !important; }
-html[data-project="project-02"] #insight .insight-inner .insight-mark { width: 30px !important; height: 30px !important; }
-html[data-project="project-02"] #insight .insight-inner h2 { margin-top: 32px !important; font-size: clamp(26px, 3.2vw, 50px) !important; line-height: 1.5 !important; }
+html[data-project="project-02"] #insight.insight-section { display: grid !important; place-items: center !important; height: auto !important; min-height: clamp(640px, 85svh, 1080px) !important; padding: var(--proposal-space) var(--proposal-gutter) !important; }
+html[data-project="project-02"] #insight .insight-inner { position: static !important; width: min(100%, var(--proposal-max)) !important; max-width: var(--proposal-max) !important; height: auto !important; padding: 0 !important; transform: none !important; }
+html[data-project="project-02"] #insight .insight-inner :is(.insight-mark, p, h2) { position: relative !important; inset: auto !important; width: auto !important; height: auto !important; margin-inline: auto !important; white-space: normal !important; text-align: center !important; }
+html[data-project="project-02"] #insight .insight-inner .insight-mark { width: 30px !important; height: 30px !important; margin-block: 0 !important; }
+html[data-project="project-02"] #insight .insight-inner p { margin-block: 16px 0 !important; }
+html[data-project="project-02"] #insight .insight-inner h2 { margin-block: 72px 0 !important; font-size: clamp(32px, 3.8vw, 64px) !important; line-height: 1.5 !important; }
+@media (max-width: 767px) {
+  html[data-project="project-02"] #insight.insight-section { min-height: max(520px, 75svh) !important; }
+  html[data-project="project-02"] #insight .insight-inner h2 { margin-block: 48px 0 !important; font-size: clamp(28px, 6vw, 36px) !important; }
+}
 html[data-project="project-02"] .wireframe-copy { width: 100%; max-width: 100%; margin-inline: 0; padding-inline: 0; }
 /* Match both headings to the inset box in the two-column Design Kit artwork. */
 html[data-project="project-02"] .figma-frame-intro { width: 100%; max-width: 100%; margin-inline: 0; padding-inline: 2.916667%; }
@@ -294,7 +299,61 @@ html[data-project="project-03"] .project-goal__symbol span {
 /* 04: the 721–767px range needs the same single-column rules as phones. */
 html[data-project="project-04"] .overview-note { height: auto; min-height: 82px; white-space: normal; }
 html[data-project="project-04"] :is(.persona-speech, .problem-goal-row > div, .comparison-copy, .outcome-grid article) { height: auto; }
+/* Stacked personas keep the desktop bubble width instead of filling the row. */
+html[data-project="project-04"] .persona-speech { width: 100%; max-width: 426px; min-width: 0; justify-self: start; }
 html[data-project="project-04"] .pizza-system .container { width: min(calc(100% - var(--proposal-gutter) * 2), var(--proposal-max)); }
+
+/* Section headings follow project 01's desk/case headers. Keep body and card copy untouched. */
+html[data-project="project-02"] :is(.section-title, .desk-title, .user-research-title, .persona-section-title, .problem-solution-copy, .flow-ia-copy, .wireframe-copy, .figma-frame-intro) > p:first-child,
+html[data-project="project-03"] :is(.section-title, .desk-research__intro, .research-finding__intro, .persona-section__intro, .insight-section__header, .project-goal__header, .ia-header, .wireframe-copy, .visual-system__header, .service-concept__header) > p:first-child,
+html[data-project="project-04"] :is(.section-intro, .persona-head, .pizza-system__heading) > span:first-child,
+html[data-project="project-04"] .statement-section > .container > p:first-child,
+html[data-project="project-04"] .result-grid > p:first-child,
+html[data-project="project-04"] .wireframe-title > span:first-child,
+html[data-project="project-02"] #insight .insight-inner > p {
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+html[data-project="project-02"] :is(.section-title, .desk-title, .user-research-title, .persona-section-title, .problem-solution-copy, .flow-ia-copy, .wireframe-copy, .figma-frame-intro) > h2,
+html[data-project="project-03"] :is(.section-title, .desk-research__intro, .research-finding__intro, .persona-section__intro, .insight-section__header, .project-goal__header, .ia-header, .wireframe-copy, .visual-system__header) > h2,
+html[data-project="project-04"] :is(.section-intro, .persona-head, .wireframe-title, .pizza-system__heading) > h2,
+html[data-project="project-04"] .statement-section > .container > h2,
+html[data-project="project-04"] .result-grid > h2,
+html[data-project="project-02"] #insight .insight-inner > h2 {
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 34px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+  word-break: keep-all !important;
+  overflow-wrap: break-word !important;
+}
+/* Overview uses project 01's responsive opening-title scale. */
+html[data-project="project-02"] .overview-intro-frame > p:first-child,
+html[data-project="project-03"] .overview__intro > .eyebrow,
+html[data-project="project-04"] .overview-head > span:first-child {
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: clamp(18px, 1.25vw, 24px) !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+html[data-project="project-02"] .overview-intro-frame > h3,
+html[data-project="project-03"] .overview__intro > h2,
+html[data-project="project-04"] .overview-head > h2 {
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: clamp(30px, 3vw, 52px) !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0 !important;
+  word-break: keep-all !important;
+  overflow-wrap: break-word !important;
+}
 @media (max-width: 1279px) {
   html[data-project="project-04"] :is(.editorial-grid, .statement-grid, .result-grid, .mvp-grid, .persona-grid, .outcome-grid) { grid-template-columns: minmax(0, 1fr); }
   html[data-project="project-04"] .solution-flow article { grid-template-columns: 70px minmax(0, 1fr); }
