@@ -40,7 +40,20 @@
       wrapper.append(table);
     });
   };
+  const marketObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-market-active');
+      marketObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.28 });
   const enhanceImages = () => {
+    if (document.documentElement.dataset.project === 'project-01') {
+      document.querySelectorAll('.market-circles:not(.is-market-ready)').forEach((circles) => {
+        circles.classList.add('is-market-ready');
+        marketObserver.observe(circles);
+      });
+    }
     document.querySelectorAll(imageSelector).forEach((image) => {
       if (image.dataset.zoomReady) return;
       image.dataset.zoomReady = 'true';

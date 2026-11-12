@@ -46,6 +46,7 @@ import ContactSection from './ContactSection.jsx';
 import ProjectSection from './ProjectSection.jsx';
 import FilmReelProject from './FilmReelProject.jsx';
 import { getArchiveUrl, getReelUrl } from '../routes.js';
+import { isProjectEnabled } from '../projectVisibility.js';
 
 const project02Frames = [
   project02SimmonsWireframeWeb,
@@ -110,7 +111,7 @@ const projects = [
         label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30',
         href: 'https://yshnada-del.github.io/jibsalifepage/',
       },
-      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://new-jibsalife.vercel.app' },
+      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: `${import.meta.env.BASE_URL}jibsalife/index.html` },
       {
         label: '\ub2e4\uc74c \ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30',
         href: '#project-02',
@@ -183,7 +184,7 @@ const projects = [
     },
     actionLinks: [
       { label: '\uae30\ud68d\uc11c \ubc14\ub85c\uac00\uae30', href: 'https://yshnada-del.github.io/landingpage/' },
-      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://yshnada-del.github.io/matmut/' },
+      { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: `${import.meta.env.BASE_URL}matmut/index.html` },
       {
         label: '\ub2e4\uc74c \ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30',
         href: '#project-04',
@@ -230,7 +231,11 @@ const projects = [
   },
 ];
 
-const pageIds = ['about', ...projects.map((project) => project.id), 'contact'];
+const enabledProjects = projects.filter((project) => isProjectEnabled(project.id)).map((project) => ({
+  ...project,
+  actionLinks: project.actionLinks.filter((link) => !link.href.startsWith('#') || isProjectEnabled(link.href.slice(1))),
+}));
+const pageIds = ['about', ...enabledProjects.map((project) => project.id), 'contact'];
 
 const aboutScrollScenes = [
   {
@@ -298,6 +303,11 @@ const aboutScrollScenes = [
 function getPageIdFromHash() {
   const hashId = window.location.hash.replace('#', '');
 
+  if (!isProjectEnabled(hashId)) {
+    window.location.replace(`${getReelUrl()}&room=projects`);
+    return 'about';
+  }
+
   return pageIds.includes(hashId) ? hashId : 'about';
 }
 
@@ -311,12 +321,12 @@ export default function ArchivePage() {
 
     return window.matchMedia('(max-width: 760px)').matches ? 'compact' : 'wide';
   });
-  const activeProject = projects.find((project) => project.id === activeId);
+  const activeProject = enabledProjects.find((project) => project.id === activeId);
   const nextProject = activeProject
-    ? projects[(projects.indexOf(activeProject) + 1) % projects.length]
+    ? enabledProjects[(enabledProjects.indexOf(activeProject) + 1) % enabledProjects.length]
     : null;
   const previousProject = activeProject
-    ? projects[(projects.indexOf(activeProject) - 1 + projects.length) % projects.length]
+    ? enabledProjects[(enabledProjects.indexOf(activeProject) - 1 + enabledProjects.length) % enabledProjects.length]
     : null;
 
   useEffect(() => {

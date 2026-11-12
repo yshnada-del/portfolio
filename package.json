@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "prepare:jibsalife": "node scripts/build-jibsalife.mjs",
+    "prepare:matmut": "node scripts/build-matmut.mjs",
+    "build": "npm run prepare:jibsalife && npm run prepare:matmut && vite build",
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist"
   },
@@ -14,6 +16,7 @@
     "@vitejs/plugin-react": "^4.7.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "three": "^0.187.0",
     "vite": "^5.4.21"
   },
   "devDependencies": {

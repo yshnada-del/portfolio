@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ArchivePage from './components/ArchivePage.jsx';
+import { isProjectEnabled } from './projectVisibility.js';
 import { getArchiveUrl, getHomeUrl, getReelUrl, isCurrentPath } from './routes.js';
 import aboutMe from './assets/about_me.png';
 import aboutMePage from './assets/about-cinema-poster.svg';
@@ -38,7 +39,7 @@ const tapes = [
   { id: 'project-03', title: 'PROJECT 03', image: tapeProject03 },
   { id: 'project-04', title: 'PROJECT 04', image: tapeProject04 },
   { id: 'contact', title: 'CONTACT', image: tapeContact },
-];
+].filter((tape) => isProjectEnabled(tape.id));
 
 const filmFrames = [
   { id: 'about', title: 'ABOUT ME', number: '01', image: aboutMePage, hideLabel: true, href: getArchiveUrl('about') },
@@ -47,7 +48,7 @@ const filmFrames = [
   { id: 'project-03', title: 'PROJECT 03', number: '04', image: matmut, hideLabel: true, href: getArchiveUrl('project-03') },
   { id: 'project-04', title: 'PROJECT 04', number: '05', image: pizzahut, hideLabel: true, href: getArchiveUrl('project-04') },
   { id: 'contact', title: 'CONTACT ME', number: '06', image: contactImage, hideLabel: true, href: getArchiveUrl('contact') },
-];
+].filter((frame) => isProjectEnabled(frame.id));
 
 
 const aboutSkillIcons = [
@@ -305,8 +306,19 @@ function AboutMeOverlay({ transition, onClose }) {
 function PortfolioScreen() {
   const cinemaRef = useRef(null);
   const ticketCursorRef = useRef(null);
+  const admissionRef = useRef(false);
+  const admissionTimerRef = useRef(null);
+  const [admittingId, setAdmittingId] = useState(null);
+  const projectFrames = filmFrames.filter((frame) => frame.id.startsWith('project-'));
+  const cinemaFrames = [
+    { id: 'vhs', title: 'VHS PLAYER', href: getHomeUrl() },
+    filmFrames[0],
+    { id: 'projects', title: 'PROJECT', href: getArchiveUrl('project-01') },
+    filmFrames[filmFrames.length - 1],
+  ];
 
   const hideTicketCursor = useCallback(() => {
+    if (admissionRef.current) return;
     cinemaRef.current?.classList.remove('has-ticket-cursor');
     if (ticketCursorRef.current) ticketCursorRef.current.dataset.visible = 'false';
   }, []);
@@ -316,9 +328,25 @@ function PortfolioScreen() {
     return () => window.removeEventListener('blur', hideTicketCursor);
   }, [hideTicketCursor]);
 
+  useEffect(() => {
+    const resetAdmission = () => {
+      window.clearTimeout(admissionTimerRef.current);
+      admissionRef.current = false;
+      setAdmittingId(null);
+      hideTicketCursor();
+    };
+    window.addEventListener('pageshow', resetAdmission);
+    return () => {
+      window.clearTimeout(admissionTimerRef.current);
+      window.removeEventListener('pageshow', resetAdmission);
+    };
+  }, [hideTicketCursor]);
+
   const moveTicketCursor = (event) => {
+    if (admissionRef.current) return;
     const cursor = ticketCursorRef.current;
-    if (event.pointerType !== 'mouse' || !cursor?.complete || !cursor.naturalWidth) {
+    const ticketImage = cursor?.querySelector('img');
+    if (event.pointerType !== 'mouse' || !ticketImage?.complete || !ticketImage.naturalWidth) {
       hideTicketCursor();
       return;
     }
@@ -327,6 +355,26 @@ function PortfolioScreen() {
     cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     cursor.dataset.visible = 'true';
     cinemaRef.current?.classList.add('has-ticket-cursor');
+  };
+
+  const enterCinema = (event, frame) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    if (admissionRef.current) return;
+    admissionRef.current = true;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const clickX = event.detail === 0 ? bounds.left + bounds.width / 2 : event.clientX;
+    const clickY = event.detail === 0 ? bounds.top + bounds.height / 2 : event.clientY;
+    const x = Math.max(12, Math.min(clickX - 12, window.innerWidth - 180));
+    const y = Math.max(12, Math.min(clickY - 12, window.innerHeight - 125));
+    const cursor = ticketCursorRef.current;
+    cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    cursor.dataset.visible = 'true';
+    setAdmittingId(frame.id);
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    admissionTimerRef.current = window.setTimeout(() => {
+      window.location.href = frame.href;
+    }, reducedMotion ? 160 : 940);
   };
 
   const bulbs = [
@@ -350,13 +398,14 @@ function PortfolioScreen() {
 
   return (
     <section className="portfolio-screen portfolio-screen--cinema" ref={cinemaRef} onPointerMove={moveTicketCursor} onPointerLeave={hideTicketCursor} aria-label="포트폴리오 상영관">
-      <img ref={ticketCursorRef} className="cinema-ticket-cursor" src={mouseTicket} alt="" aria-hidden="true" draggable="false" data-visible="false" />
-      <nav className="film-archive-nav" aria-label="필름 아카이브 메뉴">
-        <a href={getHomeUrl()}>HOME</a>
-        <a href={getArchiveUrl('about')}>ABOUT</a>
-        <a href={getArchiveUrl('project-01')}>PROJECT</a>
-        <a href={getArchiveUrl('contact')}>CONTACT</a>
-      </nav>
+      <div ref={ticketCursorRef} className={`cinema-ticket-cursor${admittingId ? ' cinema-ticket-cursor--tearing' : ''}`} aria-hidden="true" data-visible="false">
+        <div className="cinema-ticket__paper">
+          <img className="cinema-ticket__body" src={mouseTicket} alt="" draggable="false" />
+          <img className="cinema-ticket__barcode" src={mouseTicket} alt="" draggable="false" />
+        </div>
+      </div>
+      <div className="cinema-film cinema-film--top" aria-hidden="true" />
+      <div className="cinema-film cinema-film--bottom" aria-hidden="true" />
       <div className="film-flow" aria-hidden="true">
         <div className="aurora-background">
           <span />
@@ -365,12 +414,12 @@ function PortfolioScreen() {
         </div>
       </div>
       <div className="cinema-display">
-        <ul className="cinema-posters" aria-label="아카이브 선택">
-          {filmFrames.map((frame) => {
-            const detail = posterDetails[frame.id];
+        <ul className="cinema-posters" style={{ '--poster-count': cinemaFrames.length }} aria-label="아카이브 선택">
+          {cinemaFrames.map((frame) => {
+            const detail = posterDetails[frame.id] ?? { title: frame.title, name: frame.title };
             return (
               <li className={`cinema-poster cinema-poster--${frame.id}`} key={frame.id}>
-                <a className="cinema-poster__link" href={frame.href} aria-label={`${detail.title} 아카이브 열기`}>
+                <a className={`cinema-poster__link${admittingId === frame.id ? ' is-admitting' : ''}`} href={frame.href} onClick={(event) => enterCinema(event, frame)} aria-label={`${detail.title} 아카이브 열기`} aria-busy={admittingId === frame.id}>
                   <div className="cinema-poster__marquee"><h2>{detail.title}</h2></div>
                   <div className="cinema-poster__case">
                     <div className="cinema-poster__bulbs" aria-hidden="true">
@@ -379,7 +428,20 @@ function PortfolioScreen() {
                       ))}
                     </div>
                     <div className="cinema-poster__print">
-                      <div className="cinema-poster__art"><img src={frame.image} alt={`${detail.name} 포스터`} /></div>
+                      {frame.id === 'projects' ? (
+                        <div className="cinema-project-collection" aria-label="프로젝트 모음">
+                          {projectFrames.map((project) => <img key={project.id} src={project.image} alt={posterDetails[project.id].name} />)}
+                        </div>
+                      ) : frame.id === 'vhs' ? (
+                        <div className="cinema-vhs-art">
+                          <div className="cinema-vhs-art__player">
+                            <img className="cinema-vhs-art__tv" src={crtTv} alt="CRT TV" />
+                            <div className="cinema-vhs-art__tape">
+                              <img src={tapeAll} alt="TV 투입구 앞의 ALL IN ONE 비디오테이프" />
+                            </div>
+                          </div>
+                        </div>
+                      ) : <div className="cinema-poster__art"><img src={frame.image} alt={`${detail.name} 포스터`} /></div>}
                     </div>
                   </div>
                 </a>
@@ -392,7 +454,18 @@ function PortfolioScreen() {
   );
 }
 
+function ProjectRoomRedirect() {
+  useEffect(() => {
+    window.location.replace(getArchiveUrl('project-01'));
+  }, []);
+  return null;
+}
+
 export default function App() {
+  const routeParams = new URLSearchParams(window.location.search);
+  if (routeParams.get('view') === 'reel' && routeParams.get('room') === 'projects') {
+    return <ProjectRoomRedirect />;
+  }
   if (isCurrentPath(window.location.pathname, '/archive') || new URLSearchParams(window.location.search).get('view') === 'archive') {
     return <ArchivePage />;
   }

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import FilmSection from './FilmSection.jsx';
-import popcornPoster from '../assets/popcorn-contact.png';
+const PopcornScene = lazy(() => import('./PopcornScene.jsx'));
 
 const kernels = Array.from({ length: 26 }, (_, index) => {
   const angle = index * 137.5 * Math.PI / 180;
@@ -33,11 +33,13 @@ export default function ContactSection() {
   return (
     <FilmSection id="contact" scene="06" label="CONTACT" tone="dark" className="film-section--popcorn">
       <div className={`popcorn-contact popcorn-contact--${phase}`}>
-        <button ref={triggerRef} className="popcorn-contact__trigger" type="button" onClick={() => setPhase('popping')} disabled={phase !== 'idle'} aria-label="팝콘을 터뜨려 문의 양식 열기" aria-haspopup="dialog">
-          <img className="popcorn-contact__poster" src={popcornPoster} alt="붉은 극장 커튼 앞 CONTACT ME 팝콘 상자" />
-          <span className="popcorn-contact__invitation">CLICK TO POPCORN<small>팝콘을 클릭해주세요.</small></span>
-        </button>
-        {phase === 'popping' && <div className="popcorn-contact__burst" aria-hidden="true">{kernels.map((style, index) => <span className="popcorn-kernel" style={style} key={index} />)}</div>}
+        <h2 className="popcorn-contact__heading">CONTACT ME</h2>
+        <div className="popcorn-contact__stage">
+          <Suspense fallback={null}>
+            <PopcornScene phase={phase} />
+          </Suspense>
+</div>
+        <button ref={triggerRef} className="popcorn-contact__invitation" type="button" onClick={() => setPhase('popping')} disabled={phase !== 'idle'} aria-haspopup="dialog">CLICK TO BUTTON<small>버튼을 클릭해주세요.</small></button>
       </div>
       <dialog ref={dialogRef} className="contact-slate" aria-labelledby="contact-slate-title" aria-describedby="contact-slate-description" onClose={reset} onKeyDown={(event) => { if (event.key === 'Escape') event.stopPropagation(); }} onClick={(event) => { if (event.target === event.currentTarget) closeForm(); }}>
         <div className="contact-slate__board">

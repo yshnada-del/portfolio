@@ -73,11 +73,12 @@ html[data-project="project-01"] :is(.desk-section, .case-section, .persona-secti
 html[data-project="project-01"] :is(.desk-inner, .case-inner, .persona-inner, .mvp-inner) { width: min(100%, var(--proposal-max)); max-width: 100%; margin-inline: auto; }
 html[data-project="project-01"] :is(.desk-header, .case-header) { width: 100%; max-width: 100%; }
 html[data-project="project-01"] .desk-section { padding-block: var(--proposal-space); }
-html[data-project="project-01"] .desk-cards { width: 100%; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 72px 32px; margin-top: 48px; margin-bottom: 36px; }
-html[data-project="project-01"] .desk-card { width: 100%; height: auto; aspect-ratio: 443.2 / 493; }
-html[data-project="project-01"] .desk-card small { top: 6%; left: 8%; width: 84%; font-size: clamp(13px, 1.45vw, 20px); }
-html[data-project="project-01"] .desk-card h3 { top: 14%; left: 7%; width: 86%; font-size: clamp(16px, 1.6vw, 24px); }
-html[data-project="project-01"] .desk-card p { bottom: -40px; white-space: normal; font-size: 13px; }
+html[data-project="project-01"] .desk-cards { width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 2vw, 32px); margin-top: clamp(24px, 4vw, 48px); margin-bottom: 64px; }
+html[data-project="project-01"] .desk-card { container-type: inline-size; width: 100%; min-width: 0; height: auto; aspect-ratio: 443.2 / 493; border-radius: clamp(5px, 1vw, 13px); }
+html[data-project="project-01"] .desk-card small { top: 6%; left: 6%; width: 88%; font-size: clamp(4px, 4.5cqw, 20px); }
+html[data-project="project-01"] .desk-card h3 { top: 14%; left: 7%; width: 86%; font-size: clamp(5px, 5.4cqw, 24px); line-height: 1.4; }
+html[data-project="project-01"] .desk-card p { top: calc(100% + 12px); bottom: auto; white-space: normal; overflow-wrap: anywhere; font-size: clamp(7px, 2.93cqw, 13px); }
+html[data-project="project-01"] .desk-card svg { display: block; width: 100%; height: auto; max-width: 100%; }
 html[data-project="project-01"] .competitive-board { width: 100%; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 32px; }
 html[data-project="project-01"] .compare-table { min-height: 0; padding: 72px 24px 24px; overflow-x: auto; }
 html[data-project="project-01"] .compare-table::before,
@@ -86,36 +87,54 @@ html[data-project="project-01"] :is(.compare-head, .compare-row) { width: 100%; 
 html[data-project="project-01"] .analysis-list { min-height: 0; padding: 72px 24px 24px; }
 html[data-project="project-01"] .analysis-list article { grid-template-columns: 100px minmax(0, 1fr); gap: 24px; }
 html[data-project="project-01"] .analysis-list span { font-size: clamp(16px, 1.5vw, 20px); }
-html[data-project="project-01"] .market-circles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; width: 100%; height: auto; margin-top: 48px; padding-bottom: 80px; }
-html[data-project="project-01"] .market-circles article { position: relative; inset: auto; width: 100%; height: auto; min-height: 300px; aspect-ratio: 1; padding: 28px; }
-html[data-project="project-01"] .market-circles article::before { inset: 8px; width: auto; height: auto; }
-html[data-project="project-01"] .market-circles article::after { inset: 0; width: 100%; height: 100%; }
+html[data-project="project-01"] .market-circles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 2vw, 32px); width: 100%; height: auto; margin-top: clamp(24px, 4vw, 48px); padding-bottom: 80px; }
+html[data-project="project-01"] .market-circles article { container-type: inline-size; position: relative; inset: auto; width: 100%; min-width: 0; height: auto; min-height: 0; aspect-ratio: 1; padding: clamp(5px, 1.8vw, 28px); }
+html[data-project="project-01"] .market-circles article::before { inset: clamp(3px, .55vw, 8px); width: auto; height: auto; }
+html[data-project="project-01"] .market-circles article::after { inset: 0; width: 100%; height: 100%; --ring-width: clamp(1px, .3vw, 4px); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-width)), #000 calc(100% - var(--ring-width))); mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-width)), #000 calc(100% - var(--ring-width))); }
 html[data-project="project-01"] .market-circles .market-dot {
   display: block;
-  width: clamp(12px, 1.1vw, 16.2px);
-  height: clamp(12px, 1.1vw, 16.2px);
+  width: clamp(4px, 1.1vw, 16.2px);
+  height: clamp(4px, 1.1vw, 16.2px);
   left: calc(50% + (50% - 2px) * sin(var(--dot-angle)));
   top: calc(50% - (50% - 2px) * cos(var(--dot-angle)));
   transform: translate(-50%, -50%);
 }
 html[data-project="project-01"] .market-dot-a { --dot-angle: var(--arc-start); }
-html[data-project="project-01"] .market-dot-b { --dot-angle: calc(var(--arc-start) + var(--arc-sweep)); }
+html[data-project="project-01"] .market-dot-b { --dot-angle: calc(var(--arc-start) + var(--arc-sweep) * var(--market-progress, 1)); }
+@property --market-progress {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+html[data-project="project-01"] .market-circles article::after {
+  background: conic-gradient(from var(--arc-start), #6c3aa9 0deg calc(var(--arc-sweep) * var(--market-progress, 1)), transparent calc(var(--arc-sweep) * var(--market-progress, 1)) 360deg);
+}
+html[data-project="project-01"] .market-circles.is-market-ready article { --market-progress: 0; }
+html[data-project="project-01"] .market-circles.is-market-active article { animation: marketArcFill 1.15s cubic-bezier(0.22, 1, 0.36, 1) both; }
+html[data-project="project-01"] .market-circles.is-market-active article:nth-child(2) { animation-delay: 120ms; }
+html[data-project="project-01"] .market-circles.is-market-active article:nth-child(3) { animation-delay: 240ms; }
+@keyframes marketArcFill {
+  from { --market-progress: 0; }
+  to { --market-progress: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-project="project-01"] .market-circles.is-market-ready article { --market-progress: 1; animation: none; }
+}
 html[data-project="project-01"] .survey-source { display: none; }
 html[data-project="project-01"] .market-circles div { width: 100%; max-width: 300px; }
-html[data-project="project-01"] .market-circles h3 { font-size: clamp(24px, 2vw, 31px); }
-html[data-project="project-01"] .market-circles h3::after { width: 100%; }
-html[data-project="project-01"] .market-circles small { bottom: -64px; font-size: 14px; }
+html[data-project="project-01"] .market-circles h3 { margin-bottom: clamp(5px, 5.7cqw, 27px); font-size: clamp(7px, 6.6cqw, 31px); }
+html[data-project="project-01"] .market-circles h3::after { width: 100%; height: clamp(1px, .4cqw, 2px); margin-block: clamp(5px, 5.7cqw, 27px) 0; }
+html[data-project="project-01"] .market-circles p { font-size: clamp(5px, 4.58cqw, 21.6px); line-height: 1.4; }
+html[data-project="project-01"] .market-circles small { top: calc(100% + 16px); bottom: auto; font-size: clamp(7px, 2.96cqw, 14px); overflow-wrap: anywhere; }
 html[data-project="project-01"] .survey-board-image { width: 100%; max-width: 100%; margin: 48px auto 0; }
 html[data-project="project-01"] .survey-meta { position: static; margin-top: 24px; font-size: 15px; }
 html[data-project="project-01"] :is(.pain-figma-image, .persona-figma-image, .mvp-figma-image, .insight-figma-image, .wireframe-figma-image, .ui-design-figma-image, .figma-flow-image, .ia-tree-image) { width: min(100%, var(--proposal-max)); height: auto; margin-inline: auto; }
 html[data-project="project-01"] .figma-flow-image { clip-path: none; }
 html[data-project="project-01"] :is(.pain-section, .persona-figma-section, .mvp-figma-section, .insight-figma-section, .wireframe-figma-section, .ui-design-figma-section, .figma-flow-section) { min-height: 0; padding-block: var(--proposal-space); }
 @media (max-width: 1599px) { html[data-project="project-01"] .competitive-board { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 1279px) {
-  html[data-project="project-01"] .market-circles { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 96px; }
-  html[data-project="project-01"] .market-circles article { width: min(100%, 420px); }
-}
 @media (max-width: 767px) {
+  html[data-project="project-01"] .desk-section,
+  html[data-project="project-01"] .case-section:has(.market-circles) { padding-inline: 12px; }
   html[data-project="project-01"] :is(.desk-header, .case-header) h2 { font-size: clamp(24px, 6vw, 34px); }
   html[data-project="project-01"] :is(.desk-header, .case-header) span { font-size: 16px; }
   html[data-project="project-01"] .analysis-list article { grid-template-columns: minmax(0, 1fr); text-align: center; }
@@ -172,7 +191,7 @@ html[data-project="project-02"] :is(.flow-ia-figure, .wireframe-frame, .figma-fr
 html[data-project="project-02"] .flow-ia-figure img { width: 100%; height: auto; transform: none; }
 html[data-project="project-02"] .hero-section { height: auto; min-height: 0; }
 @media (max-width: 1279px) {
-  html[data-project="project-02"] :is(.three-c, .survey-frame--combined .brand-research-layout, .survey-frame--combined .pain-research-layout) { grid-template-columns: minmax(0, 1fr); }
+  html[data-project="project-02"] :is(.three-c, .survey-frame--combined .brand-research-layout) { grid-template-columns: minmax(0, 1fr); }
   html[data-project="project-02"] .problem-solution-section .problem-solution-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   html[data-project="project-02"] .problem-solution-section .problem-node:nth-child(n) { grid-column: 1; }
   html[data-project="project-02"] .problem-solution-section .solution-node:nth-child(n) { grid-column: 2; }
@@ -182,6 +201,18 @@ html[data-project="project-02"] .hero-section { height: auto; min-height: 0; }
   html[data-project="project-02"] .problem-solution-grid > :nth-child(10) { grid-row: 4; }
   html[data-project="project-02"] .problem-solution-grid > :nth-child(11) { grid-row: 5; }
   html[data-project="project-02"] .problem-solution-grid > :nth-child(12) { grid-row: 6; }
+}
+/* Keep all three interviewees together on tablets; compact rows on phones. */
+@media (max-width: 1279px) {
+  html[data-project="project-02"] .survey-frame--combined .pain-research-layout { gap: 16px; }
+  html[data-project="project-02"] .survey-frame--combined .pain-quote p { padding: 20px 12px; }
+  html[data-project="project-02"] .survey-frame--combined .pain-quote:nth-child(n) .face-image { width: min(140px, 100%); margin-top: 20px; }
+}
+@media (max-width: 639px) {
+  html[data-project="project-02"] .survey-frame--combined .pain-research-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+  html[data-project="project-02"] .survey-frame--combined .pain-quote:nth-child(n) { display: grid; grid-template-columns: minmax(0, 1fr) clamp(64px, 20vw, 100px); align-items: center; gap: 16px; min-width: 0; }
+  html[data-project="project-02"] .survey-frame--combined .pain-quote p { margin: 0; padding: 16px 12px; border-radius: 24px; font-size: 13px; line-height: 1.5; overflow-wrap: break-word; }
+  html[data-project="project-02"] .survey-frame--combined .pain-quote:nth-child(n) .face-image { width: 100%; height: auto; margin: 0; }
 }
 @media (max-width: 767px) {
   html[data-project="project-02"] .problem-solution-section :is(.problem-solution-label, .problem-node, .solution-node) { padding: 20px 12px; }

@@ -3,3 +3,6 @@ dist/
 .vite/
 *.local
 *.log
+.local-work/
+public/jibsalife/
+public/matmut/
