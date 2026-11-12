@@ -1,0 +1,14 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="32" cy="32" r="32" fill="#FEE500"/>
+  <path d="M32 21.7C21.9 21.7 13.7 27.2 13.7 34c0 4.23 3.2 7.96 8.08 10.17l-2.15 8.4c-.13.51.46.88.86.54l7.8-6.56c1.2.17 2.44.25 3.71.25 10.1 0 18.3-5.5 18.3-12.3S42.1 21.7 32 21.7Z" fill="#3B2020"/>
+  <text
+    x="32"
+    y="38.15"
+    fill="#FEE500"
+    font-family="Arial Black, Arial, sans-serif"
+    font-size="13"
+    font-weight="900"
+    letter-spacing="-1.2"
+    text-anchor="middle"
+  >TALK</text>
+</svg>
