@@ -1,0 +1,70 @@
+[
+  {
+    "name": "mypage",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=2#/mypage",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "mypage-lower",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=2#/mypage",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 434,
+      "clipped": []
+    }
+  },
+  {
+    "name": "premium-manage",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=3#/mypage/subscription",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "premium-expanded",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=3#/mypage/subscription",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 318,
+      "clipped": []
+    }
+  },
+  {
+    "name": "premium-expanded-detail",
+    "clip": {
+      "x": 0,
+      "y": 164,
+      "width": 390,
+      "height": 606
+    },
+    "partialLines": 0
+  },
+  {
+    "name": "ai-chat",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=4#/health/qna",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "ai-chat-options",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=4#/health/qna",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  }
+]

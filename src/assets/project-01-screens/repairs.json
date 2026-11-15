@@ -1,0 +1,47 @@
+[
+  {
+    "name": "home-vote",
+    "url": "http://localhost:5173/portfolio/jibsalife/index.html?embedded=1&mockup=2#/home",
+    "broken": []
+  },
+  {
+    "name": "home-story",
+    "url": "http://localhost:5173/portfolio/jibsalife/index.html?embedded=1&mockup=2#/home",
+    "broken": []
+  },
+  {
+    "name": "health-memo",
+    "url": "http://localhost:5173/portfolio/jibsalife/index.html?embedded=1&mockup=3#/health/cam",
+    "broken": []
+  },
+  {
+    "name": "calendar-memo",
+    "url": "http://localhost:5173/portfolio/jibsalife/index.html?embedded=1&mockup=4#/mission",
+    "broken": []
+  },
+  {
+    "name": "post",
+    "url": "http://localhost:5173/portfolio/jibsalife/index.html?embedded=1&mockup=5#/community/petstory/detail/2",
+    "broken": []
+  },
+  {
+    "name": "health-photo",
+    "url": "http://localhost:5173/portfolio/jibsalife/index.html?embedded=1&mockup=6#/health/cam",
+    "broken": []
+  },
+  {
+    "name": "health-pet",
+    "url": "http://localhost:5173/portfolio/jibsalife/index.html?embedded=1&mockup=7#/health/cam",
+    "broken": []
+  },
+  {
+    "name": "ai-chat",
+    "url": "http://localhost:5173/portfolio/jibsalife/index.html?embedded=1&mockup=8#/health/qna",
+    "broken": []
+  },
+  {
+    "name": "ai-chat-record",
+    "url": "http://localhost:5173/portfolio/jibsalife/index.html?embedded=1&mockup=8#/health/qna",
+    "broken": []
+  }
+]

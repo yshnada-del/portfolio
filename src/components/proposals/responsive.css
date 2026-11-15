@@ -1,4 +1,40 @@
 html, body { min-width: 0 !important; }
+.proposal-scroll-hint {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  bottom: max(28px, env(safe-area-inset-bottom));
+  top: auto;
+  right: auto;
+  width: max-content;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  color: #f5f0e5;
+  cursor: pointer;
+  transform: translateX(-50%);
+  transition: opacity 250ms ease, transform 250ms ease, visibility 250ms ease;
+}
+.proposal-scroll-hint--hidden { opacity: 0; visibility: hidden; pointer-events: none; transform: translate(-50%, 8px); }
+.proposal-scroll-hint--cover-boundary { top: var(--proposal-cover-boundary); bottom: auto; transform: translate(-50%, -28px); }
+.proposal-scroll-hint--cover-boundary.proposal-scroll-hint--hidden { transform: translate(-50%, -20px); }
+.proposal-scroll-hint:focus-visible { outline: 1px solid #eed8a8; outline-offset: 4px; }
+.proposal-scroll-hint__mouse { position: relative; display: block; width: 22px; height: 36px; border: 1px solid currentColor; border-radius: 14px; }
+.proposal-scroll-hint__mouse > span { position: absolute; top: 7px; left: calc(50% - 2px); width: 4px; height: 4px; border: 1px solid currentColor; border-radius: 50%; animation: proposalMouseWheel 1.8s ease-in-out infinite; }
+.proposal-scroll-hint__label { font: 400 9px/1.5 'Pretendard', sans-serif; letter-spacing: .16em; color: #b8ad98; white-space: nowrap; }
+html[data-project="project-02"] .proposal-scroll-hint,
+html[data-project="project-02"] .proposal-scroll-hint__label { color: #000; }
+@keyframes proposalMouseWheel { 0% { opacity: 0; transform: translateY(0); } 20% { opacity: 1; } 80%, 100% { opacity: 0; transform: translateY(10px); } }
+@media (prefers-reduced-motion: reduce) { .proposal-scroll-hint { transition: none; } .proposal-scroll-hint__mouse > span { animation: none; } }
 *, *::before, *::after { box-sizing: border-box; }
 .proposal-zoomable[role="button"] { cursor: zoom-in; }
 .proposal-zoomable[role="button"]:focus-visible { outline: 3px solid #8f7be7; outline-offset: -3px; }
@@ -221,6 +257,7 @@ html[data-project="project-02"] .hero-section { height: auto; min-height: 0; }
 }
 
 /* 03: visual-system grids must shrink with the film, including their grid items. */
+html[data-project="project-03"] .hero__meta-block { min-width: 0; overflow-wrap: break-word; }
 html[data-project="project-03"] :is(.visual-system__inner, .visual-system__stack, .design-block, .palette-card, .palette-card > section, .type-table, .system-swatches, .system-swatch) { min-width: 0; max-width: 100%; }
 html[data-project="project-03"] :is(.visual-system__stack, .design-block, .type-table, .system-swatches) { width: 100%; }
 html[data-project="project-03"] .visual-system__inner,
@@ -291,7 +328,8 @@ html[data-project="project-03"] .project-goal__symbol span {
   html[data-project="project-03"] :is(.system-swatches--palette, .system-swatches--font) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   html[data-project="project-03"] :is(.hero__grid, .persona-map-grid, .insight-direction, .project-goal__layout, .key-feature, .key-feature--reverse) { grid-template-columns: minmax(0, 1fr); }
   html[data-project="project-03"] :is(.research-card-grid, .research-finding__grid) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  html[data-project="project-03"] .hero__topline { grid-template-columns: minmax(0, 1fr); }
+  html[data-project="project-03"] .hero__topline { display: grid; width: 100%; grid-template-columns: 42.5% minmax(0, 1fr); column-gap: 0; padding-right: 0; }
+  html[data-project="project-03"] .hero__topline .hero__meta-block:nth-child(2) { grid-column: 2; grid-row: 1; justify-self: start; margin-left: 0; text-align: left; }
   html[data-project="project-03"] .hero__visual { max-width: 560px; width: 100%; margin-inline: auto; }
   html[data-project="project-03"] .project-goal-row { grid-template-columns: 100px minmax(0, 1fr); }
   html[data-project="project-03"] .insight-direction { justify-items: center; row-gap: 24px; }

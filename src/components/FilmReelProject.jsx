@@ -74,7 +74,9 @@ export default function FilmReelProject({ activeId = 'project-01', document, sou
   const previousItem = pageItems[(pageIndex - 1 + pageItems.length) % pageItems.length];
   const nextItem = pageItems[(pageIndex + 1) % pageItems.length];
   const activeLabel = archiveItems.find((item) => item.id === activeId)?.label ?? title;
-  const paginationLabel = pageIndex < 0 ? 'PROJECTS' : `${pageIndex + 1}/${pageItems.length}`;
+  const paginationLabel = pageIndex < 0 ? 'PROJECTS' : (
+    <><span className="reel-page-current">{pageIndex + 1}</span>/{pageItems.length}</>
+  );
 
   useLayoutEffect(() => {
     const film = selectedFilmRef.current;
@@ -295,6 +297,24 @@ export default function FilmReelProject({ activeId = 'project-01', document, sou
                         <path d={chipWindow} fill="#f2edfc" />
                         <svg x="-123" y="-74" width="246" height="190" viewBox="150 250 1400 650" preserveAspectRatio="xMidYMid meet">
                           <image href={project01Landscape} width="1920" height="1080" />
+                        </svg>
+                      </g>
+                    ) : item.id === 'project-03' ? (
+                      <g clipPath={`url(#${svgId}-${item.id})`}>
+                        <svg x="-123" y="-74" width="246" height="190" viewBox="0 0 1024 1536" preserveAspectRatio="xMidYMid slice">
+                          <defs>
+                            <mask id={`${svgId}-matmut-without-logo`}>
+                              <rect width="1024" height="1536" fill="white" />
+                              <rect x="307" y="556" width="409" height="415" rx="40" fill="black" />
+                            </mask>
+                          </defs>
+                          <rect width="1024" height="1536" fill="#070706" />
+                          <image href={item.image} width="1024" height="1536" mask={`url(#${svgId}-matmut-without-logo)`} />
+                          <g transform="translate(329 579) scale(3.65)">
+                            <rect width="100" height="100" rx="9" fill="white" />
+                            <rect x="18" y="18" width="64" height="64" rx="9" fill="black" />
+                            <path d="M51 48H18L51 82V48Z" fill="white" />
+                          </g>
                         </svg>
                       </g>
                     ) : item.id === 'vhs' ? (

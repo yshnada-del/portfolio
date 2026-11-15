@@ -311,10 +311,10 @@ function PortfolioScreen() {
   const [admittingId, setAdmittingId] = useState(null);
   const projectFrames = filmFrames.filter((frame) => frame.id.startsWith('project-'));
   const cinemaFrames = [
-    { id: 'vhs', title: 'VHS PLAYER', href: getHomeUrl() },
     filmFrames[0],
     { id: 'projects', title: 'PROJECT', href: getArchiveUrl('project-01') },
     filmFrames[filmFrames.length - 1],
+    { id: 'vhs', title: 'VHS PLAYER', href: getHomeUrl() },
   ];
 
   const hideTicketCursor = useCallback(() => {
@@ -430,7 +430,7 @@ function PortfolioScreen() {
                     <div className="cinema-poster__print">
                       {frame.id === 'projects' ? (
                         <div className="cinema-project-collection" aria-label="프로젝트 모음">
-                          {projectFrames.map((project) => <img key={project.id} src={project.image} alt={posterDetails[project.id].name} />)}
+                          {projectFrames.map((project) => <img key={project.id} className={project.id === 'project-03' ? 'cinema-project-collection__matmut' : undefined} src={project.image} alt={posterDetails[project.id].name} />)}
                         </div>
                       ) : frame.id === 'vhs' ? (
                         <div className="cinema-vhs-art">

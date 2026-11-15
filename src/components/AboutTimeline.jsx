@@ -69,7 +69,6 @@ export default function AboutTimeline({ scenes }) {
     let currentStep = -1;
     let queuedSteps = 0;
     let busy = false;
-    let stepTimer;
     let revealTimer;
     let scrollFrame;
     let wheelTotal = 0;
@@ -89,14 +88,21 @@ export default function AboutTimeline({ scenes }) {
         document.documentElement.scrollHeight - window.innerHeight,
       ));
       const startedAt = performance.now();
-      const travelDuration = Math.min(1100, Math.max(880, Math.abs(targetY - fromY) * 0.8));
+      const travelDuration = Math.min(1000, Math.max(700, Math.abs(targetY - fromY) * 0.9));
       const moveToSection = (now) => {
         const progress = reducedMotion.matches ? 1 : Math.min(1, (now - startedAt) / travelDuration);
         // Continuous velocity and acceleration avoid the abrupt midpoint and
         // hard stop of the previous two-piece cubic motion.
         const eased = progress ** 3 * (progress * (progress * 6 - 15) + 10);
         window.scrollTo({ top: fromY + (targetY - fromY) * eased, behavior: 'instant' });
-        if (progress < 1) scrollFrame = window.requestAnimationFrame(moveToSection);
+        if (progress < 1) {
+          scrollFrame = window.requestAnimationFrame(moveToSection);
+        } else {
+          // Accept the next gesture as soon as the glide finishes, without
+          // adding a separate pause after each scene.
+          busy = false;
+          playNextStep();
+        }
       };
       scrollFrame = window.requestAnimationFrame(moveToSection);
       // Commit the unlocked scene while its text is still transparent. Start
@@ -104,19 +110,15 @@ export default function AboutTimeline({ scenes }) {
       const currentItems = sectionItems[currentStep];
       revealTimer = window.setTimeout(() => {
         currentItems.forEach((item, index) => {
-          item.style.setProperty('--reveal-delay', reducedMotion.matches ? '0ms' : `${Math.min(index, 5) * 64}ms`);
+          item.style.setProperty('--reveal-delay', reducedMotion.matches ? '0ms' : `${Math.min(index, 5) * 45}ms`);
           item.classList.add('profile-timeline__reveal--visible');
         });
-      }, reducedMotion.matches ? 0 : 160);
-      // Consume queued inputs one at a time, after the text and a short pause.
-      stepTimer = window.setTimeout(() => {
-        busy = false;
-        playNextStep();
-      }, reducedMotion.matches ? 400 : 1500);
+      }, reducedMotion.matches ? 0 : 60);
+
     };
     const queueStep = () => {
       if (currentStep + queuedSteps >= sections.length - 1) return;
-      queuedSteps += 1;
+      queuedSteps = 1;
       playNextStep();
     };
     advanceRef.current = queueStep;
@@ -127,14 +129,14 @@ export default function AboutTimeline({ scenes }) {
       const now = performance.now();
       // A strong flick emits many wheel events, including momentum. Consume
       // the whole burst once; only a fresh gesture can request another stop.
-      if (now - lastWheelAt > 240) {
+      if (now - lastWheelAt > 180) {
         wheelTotal = 0;
         wheelGestureConsumed = false;
       }
       lastWheelAt = now;
       if (wheelGestureConsumed) return;
       wheelTotal += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1);
-      if (wheelTotal >= 80) {
+      if (wheelTotal >= 50) {
         wheelTotal = 0;
         wheelGestureConsumed = true;
         queueStep();
@@ -167,7 +169,6 @@ export default function AboutTimeline({ scenes }) {
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.clearTimeout(stepTimer);
       window.clearTimeout(revealTimer);
       window.cancelAnimationFrame(scrollFrame);
       advanceRef.current = null;

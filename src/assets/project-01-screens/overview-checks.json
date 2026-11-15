@@ -1,0 +1,28 @@
+[
+  {
+    "name": "ui-design",
+    "width": 3840,
+    "height": 2160,
+    "backgroundOutsideMockupsPreserved": true,
+    "changedPixels": 2789653,
+    "screens": [
+      "home",
+      "mypage",
+      "community",
+      "health-result",
+      "ai-chat-options",
+      "vote-result",
+      "welcome"
+    ]
+  },
+  {
+    "name": "cover",
+    "width": 3840,
+    "height": 2160,
+    "backgroundOutsideMockupsPreserved": true,
+    "changedPixels": 558109,
+    "screens": [
+      "welcome"
+    ]
+  }
+]

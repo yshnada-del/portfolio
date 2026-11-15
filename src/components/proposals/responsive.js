@@ -1,4 +1,53 @@
 (() => {
+  if (/^project-0[1-4]$/.test(document.documentElement.dataset.project || '')) {
+    const hint = document.createElement('button');
+    hint.type = 'button';
+    hint.className = 'proposal-scroll-hint';
+    hint.setAttribute('aria-label', '아래로 스크롤하여 기획서 보기');
+    hint.innerHTML = '<span class="proposal-scroll-hint__mouse" aria-hidden="true"><span></span></span><span class="proposal-scroll-hint__label">SCROLL DOWN</span>';
+    document.body.append(hint);
+    const coverSelector = {'project-02':'.hero-figma-frame'}[document.documentElement.dataset.project];
+    if (coverSelector) {
+      let observedCover;
+      const syncHintPosition = () => {
+        const cover = document.querySelector(coverSelector);
+        if (!cover) return;
+        if (cover !== observedCover) {
+          if (observedCover) coverResize.unobserve(observedCover);
+          observedCover = cover;
+          coverResize.observe(cover);
+        }
+        const rect = cover.getBoundingClientRect();
+        if (rect.height < 1) return;
+        hint.style.setProperty('--proposal-cover-boundary', `${rect.bottom}px`);
+        hint.classList.add('proposal-scroll-hint--cover-boundary');
+      };
+      const coverResize = new ResizeObserver(syncHintPosition);
+      new MutationObserver(syncHintPosition).observe(document.getElementById('root'), {childList:true,subtree:true});
+      window.addEventListener('resize', syncHintPosition);
+      document.addEventListener('load', syncHintPosition, true);
+      syncHintPosition();
+    }
+    const dismissHint = () => {
+      hint.classList.add('proposal-scroll-hint--hidden');
+      hint.setAttribute('aria-hidden', 'true');
+      hint.tabIndex = -1;
+      document.removeEventListener('scroll', onProposalScroll, true);
+    };
+    const onProposalScroll = (event) => {
+      const scroller = event.target === document ? document.scrollingElement : event.target;
+      if ((scroller?.scrollTop || window.scrollY) > 8) dismissHint();
+    };
+    document.addEventListener('scroll', onProposalScroll, {capture:true, passive:true});
+    if ((document.scrollingElement?.scrollTop || window.scrollY) > 8) dismissHint();
+    hint.addEventListener('click', () => {
+      const root = document.scrollingElement;
+      const scroller = root.scrollHeight > root.clientHeight + 8 ? root :
+        [...document.querySelectorAll('#root, #root *')].find(e =>
+          e.clientHeight > 200 && e.scrollHeight > e.clientHeight + 8 && /auto|scroll/.test(getComputedStyle(e).overflowY));
+      scroller?.scrollBy({top:Math.max(240,scroller.clientHeight*.7),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+    });
+  }
   const zoomable = window.matchMedia('(max-width: 1599px)');
   const dialog = document.createElement('dialog');
   dialog.className = 'proposal-image-dialog';
@@ -57,7 +106,7 @@
     document.querySelectorAll(imageSelector).forEach((image) => {
       if (image.dataset.zoomReady) return;
       image.dataset.zoomReady = 'true';
-      const sectionName = new URL(image.src).pathname.match(/\/sections\/([^/]+)\.png$/)?.[1];
+      const sectionName = image.classList.contains('figma-cover-image')?'cover':new URL(image.src).pathname.match(/\/sections\/([^/]+)\.png$/)?.[1];
       const replacement = window.proposalImageAssets?.[sectionName];
       if (document.documentElement.dataset.project === 'project-01' && replacement) {
         image.src = replacement;

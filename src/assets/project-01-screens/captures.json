@@ -1,0 +1,349 @@
+[
+  {
+    "name": "welcome",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=2#/onboarding",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "daily",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=2#/onboarding",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "community-intro",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=2#/onboarding",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "ai-intro",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=2#/onboarding",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "login",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=3#/login",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "signup",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=4#/signup",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "terms",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=5#/signup/terms/service",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "privacy",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=6#/signup/terms/privacy",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "home",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=7#/home",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "health",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=8#/health/cam",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "health-result",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=9#/health/result",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 8,
+      "clipped": []
+    }
+  },
+  {
+    "name": "health-detail",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=10#/health/result/detail",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "health-hospitals",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=11#/health/hospital",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 22,
+      "clipped": []
+    }
+  },
+  {
+    "name": "calendar",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=12#/mission",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "mypage",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=13#/mypage",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "premium",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=14#/mypage/subscription",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "community",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=15#/community/overview",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 12,
+      "clipped": []
+    }
+  },
+  {
+    "name": "challenge",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=16#/community/challenge",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "challenge-reward",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=17#/community/challenge/reward",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 10,
+      "clipped": []
+    }
+  },
+  {
+    "name": "daily-feed",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=18#/community/petstory/daily",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "knowledge",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=19#/community/petstory/knowledge",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "vote",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=20#/community/vote",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 10,
+      "clipped": []
+    }
+  },
+  {
+    "name": "vote-detail",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=21#/community/vote/detail",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "vote-result",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=22#/community/vote/result",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 12,
+      "clipped": []
+    }
+  },
+  {
+    "name": "post",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=23#/community/petstory/detail/2",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 2,
+      "clipped": []
+    }
+  },
+  {
+    "name": "write-post",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=24#/community/petstory/write",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "ai-chat",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=25#/health/qna",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "vote-selected",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=26#/community/vote/detail",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0,
+      "clipped": []
+    }
+  },
+  {
+    "name": "vote-reward",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=26#/community/vote/detail",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 314,
+      "clipped": []
+    }
+  },
+  {
+    "name": "calendar-memo",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=27#/mission",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "home-vote",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=28#/home",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 950,
+      "clipped": []
+    }
+  },
+  {
+    "name": "home-story",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=28#/home",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 1531,
+      "clipped": []
+    }
+  },
+  {
+    "name": "health-photo",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=29#/health/cam",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "health-pet",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=30#/health/cam",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "health-memo",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=31#/health/cam",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  },
+  {
+    "name": "ai-chat-record",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=32#/health/qna",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 81,
+      "clipped": []
+    }
+  }
+]

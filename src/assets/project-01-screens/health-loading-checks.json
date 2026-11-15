@@ -1,0 +1,11 @@
+[
+  {
+    "name": "health-loading",
+    "url": "http://127.0.0.1:5173/portfolio/jibsalife/index.html?embedded=1&mockup=2#/health/check",
+    "broken": [],
+    "alignment": {
+      "partialLines": 0,
+      "scroll": 0
+    }
+  }
+]
