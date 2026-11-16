@@ -69,6 +69,12 @@
 .contact-slate__footer a { color: #eee7d7; font-size: 12px; text-decoration: none; }
 .contact-slate__footer button { min-height: 46px; padding: 12px 22px; border: 1px solid #e8dfcc; border-radius: 2px; color: #171311; background: #f1e6cf; font: 700 15px/1.4 'Pretendard', sans-serif; cursor: pointer; }
 .contact-slate__footer button:hover { background: #fff8e6; }
+.contact-slate__footer button:disabled { opacity: .65; cursor: wait; }
+.contact-slate__form .contact-slate__honeypot { display: none; }
+.contact-slate__status { margin: 0; color: #d9edc4; font-size: 14px; line-height: 1.6; }
+.contact-slate__status:empty { display: none; }
+.contact-slate__status--sending { color: #eee7d7; }
+.contact-slate__status--error { color: #ffb9ae; }
 @media (min-width: 1920px) { .contact-slate { width: min(960px, calc(100vw - 80px)); } }
 @media (min-width: 768px) and (max-width: 1279px) { .contact-slate { width: min(740px, calc(100vw - 40px)); } }
 @media (max-width: 767px) {

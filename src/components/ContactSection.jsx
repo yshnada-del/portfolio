@@ -10,6 +10,8 @@ const kernels = Array.from({ length: 26 }, (_, index) => {
 
 export default function ContactSection() {
   const [phase, setPhase] = useState('idle');
+  const [submission, setSubmission] = useState({ status: 'idle', message: '' });
+  const sendingRef = useRef(false);
   const dialogRef = useRef(null);
   const triggerRef = useRef(null);
 
@@ -22,12 +24,43 @@ export default function ContactSection() {
 
   const closeForm = () => dialogRef.current.close();
   const reset = () => { setPhase('idle'); triggerRef.current?.focus(); };
-  const sendInquiry = (event) => {
+  const sendInquiry = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const subject = `[포트폴리오 문의 · ${data.get('type')}] ${data.get('name')}`;
-    const body = [`이름: ${data.get('name')}`, `소속: ${data.get('organization') || '-'}`, `답변 받을 이메일: ${data.get('email')}`, `문의 유형: ${data.get('type')}`, '', data.get('message')].join('\n');
-    window.location.href = `mailto:yshnada@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    if (sendingRef.current) return;
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    if (data.get('_honey')) return;
+    sendingRef.current = true;
+    setSubmission({ status: 'sending', message: '문의를 전송하고 있습니다.' });
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 20000);
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/yshnada@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          name: String(data.get('name')).trim(),
+          organization: String(data.get('organization') || '').trim() || '-',
+          email: String(data.get('email')).trim(),
+          type: data.get('type'),
+          message: String(data.get('message')).trim(),
+          _subject: `[포트폴리오 문의 · ${data.get('type')}] ${String(data.get('name')).trim()}`,
+          _replyto: String(data.get('email')).trim(),
+          _template: 'table',
+          _honey: '',
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok || ![true, 'true'].includes(result.success)) throw new Error('Inquiry was not accepted');
+      form.reset();
+      setSubmission({ status: 'success', message: '문의가 접수되었습니다. 남겨주신 이메일로 답변드리겠습니다.' });
+    } catch {
+      setSubmission({ status: 'error', message: '전송을 완료하지 못했습니다. 잠시 후 다시 시도하거나 yshnada@gmail.com으로 보내주세요.' });
+    } finally {
+      window.clearTimeout(timeout);
+      sendingRef.current = false;
+    }
   };
 
   return (
@@ -47,7 +80,8 @@ export default function ContactSection() {
           <button className="contact-slate__close" type="button" onClick={closeForm} aria-label="문의 양식 닫기" autoFocus>×</button>
           <div className="contact-slate__body">
             <header className="contact-slate__heading"><span className="contact-slate__eyebrow">LET’S MAKE THE NEXT SCENE</span><h2 id="contact-slate-title">GET IN TOUCH</h2><p id="contact-slate-description">함께할 프로젝트나 제안을 남겨주세요.</p></header>
-            <form className="contact-slate__form" onSubmit={sendInquiry}>
+            <form className="contact-slate__form" onSubmit={sendInquiry} aria-busy={submission.status === 'sending'}>
+              <input className="contact-slate__honeypot" type="text" name="_honey" tabIndex={-1} autoComplete="off" aria-hidden="true" />
               <div className="contact-slate__pair">
                 <label><span>NAME <small>이름 *</small></span><input name="name" autoComplete="name" placeholder="이름을 입력해주세요" required maxLength={80} /></label>
                 <label><span>COMPANY <small>소속 (선택)</small></span><input name="organization" autoComplete="organization" placeholder="회사 또는 단체명" maxLength={120} /></label>
@@ -55,7 +89,8 @@ export default function ContactSection() {
               <label><span>EMAIL <small>이메일 *</small></span><input name="email" type="email" autoComplete="email" placeholder="답변 받을 이메일 주소" required maxLength={200} /></label>
               <label><span>SCENE <small>문의 유형 *</small></span><select name="type" defaultValue="" required><option value="" disabled>문의 유형을 선택해주세요</option><option>채용</option><option>디자인 협업</option><option>공연·콘텐츠</option><option>기타</option></select></label>
               <label><span>STORY <small>메시지 *</small></span><textarea name="message" placeholder="제안 내용과 일정을 알려주세요" rows={4} required maxLength={5000} /></label>
-              <div className="contact-slate__footer"><span>DIRECTOR<br /><strong>YOO SEUNG HYUN</strong></span><span>CONTACT<br /><a href="mailto:yshnada@gmail.com">yshnada@gmail.com</a></span><button type="submit">문의 보내기 ↗</button></div>
+              <p className={`contact-slate__status contact-slate__status--${submission.status}`} role="status" aria-live="polite" aria-atomic="true">{submission.message}</p>
+              <div className="contact-slate__footer"><span>DIRECTOR<br /><strong>YOO SEUNG HYUN</strong></span><span>CONTACT<br /><a href="mailto:yshnada@gmail.com">yshnada@gmail.com</a></span><button type="submit" disabled={submission.status === 'sending'}>{submission.status === 'sending' ? '전송 중…' : '문의 보내기 ↗'}</button></div>
             </form>
           </div>
         </div>
