@@ -430,7 +430,18 @@ function PortfolioScreen() {
                     <div className="cinema-poster__print">
                       {frame.id === 'projects' ? (
                         <div className="cinema-project-collection" aria-label="프로젝트 모음">
-                          {projectFrames.map((project) => <img key={project.id} className={project.id === 'project-03' ? 'cinema-project-collection__matmut' : undefined} src={project.image} alt={posterDetails[project.id].name} />)}
+                          {projectFrames.map((project, index) => (
+                            <div
+                              key={project.id}
+                              className="cinema-project-collection__item"
+                              style={{
+                                gridRow: Math.floor(index / 2) + 1,
+                                gridColumn: index === projectFrames.length - 1 && projectFrames.length % 2 ? '1 / -1' : index % 2 + 1,
+                              }}
+                            >
+                              <img src={project.image} alt={posterDetails[project.id].name} />
+                            </div>
+                          ))}
                         </div>
                       ) : frame.id === 'vhs' ? (
                         <div className="cinema-vhs-art">
