@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prepare:brand": "node scripts/build-brand-assets.mjs",
     "prepare:jibsalife": "node scripts/build-jibsalife.mjs",
     "prepare:matmut": "node scripts/build-matmut.mjs",
     "build": "npm run prepare:jibsalife && npm run prepare:matmut && vite build",
@@ -20,6 +21,7 @@
     "vite": "^5.4.21"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "gh-pages": "^6.3.0"
   }
 }

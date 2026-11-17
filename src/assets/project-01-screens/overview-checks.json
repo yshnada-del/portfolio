@@ -20,9 +20,9 @@
     "width": 3840,
     "height": 2160,
     "backgroundOutsideMockupsPreserved": true,
-    "changedPixels": 558109,
+    "changedPixels": 802352,
     "screens": [
-      "welcome"
+      "home"
     ]
   }
 ]

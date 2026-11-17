@@ -11073,6 +11073,19 @@ img.contact-icon {
   .portfolio-screen--cinema.has-ticket-cursor * { cursor: none !important; }
   .cinema-ticket-cursor[data-visible="true"] { opacity: 1; }
 }
+.cinema-wall {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: #49423a;
+  background-image: url('./assets/cinema-cove-wall.png');
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+.portfolio-screen--cinema::before,
+.portfolio-screen--cinema::after { display: none; }
 .cinema-display {
   position: absolute;
   inset: 0;
@@ -11086,20 +11099,31 @@ img.contact-icon {
 }
 
 .cinema-posters {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: repeat(var(--poster-count, 4), minmax(0, 1fr));
-  gap: clamp(32px, 4.5vw, 90px);
-  width: min(100%, 1350px);
+  gap: clamp(44px, 7.5vw, 150px);
+  width: min(100%, 1510px);
   margin: auto;
   padding: 0;
   list-style: none;
 }
 
-.cinema-poster { min-width: 0; }
+.cinema-poster {
+  --depth-direction: 1;
+  --frame-angle: 135deg;
+  position: relative;
+  min-width: 0;
+  transform-origin: 0 0;
+  backface-visibility: hidden;
+}
+.cinema-poster[data-depth-side="left"] { --depth-direction: -1; --frame-angle: 225deg; }
 .cinema-posters--projects { max-width: 900px; }
 .cinema-poster__link { display: block; color: #fff; text-decoration: none; outline-offset: 10px; }
 .cinema-poster__link:focus-visible { outline: 2px solid #f6e8c7; }
 .cinema-poster__marquee {
+  --sign-depth: clamp(6px, .65vw, 11px);
   position: relative;
   margin-bottom: 14px;
   padding: 18px 4px;
@@ -11108,7 +11132,18 @@ img.contact-icon {
   border-left-color: #24212a;
   border-bottom-color: #08070b;
   background: linear-gradient(180deg, #080911, #191724 74%, #39303a);
-  box-shadow: 0 12px 18px #0008, inset 0 -2px 0 #a6743d, inset 0 0 16px #000;
+  box-shadow: calc(2px * var(--depth-direction)) 3px 0 #28231f, calc(5px * var(--depth-direction)) 6px 0 #151210, calc(10px * var(--depth-direction)) 17px 18px #0008, inset 0 -2px 0 #a6743d, inset 0 0 16px #000;
+}
+.cinema-poster__marquee::before {
+  content: '';
+  position: absolute;
+  left: calc(100% + 9px);
+  top: -9px;
+  width: var(--sign-depth);
+  height: calc(100% + 24px);
+  background: linear-gradient(90deg, #2d2823, #100e0d);
+  clip-path: polygon(0 0, 100% 6px, 100% 100%, 0 calc(100% - 6px));
+  pointer-events: none;
 }
 .cinema-poster__marquee::after {
   content: '';
@@ -11119,6 +11154,12 @@ img.contact-icon {
   height: 2px;
   background: #c78c4f;
   box-shadow: 0 -1px 9px #df9d5666;
+}
+.cinema-poster[data-depth-side="left"] .cinema-poster__marquee { border-left-color: #111015; border-right-color: #24212a; }
+.cinema-poster[data-depth-side="left"] .cinema-poster__marquee::before {
+  left: auto;
+  right: calc(100% + 9px);
+  transform: scaleX(-1);
 }
 .cinema-poster__marquee h2 {
   margin: 0;
@@ -11139,14 +11180,44 @@ img.contact-icon {
 }
 .cinema-poster__case {
   --frame-padding: clamp(14px, 1.3vw, 24px);
+  --frame-depth: clamp(9px, 1vw, 17px);
+  --frame-drop: clamp(6px, .65vw, 11px);
   position: relative;
   padding: var(--frame-padding);
-  border: 1px solid #51474a;
+  border: 2px solid #817366;
   border-right-color: #09080c;
   border-bottom-color: #09080c;
-  background: linear-gradient(130deg, #302833, #08070b 28%, #100d15 72%, #4b342b);
-  box-shadow: 10px 24px 24px #0008, 0 42px 34px -18px #000a, inset 2px 2px 2px #72605a44;
+  background: linear-gradient(var(--frame-angle), #63564b 0%, #27221f 5%, #121111 28%, #181512 72%, #40352a 95%, #74604c 100%);
+  box-shadow: calc(3px * var(--depth-direction)) 4px 2px #0007, calc(15px * var(--depth-direction)) 22px 15px #0009, calc(24px * var(--depth-direction)) 38px 30px #0006, inset calc(2px * var(--depth-direction)) 2px 1px #dbc4a75c, inset calc(-2px * var(--depth-direction)) -2px 2px #000;
   transition: box-shadow 220ms ease;
+}
+.cinema-poster__case::before,
+.cinema-poster__case::after { content: ''; position: absolute; pointer-events: none; }
+.cinema-poster__case::before {
+  top: -2px;
+  left: calc(100% + 2px);
+  width: var(--frame-depth);
+  height: calc(100% + 4px + var(--frame-drop));
+  background: linear-gradient(90deg, #453a30, #211b17 38%, #110f0d);
+  clip-path: polygon(0 0, 100% var(--frame-drop), 100% 100%, 0 calc(100% - var(--frame-drop)));
+}
+.cinema-poster__case::after {
+  top: calc(100% + 2px);
+  left: -2px;
+  width: calc(100% + 4px + var(--frame-depth));
+  height: var(--frame-drop);
+  background: linear-gradient(180deg, #31271e, #100d0a);
+  clip-path: polygon(0 0, calc(100% - var(--frame-depth)) 0, 100% 100%, var(--frame-depth) 100%);
+}
+.cinema-poster[data-depth-side="left"] .cinema-poster__case { border-left-color: #09080c; border-right-color: #817366; }
+.cinema-poster[data-depth-side="left"] .cinema-poster__case::before {
+  left: auto;
+  right: calc(100% + 2px);
+  transform: scaleX(-1);
+}
+.cinema-poster[data-depth-side="left"] .cinema-poster__case::after {
+  left: calc(-2px - var(--frame-depth));
+  transform: scaleX(-1);
 }
 .cinema-poster__bulbs {
   position: absolute;
@@ -11175,7 +11246,7 @@ img.contact-icon {
 }
 .cinema-poster__link:is(:hover, :focus-visible) .cinema-poster__bulb::after { opacity: 1; }
 .cinema-poster__link:is(:hover, :focus-visible) .cinema-poster__case {
-  box-shadow: 10px 24px 24px #0008, 0 42px 34px -18px #000a, inset 0 0 15px #ffd18a33, 0 0 24px #e9ac5a22;
+  box-shadow: calc(3px * var(--depth-direction)) 4px 2px #0007, calc(15px * var(--depth-direction)) 22px 15px #0009, calc(24px * var(--depth-direction)) 38px 30px #0006, inset calc(2px * var(--depth-direction)) 2px 1px #dbc4a777, inset 0 0 15px #ffd18a33, 0 0 24px #e9ac5a22;
 }
 @media (prefers-reduced-motion: reduce) {
   .cinema-poster__bulb::after, .cinema-poster__case, .cinema-poster__marquee h2 { transition: none; }
@@ -11186,7 +11257,8 @@ img.contact-icon {
   aspect-ratio: 2 / 3;
   overflow: hidden;
   background: #17191b;
-  box-shadow: 0 0 10px #e3d5ff33, inset 0 0 24px #0006;
+  border: 2px solid #0b0908;
+  box-shadow: 0 1px 1px #e7c39440, 0 0 0 4px #0008, inset 0 0 24px #0009;
 }
 .cinema-poster__print::after {
   content: '';
@@ -11252,7 +11324,7 @@ img.contact-icon {
 }
 @media (max-width: 1100px) {
   .cinema-display { padding-top: 28px; }
-  .cinema-posters { grid-template-columns: repeat(var(--poster-count, 4), minmax(0, 1fr)); gap: 32px 34px; }
+  .cinema-posters { grid-template-columns: repeat(var(--poster-count, 4), minmax(0, 1fr)); gap: 32px clamp(42px, 5vw, 55px); }
   .cinema-poster__marquee h2 { font-size: clamp(14px, 2vw, 22px); }
   .cinema-poster__edition { font-size: 8px; }
   .cinema-poster__credits span { font-size: 8px; }
@@ -11260,8 +11332,10 @@ img.contact-icon {
 }
 @media (max-width: 600px) {
   .cinema-display { padding: 24px 20px 32px; gap: 24px; }
-  .cinema-posters { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 30px; }
+  .cinema-posters { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 42px; }
   .cinema-poster__marquee { padding: 14px 2px; border-width: 6px; margin-bottom: 10px; }
+  .cinema-poster__marquee::before { left: calc(100% + 6px); top: -6px; height: calc(100% + 18px); }
+  .cinema-poster[data-depth-side="left"] .cinema-poster__marquee::before { right: calc(100% + 6px); }
   .cinema-poster__marquee h2 { font-size: clamp(11px, 3vw, 17px); }
   .cinema-poster__edition { font-size: 6px; padding: 10px 7px; letter-spacing: .06em; }
   .cinema-poster__credits { gap: 7px; padding: 14px 6px; }
@@ -11269,35 +11343,11 @@ img.contact-icon {
   .cinema-poster__credits strong { font-size: 15px; }
 }
 
-/* Horizontal film strips frame the cinema selection screen. */
-.portfolio-screen--cinema {
-  --cinema-film-height: clamp(18px, 1.8vw, 30px);
-}
-.portfolio-screen--cinema .cinema-display {
-  inset-block: var(--cinema-film-height);
-}
-.cinema-film {
-  position: absolute;
-  z-index: 6;
-  left: 0;
-  right: 0;
+/* Keep the live frames projected onto the curved cinema wall. */
+.cinema-poster-band {
+  position: relative;
+  flex-shrink: 0;
   width: 100%;
-  height: var(--cinema-film-height);
-  overflow: hidden;
-  pointer-events: none;
-  background: #030303;
-}
-.cinema-film--top { top: 0; }
-.cinema-film--bottom { bottom: 0; }
-.cinema-film::before {
-  content: '';
-  position: absolute;
-  inset: 18% 0;
-  width: 100%;
-  height: 64%;
-  transform: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='78' height='20' viewBox='0 0 78 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='9' y='2' width='16' height='16' fill='%23f5f5ef'/%3E%3C/svg%3E");
-  background-size: 78px 100%;
-  background-repeat: repeat-x;
-  animation: none;
+  margin-block: auto;
+  padding-block: 30px;
 }

@@ -3,10 +3,10 @@ import { getArchiveFrameLayout } from './archiveFrameLayout.js';
 import { getArchiveUrl, getHomeUrl, getReelUrl } from '../routes.js';
 import { isProjectEnabled } from '../projectVisibility.js';
 import about from '../assets/about-cinema-poster.svg';
-import project01 from '../assets/project-01-cinema-poster.png';
-import project01Landscape from '../assets/jibsalife.png';
+import project01 from '../assets/project-01-cinema-poster-home.png';
+import project01Landscape from '../assets/project-01-cover.png';
 import project02 from '../assets/project-02-cinema-poster.png';
-import project03 from '../assets/project-03-cinema-poster-wordmark.png';
+import project03 from '../assets/project-03-cover.png';
 import project04 from '../assets/project-04-cinema-poster.png';
 import contact from '../assets/contact-cinema-poster.png';
 
@@ -295,27 +295,14 @@ export default function FilmReelProject({ activeId = 'project-01', document, sou
                     {item.id === 'project-01' ? (
                       <g clipPath={`url(#${svgId}-${item.id})`}>
                         <path d={chipWindow} fill="#f2edfc" />
-                        <svg x="-123" y="-74" width="246" height="190" viewBox="150 250 1400 650" preserveAspectRatio="xMidYMid meet">
-                          <image href={project01Landscape} width="1920" height="1080" />
+                        <svg x="-123" y="-74" width="246" height="190" viewBox="300 500 2800 1300" preserveAspectRatio="xMidYMid meet">
+                          <image href={project01Landscape} width="3840" height="2160" />
                         </svg>
                       </g>
                     ) : item.id === 'project-03' ? (
                       <g clipPath={`url(#${svgId}-${item.id})`}>
-                        <svg x="-123" y="-74" width="246" height="190" viewBox="0 0 1024 1536" preserveAspectRatio="xMidYMid slice">
-                          <defs>
-                            <mask id={`${svgId}-matmut-without-logo`}>
-                              <rect width="1024" height="1536" fill="white" />
-                              <rect x="307" y="556" width="409" height="415" rx="40" fill="black" />
-                            </mask>
-                          </defs>
-                          <rect width="1024" height="1536" fill="#070706" />
-                          <image href={item.image} width="1024" height="1536" mask={`url(#${svgId}-matmut-without-logo)`} />
-                          <g transform="translate(329 579) scale(3.65)">
-                            <rect width="100" height="100" rx="9" fill="white" />
-                            <rect x="18" y="18" width="64" height="64" rx="9" fill="black" />
-                            <path d="M51 48H18L51 82V48Z" fill="white" />
-                          </g>
-                        </svg>
+                        <path d={chipWindow} fill="#030806" />
+                        <image href={item.image} x="-123" y="-74" width="246" height="190" preserveAspectRatio="xMidYMid meet" />
                       </g>
                     ) : item.id === 'vhs' ? (
                       <g clipPath={`url(#${svgId}-${item.id})`}>
@@ -377,14 +364,14 @@ export default function FilmReelProject({ activeId = 'project-01', document, sou
           <path d={chipWindow} fill="#100f0c" stroke="#3c3830" strokeWidth="4" strokeLinejoin="round" />
           {activeId === 'project-01' ? <g clipPath={`url(#${svgId}-selected-window)`}>
             <path d={chipWindow} fill="#f2edfc" />
-            <svg x="-123" y="-74" width="246" height="190" viewBox="150 250 1400 650" preserveAspectRatio="xMidYMid meet">
-              <image href={project01Landscape} width="1920" height="1080" />
+            <svg x="-123" y="-74" width="246" height="190" viewBox="300 500 2800 1300" preserveAspectRatio="xMidYMid meet">
+              <image href={project01Landscape} width="3840" height="2160" />
             </svg>
           </g> : <image href={selectedItem.image} x="-123" y="-74" width="246" height="190" preserveAspectRatio="xMidYMid slice" clipPath={`url(#${svgId}-selected-window)`} />}
         </svg>
       </div>}
       <nav className="film-reel-detail__actions" aria-label="바로가기 및 나가기">
-        {action && <a className="cassette-floater cassette-floater--app" href={action.href} target={action.href.startsWith('https:') ? '_blank' : undefined} rel="noopener noreferrer" aria-label={action.label}>
+        {action && <a className="cassette-floater cassette-floater--app" href={action.href} target="_blank" rel="noopener noreferrer" aria-label={action.label}>
           <span className="cassette-floater__art" aria-hidden="true" dangerouslySetInnerHTML={{ __html: cassetteArtwork }} />
           <span className="cassette-floater__label">
             {action.label === '앱 바로가기' ? <img src={appLinkHandwritten} alt={action.label} /> : <span className="cassette-floater__action-text">{action.label}</span>}

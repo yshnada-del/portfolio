@@ -8,6 +8,7 @@ const {chromium}=require('../.local-work/mockup-tools/node_modules/playwright');
 const root=path.resolve(import.meta.dirname,'..');
 const work=path.join(root,'.local-work/mockup-tools');
 const originals=path.join(work,'overview-originals');
+const coverOnly=process.argv.includes('--cover-only');
 await fs.mkdir(originals,{recursive:true});
 for(const [name,source] of [['ui-design','sections/ui-design.png'],['cover','figma-cover.png']]){
   try{await fs.access(path.join(originals,name+'.png'));}
@@ -35,7 +36,7 @@ try{
   }
   const uiPhones=[['home',486,490,306],['mypage',826,-70,306],['community',826,610,306],['health-result',1200,65,306],['ai-chat-options',1200,706,306],['vote-result',1546,-65,306],['welcome',1546,610,306]];
   const uiLayers=[];
-  for(const p of uiPhones)uiLayers.push(await layer(...p));
+  if(!coverOnly)for(const p of uiPhones)uiLayers.push(await layer(...p));
   const coverSource=path.join(originals,'cover.png');
   const bg=await sharp(coverSource).extract({left:1140,top:220,width:1,height:1}).raw().toBuffer();
   const coverMask={left:1140,top:215,width:400,height:735};
@@ -43,9 +44,9 @@ try{
   // A subtle device shadow is confined to the old phone/shadow area.
   const shadow=Buffer.from(`<svg width="800" height="1470"><defs><filter id="s" x="-40%" y="-20%" width="180%" height="150%"><feGaussianBlur stdDeviation="18"/></filter></defs><rect x="90" y="80" width="620" height="1310" rx="80" fill="#000" opacity=".28" filter="url(#s)"/></svg>`);
   coverLayers.push({input:shadow,left:2280,top:430});
-  coverLayers.push(await layer('welcome',1185,249,310));
+  coverLayers.push(await layer('home',1185,249,310));
   const checks=[];
-  for(const [name,layers] of [['ui-design',uiLayers],['cover',coverLayers]]){
+  for(const [name,layers] of coverOnly?[['cover',coverLayers]]:[['ui-design',uiLayers],['cover',coverLayers]]){
     const source=path.join(originals,name+'.png');
     const target=path.join(root,'src/assets/project-01-'+name+'.png');
     // Figma exports carry RGB artwork even in transparent pixels. Preserve
@@ -63,8 +64,10 @@ try{
       changed++;
       if(!regions.some(r=>x>=r.x&&x<r.x+r.w&&y>=r.y&&y<r.y+r.h))throw Error(name+': background outside mockups changed');
     }
-    checks.push({name,width:3840,height:2160,backgroundOutsideMockupsPreserved:true,changedPixels:changed,screens:name==='cover'?['welcome']:uiPhones.map(p=>p[0])});
+    checks.push({name,width:3840,height:2160,backgroundOutsideMockupsPreserved:true,changedPixels:changed,screens:name==='cover'?['home']:uiPhones.map(p=>p[0])});
     console.log('Updated mockups; preserved background:',name);
   }
-  await fs.writeFile(path.join(root,'src/assets/project-01-screens/overview-checks.json'),JSON.stringify(checks,null,2));
+  const checksPath=path.join(root,'src/assets/project-01-screens/overview-checks.json');
+  const previousChecks=coverOnly?JSON.parse(await fs.readFile(checksPath,'utf8').catch(()=> '[]')).filter(check=>check.name!=='cover'):[];
+  await fs.writeFile(checksPath,JSON.stringify([...previousChecks,...checks],null,2));
 }finally{await browser.close();}

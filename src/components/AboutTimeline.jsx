@@ -45,7 +45,6 @@ function TimelineContent({ scene }) {
 export default function AboutTimeline({ scenes }) {
   const timelineRef = useRef(null);
   const advanceRef = useRef(null);
-  const [hasStarted, setHasStarted] = useState(false);
   const [unlockedSection, setUnlockedSection] = useState(0);
 
   useLayoutEffect(() => {
@@ -53,138 +52,74 @@ export default function AboutTimeline({ scenes }) {
     if (!timeline) return;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sections = Array.from(timeline.querySelectorAll('.profile-timeline__section'));
-    const sectionItems = sections.map((section) => Array.from(section.querySelectorAll([
-      '.profile-timeline__heading',
-      '.profile-timeline__information > h3',
-      '.profile-timeline__information > p',
-      '.profile-timeline__information dl > div',
-      '.profile-timeline__entries time',
-      '.profile-timeline__entries h3',
-      '.profile-timeline__entries p',
-      '.profile-timeline__tools li',
-    ].join(', '))));
+    const sectionItems = sections.map(section => Array.from(section.querySelectorAll(
+      '.profile-timeline__heading, .profile-timeline__content',
+    )));
     const items = sectionItems.flat();
-    items.forEach((item) => item.classList.add('profile-timeline__reveal'));
+    const revealed = new Set();
+    items.forEach(item => item.classList.add('profile-timeline__reveal'));
     timeline.classList.add('profile-timeline--reveal');
-    let currentStep = -1;
-    let queuedSteps = 0;
-    let busy = false;
-    let revealTimer;
-    let scrollFrame;
-    let wheelTotal = 0;
-    let lastWheelAt = 0;
-    let wheelGestureConsumed = false;
-    const playNextStep = () => {
-      if (busy || !queuedSteps || currentStep >= sections.length - 1) return;
-      queuedSteps -= 1;
-      currentStep += 1;
-      busy = true;
-      setHasStarted(true);
-      setUnlockedSection(currentStep);
-      const target = sections[currentStep];
-      const fromY = window.scrollY;
-      const targetY = Math.max(0, Math.min(
-        target.getBoundingClientRect().top + fromY - Math.max(64, window.innerHeight * 0.12),
-        document.documentElement.scrollHeight - window.innerHeight,
-      ));
-      const startedAt = performance.now();
-      const travelDuration = Math.min(1000, Math.max(700, Math.abs(targetY - fromY) * 0.9));
-      const moveToSection = (now) => {
-        const progress = reducedMotion.matches ? 1 : Math.min(1, (now - startedAt) / travelDuration);
-        // Continuous velocity and acceleration avoid the abrupt midpoint and
-        // hard stop of the previous two-piece cubic motion.
-        const eased = progress ** 3 * (progress * (progress * 6 - 15) + 10);
-        window.scrollTo({ top: fromY + (targetY - fromY) * eased, behavior: 'instant' });
-        if (progress < 1) {
-          scrollFrame = window.requestAnimationFrame(moveToSection);
-        } else {
-          // Accept the next gesture as soon as the glide finishes, without
-          // adding a separate pause after each scene.
-          busy = false;
-          playNextStep();
-        }
-      };
-      scrollFrame = window.requestAnimationFrame(moveToSection);
-      // Commit the unlocked scene while its text is still transparent. Start
-      // fading during the glide, rather than revealing behind a hidden parent.
-      const currentItems = sectionItems[currentStep];
-      revealTimer = window.setTimeout(() => {
-        currentItems.forEach((item, index) => {
-          item.style.setProperty('--reveal-delay', reducedMotion.matches ? '0ms' : `${Math.min(index, 5) * 45}ms`);
-          item.classList.add('profile-timeline__reveal--visible');
-        });
-      }, reducedMotion.matches ? 0 : 60);
+    setUnlockedSection(0);
 
+    const revealSection = (index) => {
+      if (revealed.has(index)) return;
+      revealed.add(index);
+      sectionItems[index]?.forEach(item => {
+        item.style.setProperty('--reveal-delay', index === 0 || reducedMotion.matches
+          ? '0ms' : `${Math.min((index - 1) % 5, 4) * 42}ms`);
+        item.classList.add('profile-timeline__reveal--visible');
+      });
+      setUnlockedSection(previous => Math.max(previous, index));
     };
-    const queueStep = () => {
-      if (currentStep + queuedSteps >= sections.length - 1) return;
-      queuedSteps = 1;
-      playNextStep();
-    };
-    advanceRef.current = queueStep;
-    const stepping = () => currentStep < sections.length - 1 || busy;
-    const handleWheel = (event) => {
-      if (event.ctrlKey || event.deltaY <= 0 || !stepping()) return;
-      event.preventDefault();
-      const now = performance.now();
-      // A strong flick emits many wheel events, including momentum. Consume
-      // the whole burst once; only a fresh gesture can request another stop.
-      if (now - lastWheelAt > 180) {
-        wheelTotal = 0;
-        wheelGestureConsumed = false;
+    revealSection(0);
+
+    // Match the FAQ's viewport reveal, without capturing wheel, touch, or keys.
+    const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const index = sections.indexOf(entry.target);
+        // Include scenes passed by a fast scrollbar drag or a keyboard jump.
+        for (let passed = 1; passed <= index; passed += 1) revealSection(passed);
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' }) : null;
+
+    let previousY = window.scrollY;
+    const startReveals = () => {
+      const nextY = window.scrollY;
+      if (nextY <= previousY) {
+        previousY = nextY;
+        return;
       }
-      lastWheelAt = now;
-      if (wheelGestureConsumed) return;
-      wheelTotal += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1);
-      if (wheelTotal >= 50) {
-        wheelTotal = 0;
-        wheelGestureConsumed = true;
-        queueStep();
-      }
+      window.removeEventListener('scroll', startReveals);
+      sections.slice(1).forEach((section, index) => {
+        if (observer) observer.observe(section);
+        else revealSection(index + 1);
+      });
     };
-    let touchY = null;
-    let touchGestureConsumed = false;
-    const handleTouchStart = (event) => {
-      touchY = event.touches[0]?.clientY ?? null;
-      touchGestureConsumed = false;
+    // Scene 01 is ready on arrival; later scenes wait for the first downward scroll.
+    window.addEventListener('scroll', startReveals, { passive: true });
+    advanceRef.current = () => {
+      const inset = Math.max(64, window.innerHeight * 0.12);
+      const next = sections.find(section => section.getBoundingClientRect().top > inset + 1);
+      const top = next ? next.getBoundingClientRect().top + window.scrollY - inset
+        : window.scrollY + window.innerHeight * 0.7;
+      window.scrollTo({ top, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
     };
-    const handleTouchMove = (event) => {
-      const nextY = event.touches[0]?.clientY;
-      if (touchY === null || nextY === undefined || nextY >= touchY || !stepping()) return;
-      event.preventDefault();
-      if (touchGestureConsumed) return;
-      if (touchY - nextY >= 60) {
-        touchGestureConsumed = true;
-        queueStep();
-      }
-    };
-    const handleKeyDown = (event) => {
-      if (event.target.closest('button, a, input, textarea, select, [contenteditable]')) return;
-      if (!['ArrowDown', 'PageDown', 'End', ' '].includes(event.key) || event.shiftKey || !stepping()) return;
-      event.preventDefault();
-      if (!event.repeat) queueStep();
-    };
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('keydown', handleKeyDown);
+
     return () => {
-      window.clearTimeout(revealTimer);
-      window.cancelAnimationFrame(scrollFrame);
+      observer?.disconnect();
+      window.removeEventListener('scroll', startReveals);
       advanceRef.current = null;
-      window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('keydown', handleKeyDown);
       timeline.classList.remove('profile-timeline--reveal');
-      items.forEach((item) => {
+      items.forEach(item => {
         item.classList.remove('profile-timeline__reveal', 'profile-timeline__reveal--visible');
         item.style.removeProperty('--reveal-delay');
       });
     };
   }, [scenes]);
   return (
-    <section ref={timelineRef} className={`profile-timeline${hasStarted ? ' profile-timeline--started' : ''}`} id="about" aria-label="About me">
+    <section ref={timelineRef} className="profile-timeline" id="about" aria-label="About me">
       <div className="project-proposal__film project-proposal__film--left profile-timeline__film" aria-hidden="true" />
       <div className="project-proposal__film project-proposal__film--right profile-timeline__film" aria-hidden="true" />
       <header className="profile-timeline__intro">
@@ -201,7 +136,7 @@ export default function AboutTimeline({ scenes }) {
       </header>
       <ol className="profile-timeline__sections">
         {scenes.map((scene, index) => (
-          <li className="profile-timeline__section" key={scene.id} data-unlocked={hasStarted && index <= unlockedSection ? 'true' : 'false'}>
+          <li className="profile-timeline__section" key={scene.id} data-unlocked={index <= unlockedSection ? 'true' : 'false'}>
             <div className="profile-timeline__heading">
               <span>{String(index + 1).padStart(2, '0')}</span>
               <h2>{scene.title}</h2>

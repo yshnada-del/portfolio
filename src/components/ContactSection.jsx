@@ -33,7 +33,10 @@ export default function ContactSection() {
     sendingRef.current = true;
     setSubmission({ status: 'sending', message: '문의를 전송하고 있습니다.' });
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 20000);
+    const slowResponse = window.setTimeout(() => {
+      setSubmission({ status: 'sending', message: '서버의 접수 확인이 지연되고 있습니다. 중복 전송하지 말고 잠시 기다려주세요.' });
+    }, 12000);
+    const timeout = window.setTimeout(() => controller.abort(), 60000);
     try {
       const response = await fetch('https://formsubmit.co/ajax/yshnada@gmail.com', {
         method: 'POST',
@@ -48,16 +51,39 @@ export default function ContactSection() {
           _subject: `[포트폴리오 문의 · ${data.get('type')}] ${String(data.get('name')).trim()}`,
           _replyto: String(data.get('email')).trim(),
           _template: 'table',
+          _url: window.location.href,
           _honey: '',
         }),
       });
-      const result = await response.json();
-      if (!response.ok || ![true, 'true'].includes(result.success)) throw new Error('Inquiry was not accepted');
+      let result;
+      try {
+        result = await response.json();
+      } catch (error) {
+        if (error.name === 'AbortError') throw error;
+        throw Object.assign(new Error(`서버의 완료 응답을 확인하지 못했습니다 (HTTP ${response.status}). 문의가 이미 접수됐을 수 있으니 중복 전송을 피해주세요.`), { deliveryStatus: 'uncertain' });
+      }
+      if (!response.ok || ![true, 'true'].includes(result?.success)) {
+        const detail = typeof result?.message === 'string' ? result.message.trim().slice(0, 500) : '';
+        if (response.status === 429) {
+          throw new Error('전송 서비스의 요청 횟수 제한에 걸렸습니다. 연속 전송을 멈추고 잠시 후 다시 시도해주세요.');
+        }
+        if (response.status >= 500) {
+          throw Object.assign(new Error(`전송 서비스에 일시적인 문제가 있어 접수 결과를 확인하지 못했습니다 (HTTP ${response.status}). 문의가 이미 접수됐을 수 있으니 중복 전송을 피해주세요.`), { deliveryStatus: 'uncertain' });
+        }
+        throw new Error(`전송 서비스에서 요청을 처리하지 못했습니다 (HTTP ${response.status}).${detail ? ` ${detail}` : ' 이메일로 직접 연락해주세요.'}`);
+      }
       form.reset();
-      setSubmission({ status: 'success', message: '문의가 접수되었습니다. 남겨주신 이메일로 답변드리겠습니다.' });
-    } catch {
-      setSubmission({ status: 'error', message: '전송을 완료하지 못했습니다. 잠시 후 다시 시도하거나 yshnada@gmail.com으로 보내주세요.' });
+      setSubmission({ status: 'success', message: '전송이 완료되었습니다.' });
+    } catch (error) {
+      const uncertain = error.name === 'AbortError' || error instanceof TypeError || error.deliveryStatus === 'uncertain';
+      const message = error.name === 'AbortError'
+        ? '서버의 응답 시간이 초과되어 접수 결과를 확인하지 못했습니다. 문의가 이미 접수됐을 수 있으니 중복 전송을 피해주세요.'
+        : error instanceof TypeError
+          ? '연결 문제로 서버의 완료 응답을 확인하지 못했습니다. 문의가 이미 접수됐을 수 있으니 중복 전송을 피해주세요.'
+          : error.message || '전송을 완료하지 못했습니다. 이메일로 직접 연락해주세요.';
+      setSubmission({ status: uncertain ? 'uncertain' : 'error', message });
     } finally {
+      window.clearTimeout(slowResponse);
       window.clearTimeout(timeout);
       sendingRef.current = false;
     }

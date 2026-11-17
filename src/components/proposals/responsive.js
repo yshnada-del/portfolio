@@ -1,4 +1,25 @@
 (() => {
+  if (/^project-0[1-3]$/.test(document.documentElement.dataset.project || '')) {
+    const topButton = document.createElement('button');
+    topButton.type = 'button';
+    topButton.className = 'proposal-back-to-top';
+    topButton.setAttribute('aria-label', '기획서 맨 위로 이동');
+    topButton.title = '맨 위로';
+    topButton.innerHTML = '<span class="proposal-back-to-top__icon" aria-hidden="true">▲</span><span>TOP</span>';
+    document.body.append(topButton);
+    const scrollContainers = new Set([document.scrollingElement]);
+    document.addEventListener('scroll', (event) => {
+      const target = event.target === document ? document.scrollingElement : event.target;
+      if (target instanceof HTMLElement && target.scrollHeight > target.clientHeight) scrollContainers.add(target);
+    }, { capture: true, passive: true });
+    topButton.addEventListener('click', () => {
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+      window.scrollTo({ top: 0, behavior });
+      scrollContainers.forEach(container => {
+        if (container?.isConnected && container.scrollTop > 0) container.scrollTo({ top: 0, behavior });
+      });
+    });
+  }
   if (/^project-0[1-4]$/.test(document.documentElement.dataset.project || '')) {
     const hint = document.createElement('button');
     hint.type = 'button';

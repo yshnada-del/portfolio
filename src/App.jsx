@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ArchivePage from './components/ArchivePage.jsx';
+import CinemaPosterBand from './components/CinemaPosterBand.jsx';
 import { isProjectEnabled } from './projectVisibility.js';
 import { getArchiveUrl, getHomeUrl, getReelUrl, isCurrentPath } from './routes.js';
 import aboutMe from './assets/about_me.png';
@@ -12,10 +13,10 @@ import figmaIcon from './assets/figma.png';
 import htmlIcon from './assets/html.png';
 import illustIcon from './assets/illust.png';
 import javascriptIcon from './assets/javascript.png';
-import jibsalife from './assets/project-01-cinema-poster.png';
+import jibsalife from './assets/project-01-cinema-poster-home.png';
 import mailIcon from './assets/mail.png';
 import mouseTicket from './assets/mouse-ticket.png';
-import matmut from './assets/project-03-cinema-poster-wordmark.png';
+import matmut from './assets/project-03-cover.png';
 import noSignalVideo from './assets/NO SIGNAL.mp4';
 import phoneIcon from './assets/phone.png';
 import pizzahut from './assets/project-04-cinema-poster.png';
@@ -404,16 +405,9 @@ function PortfolioScreen() {
           <img className="cinema-ticket__barcode" src={mouseTicket} alt="" draggable="false" />
         </div>
       </div>
-      <div className="cinema-film cinema-film--top" aria-hidden="true" />
-      <div className="cinema-film cinema-film--bottom" aria-hidden="true" />
-      <div className="film-flow" aria-hidden="true">
-        <div className="aurora-background">
-          <span />
-          <span />
-          <span />
-        </div>
-      </div>
+      <div className="cinema-wall" aria-hidden="true" />
       <div className="cinema-display">
+        <CinemaPosterBand>
         <ul className="cinema-posters" style={{ '--poster-count': cinemaFrames.length }} aria-label="아카이브 선택">
           {cinemaFrames.map((frame) => {
             const detail = posterDetails[frame.id] ?? { title: frame.title, name: frame.title };
@@ -460,6 +454,7 @@ function PortfolioScreen() {
             );
           })}
         </ul>
+        </CinemaPosterBand>
       </div>
     </section>
   );
