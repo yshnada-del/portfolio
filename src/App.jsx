@@ -428,6 +428,7 @@ function PortfolioScreen() {
                             <div
                               key={project.id}
                               className="cinema-project-collection__item"
+                              data-project={project.id}
                               style={{
                                 gridRow: Math.floor(index / 2) + 1,
                                 gridColumn: index === projectFrames.length - 1 && projectFrames.length % 2 ? '1 / -1' : index % 2 + 1,
