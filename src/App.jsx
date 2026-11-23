@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ArchivePage from './components/ArchivePage.jsx';
 import CinemaPosterBand from './components/CinemaPosterBand.jsx';
+import aboutCinemaPreview from './assets/about-cinema-preview.mp4';
+import projectsCinemaPreview from './assets/projects-cinema-preview.mp4';
+import contactCinemaPreview from './assets/contact-cinema-preview.mp4';
+import vhsCinemaPreview from './assets/vhs-cinema-preview.mp4';
 import { isProjectEnabled } from './projectVisibility.js';
 import { getArchiveUrl, getHomeUrl, getReelUrl, isCurrentPath } from './routes.js';
 import aboutMe from './assets/about_me.png';
@@ -16,10 +20,10 @@ import javascriptIcon from './assets/javascript.png';
 import jibsalife from './assets/project-01-cinema-poster-home.png';
 import mailIcon from './assets/mail.png';
 import mouseTicket from './assets/mouse-ticket.png';
-import matmut from './assets/project-03-cover.png';
+import matmut from './assets/project-03-cover-portrait.png';
 import noSignalVideo from './assets/NO SIGNAL.mp4';
 import phoneIcon from './assets/phone.png';
-import pizzahut from './assets/project-04-cinema-poster.png';
+import pizzahut from './assets/project-04-cover-portrait.png';
 import photoshopIcon from './assets/photoshop.png';
 import reactIcon from './assets/react.png';
 import earthIcon from './assets/earth.png';
@@ -304,12 +308,41 @@ function AboutMeOverlay({ transition, onClose }) {
   );
 }
 
+const cinemaPreviews = {
+  about: aboutCinemaPreview,
+  projects: projectsCinemaPreview,
+  contact: contactCinemaPreview,
+  vhs: vhsCinemaPreview,
+};
+
+function CinemaPosterPreview({ source }) {
+  const [isReady, setIsReady] = useState(false);
+  const [autoplay] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  return (
+    <video
+      className="cinema-poster__preview"
+      data-ready={isReady ? '' : undefined}
+      src={source}
+      autoPlay={autoplay}
+      muted
+      playsInline
+      preload="auto"
+      aria-hidden="true"
+      onLoadedData={() => setIsReady(true)}
+    />
+  );
+}
+
 function PortfolioScreen() {
   const cinemaRef = useRef(null);
   const ticketCursorRef = useRef(null);
   const admissionRef = useRef(false);
   const admissionTimerRef = useRef(null);
   const [admittingId, setAdmittingId] = useState(null);
+  const [hoveredPoster, setHoveredPoster] = useState(null);
+  const [focusedPoster, setFocusedPoster] = useState(null);
+  const previewPoster = hoveredPoster ?? focusedPoster;
   const projectFrames = filmFrames.filter((frame) => frame.id.startsWith('project-'));
   const cinemaFrames = [
     filmFrames[0],
@@ -413,7 +446,21 @@ function PortfolioScreen() {
             const detail = posterDetails[frame.id] ?? { title: frame.title, name: frame.title };
             return (
               <li className={`cinema-poster cinema-poster--${frame.id}`} key={frame.id}>
-                <a className={`cinema-poster__link${admittingId === frame.id ? ' is-admitting' : ''}`} href={frame.href} onClick={(event) => enterCinema(event, frame)} aria-label={`${detail.title} 아카이브 열기`} aria-busy={admittingId === frame.id}>
+                <a
+                  className={`cinema-poster__link${admittingId === frame.id ? ' is-admitting' : ''}`}
+                  href={frame.href}
+                  onClick={(event) => enterCinema(event, frame)}
+                  onPointerEnter={event => {
+                    if (event.pointerType === 'mouse') setHoveredPoster(frame.id);
+                  }}
+                  onPointerLeave={() => setHoveredPoster(null)}
+                  onFocus={event => {
+                    if (event.currentTarget.matches(':focus-visible')) setFocusedPoster(frame.id);
+                  }}
+                  onBlur={() => setFocusedPoster(null)}
+                  aria-label={`${detail.title} 아카이브 열기`}
+                  aria-busy={admittingId === frame.id}
+                >
                   <div className="cinema-poster__marquee"><h2>{detail.title}</h2></div>
                   <div className="cinema-poster__case">
                     <div className="cinema-poster__bulbs" aria-hidden="true">
@@ -448,6 +495,7 @@ function PortfolioScreen() {
                           </div>
                         </div>
                       ) : <div className="cinema-poster__art"><img src={frame.image} alt={`${detail.name} 포스터`} /></div>}
+                      {previewPoster === frame.id && <CinemaPosterPreview source={cinemaPreviews[frame.id]} />}
                     </div>
                   </div>
                 </a>

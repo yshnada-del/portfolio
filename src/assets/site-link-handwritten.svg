@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="232" height="122" viewBox="0 0 232 122">
+  <g fill="none" stroke="#201e1a" stroke-width="4.1" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 사이트 -->
+    <g transform="translate(31 4) rotate(-3 27 27)">
+      <path d="M20 8C18 21 11 35 4 43M18 24C23 29 29 36 33 41M44 4L42 54M43 27L55 26"/>
+    </g>
+    <g transform="translate(96 3) rotate(2 25 26)">
+      <path d="M19 12C32 12 33 42 19 43C3 44 3 14 19 12ZM43 5L41 53"/>
+    </g>
+    <g transform="translate(150 5) rotate(-2 26 27)">
+      <path d="M7 9L43 8M7 9L6 33L44 32M8 21L41 20M3 49L49 48"/>
+    </g>
+    <!-- 바로가기 -->
+    <g transform="translate(4 62) rotate(2 24 28)">
+      <path d="M3 5L4 48L24 47L24 5M4 26L24 25M37 2L36 54M37 26L50 25"/>
+    </g>
+    <g transform="translate(62 61) rotate(-2 24 28)">
+      <path d="M3 6L39 5L38 20L5 21L5 35L41 34M24 41L24 55M3 56L46 55"/>
+    </g>
+    <g transform="translate(120 62) rotate(1 24 28)">
+      <path d="M2 7L26 6L25 43M39 2L38 55M39 26L51 25"/>
+    </g>
+    <g transform="translate(177 61) rotate(-2 24 28)">
+      <path d="M2 7L25 6L24 44M41 2L40 55"/>
+    </g>
+  </g>
+</svg>

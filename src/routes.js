@@ -6,8 +6,8 @@ export function withBasePath(path) {
   return `${basePath}${normalizedPath}`;
 }
 
-export function getArchiveUrl(id) {
-  return `${withBasePath('/?view=archive')}#${id}`;
+export function getArchiveUrl(id, { embedded = false } = {}) {
+  return `${withBasePath('/?view=archive')}${embedded ? '&embedded=1' : ''}#${id}`;
 }
 
 export function getReelUrl() {

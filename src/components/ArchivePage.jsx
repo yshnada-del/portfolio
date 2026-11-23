@@ -1,16 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import project01Proposal from './project01Proposal.html?raw';
 import project01Ending from '../assets/project-01-frame-15.png';
-import { getProposalDocument, withResponsiveProposal } from './proposals/documents.js';
+import { getOriginalProposalDocument, getProposalDocument, withResponsiveProposal } from './proposals/documents.js';
 import { getProject01Sections, project01SectionImages as project01Frames } from './proposals/project01Sections.js';
 import AboutTimeline from './AboutTimeline.jsx';
-import cssIcon from '../assets/css.png';
-import figmaIcon from '../assets/figma.png';
-import htmlIcon from '../assets/html.png';
-import illustratorIcon from '../assets/illust.png';
-import javascriptIcon from '../assets/javascript.png';
-import photoshopIcon from '../assets/photoshop.png';
-import pizzahut from '../assets/pizzahut.png';
+import { aboutScrollScenes } from './aboutScenes.js';
 import exitIcon from '../assets/exit.png';
 import project02SimmonsDeliverablesMobile from '../assets/project-02-simmons-deliverables-mobile.png';
 import project02SimmonsDeliverablesThumbnail from '../assets/project-02-simmons-deliverables-thumbnail.png';
@@ -29,17 +23,6 @@ import project03Frame05 from '../assets/project-03-frame-05.png';
 import project03Frame06 from '../assets/project-03-frame-06.png';
 import project03Frame07 from '../assets/project-03-frame-07.png';
 import project03Frame08 from '../assets/project-03-frame-08.png';
-import project04SectionAfterDetail from '../assets/project-04-section-after-detail.png';
-import project04SectionAfterLogin from '../assets/project-04-section-after-login.png';
-import project04SectionAfterMain from '../assets/project-04-section-after-main.png';
-import project04SectionAfterMenu from '../assets/project-04-section-after-menu.png';
-import project04SectionAfterProductInfo from '../assets/project-04-section-after-product-info.png';
-import project04SectionBeforeDetail from '../assets/project-04-section-before-detail.png';
-import project04SectionBeforeLogin from '../assets/project-04-section-before-login.png';
-import project04SectionBeforeMain from '../assets/project-04-section-before-main.png';
-import project04SectionBeforeMenu from '../assets/project-04-section-before-menu.png';
-import project04SectionBeforeProductInfo from '../assets/project-04-section-before-product-info.png';
-import reactIcon from '../assets/react.png';
 import simmons from '../assets/simmons.png';
 import ArchiveNav from './ArchiveNav.jsx';
 import ContactSection from './ContactSection.jsx';
@@ -69,19 +52,6 @@ const project03Frames = [
   project03Frame06,
   project03Frame07,
   project03Frame08,
-];
-
-const project04Frames = [
-  project04SectionBeforeMain,
-  project04SectionAfterMain,
-  project04SectionBeforeMenu,
-  project04SectionAfterMenu,
-  project04SectionBeforeDetail,
-  project04SectionAfterDetail,
-  project04SectionBeforeProductInfo,
-  project04SectionAfterProductInfo,
-  project04SectionBeforeLogin,
-  project04SectionAfterLogin,
 ];
 
 const projects = [
@@ -199,14 +169,15 @@ const projects = [
   {
     id: 'project-04',
     proposalUrl: 'https://yshnada-del.github.io/pizzahutpage/',
-    floatingColor: '#c8102e',
+    embedOriginalProposal: true,
+    floatingColor: '#c92332',
     scene: '05',
     edgeLabel: 'PROJECT 04',
     number: 'PROJECT 04',
     title: '피자헛',
-    tagline: '반려동물 예방 건강 관리 서비스',
+    tagline: '피자헛 웹사이트 리뉴얼',
     description:
-      '사진 기반 AI 분석과 오늘의 요약, 커뮤니티 기능을 통해 반려동물의 건강 관리를 더 쉽고 꾸준하게 도와주는 서비스입니다.',
+      '피자헛의 메뉴 탐색부터 배달·포장 주문까지 이어지는 흐름을 재설계한 웹 UX/UI 프로젝트입니다.',
     role: '\uae30\ud68d \uac1c\ubc1c \ub514\uc790\uc778',
     period: '2026.02.09 ~ 2026.02.25',
     tools: 'Figma / ChatGPT / Photoshop / Midjourney / Codex / VS Code / GitHub / HTML / CSS / JavaScript',
@@ -224,9 +195,6 @@ const projects = [
       },
       { label: '\ud504\ub85c\uc81d\ud2b8 \ubc14\ub85c\uac00\uae30', href: 'https://yshnada-del.github.io/pizzahut/' },
     ],
-    visualType: 'figma-frame',
-    image: project04SectionAfterMain,
-    images: project04Frames,
     tone: 'ivory',
   },
 ];
@@ -236,69 +204,6 @@ const enabledProjects = projects.filter((project) => isProjectEnabled(project.id
   actionLinks: project.actionLinks.filter((link) => !link.href.startsWith('#') || isProjectEnabled(link.href.slice(1))),
 }));
 const pageIds = ['about', ...enabledProjects.map((project) => project.id), 'contact'];
-
-const aboutScrollScenes = [
-  {
-    id: 'information',
-    title: 'INFORMATION',
-    type: 'information',
-  },
-  {
-    id: 'education',
-    title: 'EDUCATION',
-    type: 'timeline',
-    items: [
-      ['2011.03 - 2014.02', '상동고등학교', '이과 졸업'],
-      ['2014.03 - 2019.02', '국제패션디자인전문학교', '패션디자인과 전문 학사 졸업'],
-      ['2025.12 - 2026.06', '이젠아카데미 DX교육센터', 'UX/UI 디자인 & 웹기획 프론트엔드 부트캠프'],
-    ],
-  },
-  {
-    id: 'experience',
-    title: 'EXPERIENCE',
-    type: 'timeline',
-    items: [
-      ['2020.12 - 2021.07', '슬링스톤', '패션디자인'],
-      ['2021.09 - 2023.06', '엘 로꼬', '패션 사업 운영'],
-      ['2023.07 - 2025.12', '제이앤에스커넥터', '제조 및 납품'],
-    ],
-  },
-  {
-    id: 'tools',
-    title: 'TOOLS',
-    type: 'tools',
-    items: [
-      ['Figma', 80, figmaIcon],
-      ['Photoshop', 70, photoshopIcon],
-      ['Illustrator', 65, illustratorIcon],
-      ['React', 50, reactIcon],
-      ['HTML', 78, htmlIcon],
-      ['CSS', 75, cssIcon],
-      ['JavaScript', 55, javascriptIcon],
-    ],
-  },
-  {
-    id: 'awards',
-    title: 'AWARDS',
-    type: 'awards',
-    items: [
-      ['2018.11', '패션디자인전문학교 우수작품상'],
-      ['2018.11', '패션디자인전문학교 협력사상'],
-      ['2026.04', '이젠아카데미 DX교육센터 프로젝트 우수상'],
-      ['2026.06', '이젠아카데미 DX교육센터 개근상'],
-    ],
-  },
-  {
-    id: 'exhibition',
-    title: 'EXHIBITION',
-    type: 'awards',
-    items: [
-      ['2018.07', '강남페스티벌 패션쇼 신진 디자이너 콘테스트 참가'],
-      ['2019.03', 'K패션오디션 참가'],
-      ['2019.06', '케이브랜드 NIX 데님 콘테스트 참가'],
-    ],
-  },
-];
 
 function getPageIdFromHash() {
   const hashId = window.location.hash.replace('#', '');
@@ -314,6 +219,7 @@ function getPageIdFromHash() {
 export default function ArchivePage() {
   const proposalFrameRef = useRef(null);
   const [activeId, setActiveId] = useState(getPageIdFromHash);
+  const [originalProposal, setOriginalProposal] = useState();
   const [projectViewportMode, setProjectViewportMode] = useState(() => {
     if (typeof window === 'undefined') {
       return 'wide';
@@ -322,12 +228,24 @@ export default function ArchivePage() {
     return window.matchMedia('(max-width: 760px)').matches ? 'compact' : 'wide';
   });
   const activeProject = enabledProjects.find((project) => project.id === activeId);
+  const originalProposalUrl = activeProject?.embedOriginalProposal ? activeProject.proposalUrl : undefined;
   const nextProject = activeProject
     ? enabledProjects[(enabledProjects.indexOf(activeProject) + 1) % enabledProjects.length]
     : null;
   const previousProject = activeProject
     ? enabledProjects[(enabledProjects.indexOf(activeProject) - 1 + enabledProjects.length) % enabledProjects.length]
     : null;
+
+  useEffect(() => {
+    if (!originalProposalUrl) return;
+    const controller = new AbortController();
+    getOriginalProposalDocument(activeId, originalProposalUrl, controller.signal)
+      .then(document => setOriginalProposal({ url: originalProposalUrl, document }))
+      .catch(() => {
+        if (!controller.signal.aborted) setOriginalProposal({ url: originalProposalUrl, source: originalProposalUrl });
+      });
+    return () => controller.abort();
+  }, [activeId, originalProposalUrl]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -416,13 +334,13 @@ export default function ArchivePage() {
     );
   }
 
-  const proposalDocument = activeProject
-    ? activeId === 'project-01'
-      ? withResponsiveProposal(project01Proposal.replace('__PROJECT_01_ENDING__', new URL(project01Ending, window.location.href).href), 'project-01', getProject01Sections())
-      : getProposalDocument(activeProject)
-    : undefined;
+  const loadedOriginal = originalProposal?.url === originalProposalUrl ? originalProposal : undefined;
+  const proposalDocument = activeId === 'project-01'
+    ? withResponsiveProposal(project01Proposal.replace('__PROJECT_01_ENDING__', new URL(project01Ending, window.location.href).href), 'project-01', getProject01Sections())
+    : activeProject && !originalProposalUrl ? getProposalDocument(activeProject) : loadedOriginal?.document;
   const action = activeProject ? {
     href: activeProject.actionLinks[1].href,
+    color: activeProject.floatingColor,
     label: activeId === 'project-01' || activeId === 'project-03'
       ? '\uc571 \ubc14\ub85c\uac00\uae30'
       : '\uc0ac\uc774\ud2b8 \ubc14\ub85c\uac00\uae30',
@@ -435,7 +353,9 @@ export default function ArchivePage() {
         activeId={activeId}
         frameRef={proposalFrameRef}
         document={proposalDocument}
-        source={nativePage ? getArchiveUrl(activeId).replace('?view=archive', '?view=archive&embedded=1') : undefined}
+        source={nativePage
+          ? getArchiveUrl(activeId, { embedded: true })
+          : loadedOriginal?.source}
         title={activeProject ? activeProject.title : activeId === 'about' ? 'ABOUT ME' : 'CONTACT ME'}
         action={action}
       />

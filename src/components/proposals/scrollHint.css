@@ -1,0 +1,45 @@
+.proposal-scroll-hint {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  bottom: max(28px, env(safe-area-inset-bottom));
+  top: auto;
+  right: auto;
+  width: max-content;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  color: #f5f0e5;
+  cursor: pointer;
+  transform: translateX(-50%);
+  transition: opacity 250ms ease, transform 250ms ease, visibility 250ms ease;
+}
+.proposal-scroll-hint--hidden { opacity: 0; visibility: hidden; pointer-events: none; transform: translate(-50%, 8px); }
+.proposal-scroll-hint--cover-boundary { top: var(--proposal-cover-boundary); bottom: auto; transform: translate(-50%, -28px); }
+.proposal-scroll-hint--cover-boundary.proposal-scroll-hint--hidden { transform: translate(-50%, -20px); }
+.proposal-scroll-hint:focus-visible { outline: 1px solid #eed8a8; outline-offset: 4px; }
+.proposal-scroll-hint__mouse { position: relative; display: block; width: 22px; height: 36px; border: 1px solid currentColor; border-radius: 14px; }
+.proposal-scroll-hint__mouse > span { position: absolute; top: 7px; left: calc(50% - 2px); width: 4px; height: 4px; border: 1px solid currentColor; border-radius: 50%; animation: proposalMouseWheel 1.8s ease-in-out infinite; }
+.proposal-scroll-hint__label { font: 400 9px/1.5 'Pretendard', sans-serif; letter-spacing: .16em; color: #b8ad98; white-space: nowrap; }
+html[data-project="project-01"] .proposal-scroll-hint__mouse::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid #000;
+  border-radius: inherit;
+  clip-path: inset(0 0 50%);
+}
+html[data-project="project-01"] .proposal-scroll-hint__mouse > span { color: #000; }
+html:is([data-project="project-02"], [data-project="project-04"]) .proposal-scroll-hint,
+html:is([data-project="project-02"], [data-project="project-04"]) .proposal-scroll-hint__label { color: #000; }
+@keyframes proposalMouseWheel { 0% { opacity: 0; transform: translateY(0); } 20% { opacity: 1; } 80%, 100% { opacity: 0; transform: translateY(10px); } }
+@media (prefers-reduced-motion: reduce) { .proposal-scroll-hint { transition: none; } .proposal-scroll-hint__mouse > span { animation: none; } }

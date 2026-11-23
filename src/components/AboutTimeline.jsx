@@ -1,19 +1,23 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import './AboutTimeline.css';
 
+function ProfileInformation() {
+  return (
+    <div className="profile-timeline__information">
+      <h3>YOO SEUNG HYUN</h3>
+      <p className="profile-timeline__job">UX/UI Designer</p>
+      <p className="profile-timeline__statement">사용자의 흐름을 이해하고,<br />가치 있는 경험을 설계합니다.</p>
+      <dl>
+        <div><dt>EMAIL</dt><dd>yshnada@gmail.com</dd></div>
+        <div><dt>LOCATION</dt><dd>Bucheon, Korea</dd></div>
+      </dl>
+    </div>
+  );
+}
+
 function TimelineContent({ scene }) {
   if (scene.type === 'information') {
-    return (
-      <div className="profile-timeline__information">
-        <h3>YOO SEUNG HYUN</h3>
-        <p className="profile-timeline__job">UX/UI Designer</p>
-        <p className="profile-timeline__statement">사용자의 흐름을 이해하고,<br />가치 있는 경험을 설계합니다.</p>
-        <dl>
-          <div><dt>EMAIL</dt><dd>yshnada@gmail.com</dd></div>
-          <div><dt>LOCATION</dt><dd>Bucheon, Korea</dd></div>
-        </dl>
-      </div>
-    );
+    return <ProfileInformation />;
   }
 
   if (scene.type === 'tools') {
@@ -21,7 +25,7 @@ function TimelineContent({ scene }) {
       <ul className="profile-timeline__tools">
         {scene.items.map(([name, , icon]) => (
           <li key={name}>
-            <img src={icon} alt="" />
+            <img src={icon} alt="" loading="lazy" />
             <span>{name}</span>
           </li>
         ))}
@@ -36,6 +40,23 @@ function TimelineContent({ scene }) {
           <time>{date}</time>
           <h3>{title}</h3>
           {description && <p>{description}</p>}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function TimelineSections({ scenes, unlockedSection }) {
+  return (
+    <ol className="profile-timeline__sections">
+      {scenes.map((scene, index) => (
+        <li className="profile-timeline__section" key={scene.id} data-unlocked={index <= unlockedSection ? 'true' : 'false'}>
+          <div className="profile-timeline__heading">
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <h2>{scene.title}</h2>
+          </div>
+          <span className="profile-timeline__node" aria-hidden="true" />
+          <div className="profile-timeline__content"><TimelineContent scene={scene} /></div>
         </li>
       ))}
     </ol>
@@ -134,18 +155,7 @@ export default function AboutTimeline({ scenes }) {
           <span className="profile-timeline__scroll-label">SCROLL DOWN</span>
         </button>
       </header>
-      <ol className="profile-timeline__sections">
-        {scenes.map((scene, index) => (
-          <li className="profile-timeline__section" key={scene.id} data-unlocked={index <= unlockedSection ? 'true' : 'false'}>
-            <div className="profile-timeline__heading">
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <h2>{scene.title}</h2>
-            </div>
-            <span className="profile-timeline__node" aria-hidden="true" />
-            <div className="profile-timeline__content"><TimelineContent scene={scene} /></div>
-          </li>
-        ))}
-      </ol>
+      <TimelineSections scenes={scenes} unlockedSection={unlockedSection} />
     </section>
   );
 }
