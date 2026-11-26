@@ -17,23 +17,21 @@ import siteLinkHandwritten from '../assets/site-link-handwritten.svg';
 import cassetteArtwork from '../assets/cassette-floater.svg?raw';
 import crtTv from '../assets/crt-tv.png';
 
-const archiveItems = [
+const reelItems = [
   { id: 'about', label: 'ABOUT ME', image: about },
   { id: 'project-01', label: 'PROJECT 1', image: project01 },
   { id: 'project-02', label: 'PROJECT 2', image: project02 },
   { id: 'project-03', label: 'PROJECT 3', image: project03 },
   { id: 'project-04', label: 'PROJECT 4', image: project04, filmImage: project04Film },
   { id: 'contact', label: 'CONTACT ME', image: contact },
+  { id: 'vhs', label: 'VHS PLAYER', image: crtTv },
 ].filter((item) => isProjectEnabled(item.id));
 
-const reelItems = archiveItems;
-const pageItems = [
-  ...reelItems,
-  { id: 'vhs', label: 'VHS PLAYER', image: crtTv },
-];
 const itemUrl = (id) => id === 'vhs' ? getHomeUrl() : getArchiveUrl(id);
-// Start with the project trio at -60, 0 and 60 degrees, while About is page one.
-const reelAngles = reelItems.map((_, index) => -120 + index * 60);
+const reelStep = 360 / reelItems.length;
+const centerIndex = reelItems.findIndex((item) => item.id === 'project-02');
+const reelAngles = reelItems.map((_, index) => (index - centerIndex) * reelStep);
+const snapRotation = (angle) => Math.round(angle / reelStep) * reelStep;
 const reelPoint = (radius, angle) => {
   const radians = angle * Math.PI / 180;
   return `${Math.cos(radians) * radius} ${500 + Math.sin(radians) * radius}`;
@@ -85,17 +83,15 @@ export default function FilmReelProject({ activeId = 'project-01', document, sou
   const menuButtonRef = useRef(null);
   const closeButtonRef = useRef(null);
   const svgId = useId().replace(/:/g, '');
-  const showReelHint = activeId.startsWith('project-');
   const reelHintId = `${svgId}-drag-hint`;
-  const currentIndex = reelItems.findIndex((item) => item.id === activeId);
-  const selectedItem = reelItems[currentIndex];
-  const pageIndex = pageItems.findIndex((item) => item.id === activeId);
-  const previousItem = pageItems[(pageIndex - 1 + pageItems.length) % pageItems.length];
-  const nextItem = pageItems[(pageIndex + 1) % pageItems.length];
-  const activeLabel = archiveItems.find((item) => item.id === activeId)?.label ?? title;
+  const pageIndex = reelItems.findIndex((item) => item.id === activeId);
+  const selectedItem = reelItems[pageIndex];
+  const previousItem = reelItems[(pageIndex - 1 + reelItems.length) % reelItems.length];
+  const nextItem = reelItems[(pageIndex + 1) % reelItems.length];
+  const activeLabel = selectedItem?.label ?? title;
   const isAppLink = action?.label === '앱 바로가기';
   const paginationLabel = pageIndex < 0 ? 'PROJECTS' : (
-    <><span className="reel-page-current">{pageIndex + 1}</span>/{pageItems.length}</>
+    <><span className="reel-page-current">{pageIndex + 1}</span>/{reelItems.length}</>
   );
 
   useLayoutEffect(() => {
@@ -147,7 +143,7 @@ export default function FilmReelProject({ activeId = 'project-01', document, sou
     const drag = rotationDragRef.current;
     if (!drag) return;
     if (drag.onCard && drag.distance <= 4) setRotation(drag.initialRotation);
-    else setRotation(Math.round((drag.rotation + (drag.distance <= 4 && event.type !== 'pointercancel' ? 60 : 0)) / 60) * 60);
+    else setRotation(snapRotation(drag.rotation + (drag.distance <= 4 && event.type !== 'pointercancel' ? reelStep : 0)));
     if (drag.distance > 4) suppressCardClickUntilRef.current = performance.now() + 400;
     rotationDragRef.current = null;
     setIsRotating(false);
@@ -192,7 +188,7 @@ export default function FilmReelProject({ activeId = 'project-01', document, sou
     event.preventDefault();
     if (ejectingId) return;
     const selectedIndex = reelItems.findIndex((item) => item.id === id);
-    if (id !== activeId && event.currentTarget.classList.contains('half-reel__card')) {
+    if (id !== activeId && id !== 'vhs' && event.currentTarget.classList.contains('half-reel__card')) {
       const bounds = event.currentTarget.getBoundingClientRect();
       pendingFilmOrigin = {
         id,
@@ -261,7 +257,7 @@ export default function FilmReelProject({ activeId = 'project-01', document, sou
       <aside ref={sidebarRef} id={`${svgId}-menu`} className="film-reel-detail__sidebar" onKeyDown={handleMenuKey}>
         <div className="film-reel-detail__menu-heading"><span>ARCHIVE</span><button ref={closeButtonRef} type="button" onClick={closeMenu} aria-label="메뉴 닫기">×</button></div>
         <nav className={`half-reel${isRotating ? ' is-rotating' : ''}`} aria-label="반원 필름 아카이브 메뉴">
-          <svg onPointerDown={startRotation} onPointerMove={dragRotation} onPointerUp={endRotation} onPointerCancel={endRotation} className="half-reel__assembly" viewBox="0 0 540 1000" aria-label="여섯 장의 탈착식 필름 카드" aria-describedby={showReelHint ? reelHintId : undefined}>
+          <svg onPointerDown={startRotation} onPointerMove={dragRotation} onPointerUp={endRotation} onPointerCancel={endRotation} className="half-reel__assembly" viewBox="0 0 540 1000" aria-label={`탈착식 필름 카드 ${reelItems.length}장`} aria-describedby={reelHintId}>
             <defs>
               <radialGradient id={`${svgId}-cardboard`} cx="30%" cy="45%" r="80%">
                 <stop stopColor="#45433b" /><stop offset=".6" stopColor="#302f29" /><stop offset="1" stopColor="#201f1b" />
@@ -299,7 +295,7 @@ export default function FilmReelProject({ activeId = 'project-01', document, sou
               <circle cx="0" cy="500" r="460" fill="none" stroke="#37352f" strokeWidth="14" />
               <circle cx="0" cy="500" r="460" fill="none" stroke={`url(#${svgId}-rim)`} strokeWidth="8" />
               <circle cx="0" cy="500" r="447" fill="none" stroke="#ded6c1" strokeWidth="2" opacity=".55" />
-              {reelAngles.map((angle) => <g key={angle} transform={`translate(${reelPoint(425, angle + 30)})`}>
+              {reelAngles.map((angle) => <g key={angle} transform={`translate(${reelPoint(425, angle + reelStep / 2)})`}>
                 <circle r="7" fill="#383731" stroke="#c0b6a0" strokeWidth="2" />
                 <path d="M-3 2L3-2" stroke="#b7ad97" strokeWidth="1.5" />
               </g>)}
@@ -367,26 +363,24 @@ export default function FilmReelProject({ activeId = 'project-01', document, sou
             </g>
           </svg>
           <div className="half-reel__rotation-controls" role="group" aria-label="릴 회전">
-            <button type="button" onClick={() => setRotation((value) => Math.round(value / 60) * 60 - 60)} aria-label="릴을 위로 돌리기">
+            <button type="button" onClick={() => setRotation((value) => snapRotation(value - reelStep))} aria-label="릴을 위로 돌리기">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15L12 8L19 15" /></svg>
             </button>
             <span className="half-reel__page-count" aria-label="현재 페이지" aria-live="polite">{paginationLabel}</span>
-            <button type="button" onClick={() => setRotation((value) => Math.round(value / 60) * 60 + 60)} aria-label="릴을 아래로 돌리기">
+            <button type="button" onClick={() => setRotation((value) => snapRotation(value + reelStep))} aria-label="릴을 아래로 돌리기">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9L12 16L19 9" /></svg>
             </button>
-            {showReelHint && (
-              <div className="half-reel__drag-hint" id={reelHintId}>
-                <svg className="half-reel__drag-gesture" viewBox="0 0 40 44" aria-hidden="true">
-                  <rect x="2" y="4" width="22" height="36" rx="11" />
-                  <path d="M13 4v12M2 16h22M9 10h1m24-2-4 4m4-4 4 4m-4-4v28m0 0-4-4m4 4 4-4" />
-                </svg>
-                <span lang="en">DRAG</span>
-              </div>
-            )}
+            <div className="half-reel__drag-hint" id={reelHintId}>
+              <svg className="half-reel__drag-gesture" viewBox="0 0 40 44" aria-hidden="true">
+                <rect x="2" y="4" width="22" height="36" rx="11" />
+                <path d="M13 4v12M2 16h22M9 10h1m24-2-4 4m4-4 4 4m-4-4v28m0 0-4-4m4 4 4-4" />
+              </svg>
+              <span lang="en">DRAG</span>
+            </div>
           </div>
         </nav>
         <nav className="film-reel-detail__compact-links" aria-label="아카이브 메뉴">
-          {pageItems.map((item) => <a key={item.id} href={itemUrl(item.id)} onClick={(event) => selectCard(event, item.id)} aria-current={item.id === activeId ? 'page' : undefined}><img src={item.image} alt="" /><span>{item.label}</span></a>)}
+          {reelItems.map((item) => <a key={item.id} href={itemUrl(item.id)} onClick={(event) => selectCard(event, item.id)} aria-current={item.id === activeId ? 'page' : undefined}><img src={item.image} alt="" /><span>{item.label}</span></a>)}
 
         </nav>
       </aside>
